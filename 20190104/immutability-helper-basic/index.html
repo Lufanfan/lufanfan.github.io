@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>immutability-helper 插件的基本使用（附源码） | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="React,Immutable">
+    <meta name="description" content="本文介绍了 immutability-helper 插件的基本使用，详细介绍了相关 API 的用法及注意事项。">
+<meta name="keywords" content="React,Immutable">
+<meta property="og:type" content="article">
+<meta property="og:title" content="immutability-helper 插件的基本使用（附源码）">
+<meta property="og:url" content="https://beichensky.github.io/20190104/immutability-helper-basic/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文介绍了 immutability-helper 插件的基本使用，详细介绍了相关 API 的用法及注意事项。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-01-07T14:37:21.760Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="immutability-helper 插件的基本使用（附源码）">
+<meta name="twitter:description" content="本文介绍了 immutability-helper 插件的基本使用，详细介绍了相关 API 的用法及注意事项。">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">immutability-helper 插件的基本使用（附源码）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">immutability-helper 插件的基本使用（附源码）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-01-04T08:30:08.000Z" itemprop="datePublished" class="page-time">
+  2019-01-04
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/React/">React</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概念"><span class="post-toc-number">1.</span> <span class="post-toc-text">概念</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#源码"><span class="post-toc-number">2.</span> <span class="post-toc-text">源码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意事项总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">注意事项总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#常用-API"><span class="post-toc-number">4.</span> <span class="post-toc-text">常用 API</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#API-用法及示例"><span class="post-toc-number">5.</span> <span class="post-toc-text">API 用法及示例</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#初始化四个变量，之后的各种-API-操作都是基于这四个变量"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">初始化四个变量，之后的各种 API 操作都是基于这四个变量</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#push-array"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">{$push: array}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#unshift-array"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">{$unshift: array}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#splice-array-of-arrays"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">{$splice: array of arrays}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#set-any"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">{$set: any}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#toggle-array-of-strings"><span class="post-toc-number">5.6.</span> <span class="post-toc-text">{$toggle: array of strings}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#unset-array-of-strings"><span class="post-toc-number">5.7.</span> <span class="post-toc-text">{$unset: array of strings}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#merge-object"><span class="post-toc-number">5.8.</span> <span class="post-toc-text">{$merge: object}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#apply-function"><span class="post-toc-number">5.9.</span> <span class="post-toc-text">{$apply: function}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#add-array-of-objects"><span class="post-toc-number">5.10.</span> <span class="post-toc-text">{$add: array of objects}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#remove-array-of-strings"><span class="post-toc-number">5.11.</span> <span class="post-toc-text">{$remove: array of strings}</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#扩展用法"><span class="post-toc-number">6.</span> <span class="post-toc-text">扩展用法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意用法"><span class="post-toc-number">7.</span> <span class="post-toc-text">注意用法</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-immutability-helper-basic" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">immutability-helper 插件的基本使用（附源码）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-01-04 16:30:08" datetime="2019-01-04T08:30:08.000Z" itemprop="datePublished">2019-01-04</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/React/">React</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文介绍了 immutability-helper 插件的基本使用，详细介绍了相关 API 的用法及注意事项。</p>
+<a id="more"></a>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>先理解一下 Immutable 的概念，Immutable数据就是一旦创建，就不能更改的数据。每当对Immutable对象进行修改的时候，就会返回一个新的Immutable对象，以此来保证数据的不可变。但是由于 Immutable 的 API 和用法学习起来比较困难，所以可以使用 immutability-helper 这个工具来对原生JS对象进行操作。本文主要是对 immutability-helper 的用法做一个讲解。</p>
+<hr>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p><strong><a href="https://github.com/beichensky/ReactUtilsDemo/tree/master/immutability-helper-basic" target="_blank" rel="noopener">源码位置</a></strong></p>
+<p>欢迎 Star！欢迎 Watch！</p>
+<hr>
+<h2 id="注意事项总结"><a href="#注意事项总结" class="headerlink" title="注意事项总结"></a>注意事项总结</h2><ul>
+<li><p>immutability-helper 不会对原有对象进行修改，只是会返回一个新的对象</p>
+</li>
+<li><p>$push、$unshift、$splice 的使用目标必须是数组，否则会报错</p>
+</li>
+<li><p>$add、$remove 的使用目标必须是 Set 或 Map</p>
+</li>
+<li><p>其余 API 的使用目标可以是任意数据</p>
+</li>
+<li><p>$splice 的参数是一个操作数组，可以对目标数组一次进行多次操作，但是参数 arrays 中的项是按顺序执行的，所以使用时需要注意顺序</p>
+</li>
+<li><p>任意 API 均可在多层结构内使用。可查看<a href="#扩展用法">扩展用法示例</a></p>
+</li>
+<li><p>可以同时执行多个 API 操作，但是请注意：<strong>多个 API 在一个语句中执行时，只会执行最后一个！！！</strong>。可查看<a href="#注意用法">注意用法示例</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="常用-API"><a href="#常用-API" class="headerlink" title="常用 API"></a>常用 API</h2><ul>
+<li><p>{$push: array} 同数组的 push 方法，将参数 array 中的所有项 push 到目标数组中</p>
+</li>
+<li><p>{$unshift: array} 同数组的 unshift 方法，将参数 array 中的所有项 unshift 到目标数组中</p>
+</li>
+<li><p>{$splice: array of arrays} 同数组的 splice 方法，对于参数 arrays 中的每一项，使用该项提供的参数对目标数组调用 splice()</p>
+<blockquote>
+<p>PS: 参数 arrays 中的项是按顺序应用的，所以顺序很重要。在操作过程中，目标的指针可能会发生变化</p>
+</blockquote>
+</li>
+<li><p>{$set: any} 使用 any 值替换目标</p>
+</li>
+<li><p>{$toggle: array of strings} 将参数 array 中提供的下标或者属性的值切换成相反的布尔值</p>
+</li>
+<li><p>{$unset: array of strings} 从目标对象中移除参数 array 中的键列表</p>
+</li>
+<li><p>{$merge: object} 将参数 object 的键与目标合并</p>
+</li>
+<li><p>{$apply: function} 将当前值传递给函数并用新的返回值更新它</p>
+</li>
+<li><p>{$add: array of objects} 向 Set 或 Map 中添加值。添加到 Set 时，参数 array 为要添加的对象数组，添加到 Map 时，参数 array 为 [key, value] 数组</p>
+</li>
+<li><p>{$remove: array of strings} 从 Set 或 Map 中移除参数 array 中的键列表</p>
+</li>
+</ul>
+<hr>
+<h2 id="API-用法及示例"><a href="#API-用法及示例" class="headerlink" title="API 用法及示例"></a>API 用法及示例</h2><h3 id="初始化四个变量，之后的各种-API-操作都是基于这四个变量"><a href="#初始化四个变量，之后的各种-API-操作都是基于这四个变量" class="headerlink" title="初始化四个变量，之后的各种 API 操作都是基于这四个变量"></a>初始化四个变量，之后的各种 API 操作都是基于这四个变量</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialObject = &#123;</span><br><span class="line">    name: <span class="string">'Jack'</span>,</span><br><span class="line">    age: <span class="number">22</span>,</span><br><span class="line">    gender: <span class="string">'Man'</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> initialArray = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>, <span class="string">'e'</span>];</span><br><span class="line"><span class="keyword">const</span> initialSet = <span class="keyword">new</span> <span class="built_in">Set</span>([<span class="string">'2'</span>, <span class="string">'0'</span>, <span class="string">'1'</span>, <span class="string">'9'</span>, <span class="string">'猪'</span>, <span class="string">'年'</span>, <span class="string">'快'</span>, <span class="string">'乐'</span>]);</span><br><span class="line"><span class="keyword">const</span> initialMap = <span class="keyword">new</span> <span class="built_in">Map</span>([[<span class="string">'id'</span>, <span class="string">'1'</span>], [<span class="string">'color'</span>, <span class="string">'blue'</span>], [<span class="string">'alias'</span>, <span class="string">'map'</span>]]);</span><br></pre></td></tr></table></figure>
+<h3 id="push-array"><a href="#push-array" class="headerlink" title="{$push: array}"></a>{$push: array}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$push: array&#125;</span></span><br><span class="line"><span class="comment"> * 同数组的 push 方法，将数组 array 中包含的所有元素添加到 initialArray 的后面，作为一个新数组返回</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> pushArray = update(initialArray, &#123; <span class="attr">$push</span>: [<span class="string">'f'</span>] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'pushArray：'</span>, pushArray);  <span class="comment">// =&gt; [ 'a', 'b', 'c', 'd', 'e', 'f' ]</span></span><br></pre></td></tr></table></figure>
+<h3 id="unshift-array"><a href="#unshift-array" class="headerlink" title="{$unshift: array}"></a>{$unshift: array}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$unshift: array&#125;</span></span><br><span class="line"><span class="comment"> * 同数组的 unshift 方法，将数组 ['f'] 中包含的所有元素添加到 initialArray 的前面，作为一个新数组返回</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> unshiftArray = update(initialArray, &#123; <span class="attr">$unshift</span>: [<span class="string">'f'</span>] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'unshiftArray：'</span>, unshiftArray);   <span class="comment">// =&gt; [ 'f', 'a', 'b', 'c', 'd', 'e' ]</span></span><br></pre></td></tr></table></figure>
+<h3 id="splice-array-of-arrays"><a href="#splice-array-of-arrays" class="headerlink" title="{$splice: array of arrays}"></a>{$splice: array of arrays}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$splice: array of arrays&#125;</span></span><br><span class="line"><span class="comment"> * 同数组的 splice 方法</span></span><br><span class="line"><span class="comment"> *      数组 arrays 中包含的是所有需要执行的操作集合</span></span><br><span class="line"><span class="comment"> *      元素 array 中第一个元素代表下标，第二个元素代表需要删除的个数，第三个元素代表需要插入到 initialArray 中的的元素</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * PS:  1、可以在 arrays 中执行多个集合；</span></span><br><span class="line"><span class="comment"> *      2、两个操作不是同时执行，而是按顺序执行，后面的操作会在前面一个操作的执行结果上执行</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> spliceArray = update(initialArray, &#123; <span class="attr">$splice</span>: [[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">2</span>, <span class="number">0</span>, <span class="string">'f'</span>, <span class="string">'g'</span>]] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'spliceArray：'</span>, spliceArray);  <span class="comment">// =&gt; [ 'a', 'd', 'f', 'g', 'e' ]</span></span><br></pre></td></tr></table></figure>
+<h3 id="set-any"><a href="#set-any" class="headerlink" title="{$set: any}"></a>{$set: any}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$set: any&#125;</span></span><br><span class="line"><span class="comment"> * 可以将数组或者对象中某一下标或者属性的值进行替换</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">// 将 initialArray 数组中下标为 1 的元素修改为 'f'</span></span><br><span class="line"><span class="keyword">const</span> setArray = update(initialArray, &#123; <span class="number">1</span>: &#123; <span class="attr">$set</span>: <span class="string">'f'</span> &#125; &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'setArray'</span>, setArray);  <span class="comment">// =&gt; [ 'a', 'f', 'c', 'd', 'e' ]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 initialObject 对象中 age 属性值修改为 26</span></span><br><span class="line"><span class="keyword">const</span> setObject = update(initialObject, &#123; <span class="attr">age</span>: &#123; <span class="attr">$set</span>: <span class="number">26</span> &#125; &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'setObject'</span>, setObject);    <span class="comment">// =&gt; &#123; name: 'Jack', age: 26, gender: 'Man' &#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="toggle-array-of-strings"><a href="#toggle-array-of-strings" class="headerlink" title="{$toggle: array of strings}"></a>{$toggle: array of strings}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$toggle: array of strings&#125;</span></span><br><span class="line"><span class="comment"> * 可以将数组或者对象中下标集合或者属性集合的值进行切换：任何 Truthy 都会切换成 false，任何 Falsy 值都会切换成 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">// 将 initialArray 中下标为 1、2 的元素值进行切换</span></span><br><span class="line"><span class="keyword">const</span> toggleArray = update(initialArray, &#123; <span class="attr">$toggle</span>: [ <span class="number">1</span>, <span class="number">2</span> ] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'toggleArray：'</span>, toggleArray);    <span class="comment">// =&gt; [ 'a', false, false, 'd', 'e' ]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> toggleObject = update(initialObject, &#123; <span class="attr">$toggle</span>: [ <span class="string">'name'</span>, <span class="string">'gender'</span> ] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'toggleObject：'</span>, toggleObject);  <span class="comment">// =&gt; &#123; name: false, age: 22, gender: false &#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="unset-array-of-strings"><a href="#unset-array-of-strings" class="headerlink" title="{$unset: array of strings}"></a>{$unset: array of strings}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$unset: array of strings&#125;</span></span><br><span class="line"><span class="comment"> * 从目标数组或者对象中移除 array 中的下标或者属性列表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">// 删除数组 initialArray 中下标为 1 和 2 的两个元素，但是保留占位</span></span><br><span class="line"><span class="keyword">const</span> unsetArray = update(initialArray, &#123; <span class="attr">$unset</span>: [<span class="number">1</span>, <span class="number">2</span>] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'unsetArray：'</span>, unsetArray.length, unsetArray); <span class="comment">// 5    [ 'a', &lt;2 empty items&gt;, 'd', 'e' ]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除对象 initialObject 中 name 和 gender 属性</span></span><br><span class="line"><span class="keyword">const</span> unsetObject = update(initialObject, &#123; <span class="attr">$unset</span>: [<span class="string">'name'</span>, <span class="string">'gender'</span>] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'unsetObject'</span>, unsetObject);    <span class="comment">// unsetObject &#123; age: 22 &#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="merge-object"><a href="#merge-object" class="headerlink" title="{$merge: object}"></a>{$merge: object}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$merge: object&#125;</span></span><br><span class="line"><span class="comment"> * 从目标数组或者对象中合并 object 中下标或者属性相同的元素，下标或属性相同时 object 中的元素会替换掉目标中的元素</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">// 将 initialArray 数组中的 'a', 'b', 'c' 替换为 1, 2, 3</span></span><br><span class="line"><span class="keyword">const</span> mergeArray = update(initialArray, &#123; <span class="attr">$merge</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'mergeArray：'</span>, mergeArray);    <span class="comment">// =&gt; [ 1, 2, 3, 'd', 'e' ]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 initialObject 和 &#123; name: 'Rose', gender: 'Woman', hobby: 'Swimming' &#125; &#125; 对象进行合并</span></span><br><span class="line"><span class="keyword">const</span> mergeObject = update(initialObject, &#123; <span class="attr">$merge</span>: &#123; <span class="attr">name</span>: <span class="string">'Rose'</span>, <span class="attr">gender</span>: <span class="string">'Woman'</span>, <span class="attr">hobby</span>: <span class="string">'Swimming'</span> &#125; &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'mergeObject'</span>, mergeObject);    <span class="comment">// =&gt; &#123; name: 'Rose', age: 22, gender: 'Woman', hobby: 'Swimming' &#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="apply-function"><a href="#apply-function" class="headerlink" title="{$apply: function}"></a>{$apply: function}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$apply: function&#125;</span></span><br><span class="line"><span class="comment"> * 为目标数组或者对象中某个下标或者属性应用 function</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> apply = <span class="function">(<span class="params">val</span>) =&gt;</span> val + <span class="string">'--apply'</span></span><br><span class="line"><span class="comment">// 为 initialArray 数组中下标为 1 的元素执行 apply 函数</span></span><br><span class="line"><span class="keyword">const</span> applyArray = update(initialArray, &#123; <span class="number">1</span>: &#123; <span class="attr">$apply</span>: apply &#125; &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'applyArray：'</span>, applyArray);    <span class="comment">// =&gt; [ 'a', 'b--apply', 'c', 'd', 'e' ]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为 initialObject 对象中 name 属性执行 apply 函数</span></span><br><span class="line"><span class="keyword">const</span> applyObject = update(initialObject, &#123; <span class="attr">name</span>: &#123; <span class="attr">$apply</span>: apply &#125; &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'applyObject：'</span>, applyObject);  <span class="comment">// =&gt; &#123; name: 'Jack--apply', age: 22, gender: 'Man' &#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="add-array-of-objects"><a href="#add-array-of-objects" class="headerlink" title="{$add: array of objects}"></a>{$add: array of objects}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$add: array of objects&#125;</span></span><br><span class="line"><span class="comment"> * 向 Set 中添加元素时，array 是一个对象的数组，向 Map 中添加元素时， array 是一个 [key, value] 的数组</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">// 将 ['Hello', 'World'] 中的元素添加到 initialSet 后，并返回一个新的 Set</span></span><br><span class="line"><span class="keyword">const</span> addSet = update(initialSet, &#123; <span class="attr">$add</span>: [<span class="string">'Hello'</span>, <span class="string">'World'</span>] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'addSet：'</span>, addSet);    <span class="comment">// =&gt; Set &#123; '2', '0', '1', '9', '猪', '年', '快', '乐', 'Hello', 'World' &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 [[3, 'Hello'], ['width', '20px']] 中的元素添加到 initialMap 中，并返回一个新的 Map</span></span><br><span class="line"><span class="keyword">const</span> addMap = update(initialMap, &#123; <span class="attr">$add</span>: [[<span class="number">3</span>, <span class="string">'Hello'</span>], [<span class="string">'width'</span>, <span class="string">'20px'</span>]] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'addMap'</span>, addMap);  <span class="comment">// =&gt; Map &#123; 'id' =&gt; '1', 'color' =&gt; 'blue', 3 =&gt; 'Hello', 'width' =&gt; '20px' &#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="remove-array-of-strings"><a href="#remove-array-of-strings" class="headerlink" title="{$remove: array of strings}"></a>{$remove: array of strings}</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * API: &#123;$remove: array of strings&#125;</span></span><br><span class="line"><span class="comment"> * 从 Set 或者 Map 中移除 array 中的键列表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">// 删除 initialSet 中的 '猪' 和 '年' 这两个元素</span></span><br><span class="line"><span class="keyword">const</span> removeSet = update(initialSet, &#123; <span class="attr">$remove</span>: [<span class="string">'猪'</span>, <span class="string">'年'</span>] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'removeSet：'</span>, removeSet);  <span class="comment">// =&gt; removeSet： Set &#123; '2', '0', '1', '9', '快', '乐' &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除 initialMap 中的 'color'和 'alias' 对应的两个键值对</span></span><br><span class="line"><span class="keyword">const</span> removeMap = update(initialMap, &#123; <span class="attr">$remove</span>: [<span class="string">'color'</span>, <span class="string">'alias'</span>] &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'removeMap：'</span>, removeMap);  <span class="comment">// =&gt; Map &#123; 'id' =&gt; '1' &#125;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="扩展用法"><a href="#扩展用法" class="headerlink" title="扩展用法"></a>扩展用法</h2><ul>
+<li>可多层结构内使用<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 扩展用法：可多层结构内使用</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> initialConfig = &#123;</span><br><span class="line">    width: <span class="number">100</span>,</span><br><span class="line">    height: <span class="number">100</span>,</span><br><span class="line">    options: [</span><br><span class="line">        &#123; <span class="attr">color</span>: <span class="string">'red'</span>, <span class="attr">shape</span>: <span class="string">'Square'</span> &#125;,</span><br><span class="line">        &#123; <span class="attr">color</span>: <span class="string">'blue'</span>, <span class="attr">shape</span>: <span class="string">'Circular'</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 多层结构内使用</span></span><br><span class="line"><span class="keyword">const</span> multiConfig1 = update(initialConfig, &#123; <span class="attr">options</span>: &#123; <span class="attr">color</span>: &#123; <span class="attr">$set</span>: <span class="string">'pink'</span> &#125; &#125; &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'multiConfig1：'</span>, multiConfig1);</span><br><span class="line"><span class="comment">/* =&gt; </span></span><br><span class="line"><span class="comment">&#123; width: 100,</span></span><br><span class="line"><span class="comment">  height: 100,</span></span><br><span class="line"><span class="comment">  options:</span></span><br><span class="line"><span class="comment">   [ &#123; color: 'red', shape: 'Square' &#125;,</span></span><br><span class="line"><span class="comment">     &#123; color: 'blue', shape: 'Circular' &#125;,</span></span><br><span class="line"><span class="comment">     color: 'pink' ] &#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h2 id="注意用法"><a href="#注意用法" class="headerlink" title="注意用法"></a>注意用法</h2><ul>
+<li>多种操作不要一起使用，否则只会执行最后的一个操作<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 注意用法：多种操作不要一起使用，否则只会执行最后的一个操作</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initialConfig = &#123;</span><br><span class="line">    width: <span class="number">100</span>,</span><br><span class="line">    height: <span class="number">100</span>,</span><br><span class="line">    options: [</span><br><span class="line">        &#123; <span class="attr">color</span>: <span class="string">'red'</span>, <span class="attr">shape</span>: <span class="string">'Square'</span> &#125;,</span><br><span class="line">        &#123; <span class="attr">color</span>: <span class="string">'blue'</span>, <span class="attr">shape</span>: <span class="string">'Circular'</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 例子：只会执行最后的设置 color 属性的操作</span></span><br><span class="line"><span class="keyword">const</span> multiConfig2 = update(initialConfig, &#123; <span class="attr">options</span>: &#123; <span class="attr">$push</span>: [ &#123; <span class="attr">color</span>: <span class="string">'deepPink'</span>, <span class="attr">shape</span>: <span class="string">'Triangle'</span> &#125; ] &#125;, <span class="attr">options</span>: &#123; <span class="attr">color</span>: &#123; <span class="attr">$set</span>: <span class="string">'pink'</span> &#125; &#125; &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'multiConfig2：'</span>, multiConfig2);    </span><br><span class="line"><span class="comment">/* =&gt; </span></span><br><span class="line"><span class="comment">&#123; width: 100,</span></span><br><span class="line"><span class="comment">  height: 100,</span></span><br><span class="line"><span class="comment">  options:</span></span><br><span class="line"><span class="comment">   [ &#123; color: 'red', shape: 'Square' &#125;,</span></span><br><span class="line"><span class="comment">     &#123; color: 'blue', shape: 'Circular' &#125;,</span></span><br><span class="line"><span class="comment">     color: 'pink' ] &#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190104/immutability-helper-basic/" target="_blank" rel="external">https://beichensky.github.io/20190104/immutability-helper-basic/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Immutable/">Immutable</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190104/immutability-helper-basic/&title=《immutability-helper 插件的基本使用（附源码）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190104/immutability-helper-basic/&title=《immutability-helper 插件的基本使用（附源码）》 — 前端小栈&source=本文介绍了 immutability-helper 插件的基本使用，详细介绍了相关 API 的用法及注意事项。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190104/immutability-helper-basic/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《immutability-helper 插件的基本使用（附源码）》 — 前端小栈&url=https://beichensky.github.io/20190104/immutability-helper-basic/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190104/immutability-helper-basic/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190108/react-redux-basic/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Redux 基础教程以及结合 React 使用方式</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190102/github-branch/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Github仓库中分支的创建和删除</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190104/immutability-helper-basic/&title=《immutability-helper 插件的基本使用（附源码）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190104/immutability-helper-basic/&title=《immutability-helper 插件的基本使用（附源码）》 — 前端小栈&source=本文介绍了 immutability-helper 插件的基本使用，详细介绍了相关 API 的用法及注意事项。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190104/immutability-helper-basic/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《immutability-helper 插件的基本使用（附源码）》 — 前端小栈&url=https://beichensky.github.io/20190104/immutability-helper-basic/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190104/immutability-helper-basic/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190104/immutability-helper-basic/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

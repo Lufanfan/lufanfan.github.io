@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>浅显易懂的原型与原型链知识总结 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="本文总结了原型以及原型链的一些概念和规律，并且提供了代码示例进行说明。有助于更深一步的理解原型与原型链">
+<meta name="keywords" content="博客，Web前端，前端开发，JS，JavaScript, Html, CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅显易懂的原型与原型链知识总结">
+<meta property="og:url" content="https://beichensky.github.io/20190808/prototype-chain/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文总结了原型以及原型链的一些概念和规律，并且提供了代码示例进行说明。有助于更深一步的理解原型与原型链">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-15T23:23:53.720Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅显易懂的原型与原型链知识总结">
+<meta name="twitter:description" content="本文总结了原型以及原型链的一些概念和规律，并且提供了代码示例进行说明。有助于更深一步的理解原型与原型链">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">浅显易懂的原型与原型链知识总结</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">浅显易懂的原型与原型链知识总结</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-08-08T15:58:55.000Z" itemprop="datePublished" class="page-time">
+  2019-08-08
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、原型"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、原型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#显式原型和隐式原型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">显式原型和隐式原型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#显式原型和隐式原型的实现机制"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">显式原型和隐式原型的实现机制</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#原型补充"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">原型补充</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、原型链（别名：隐式原型链）"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、原型链（别名：隐式原型链）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概念"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">概念</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#对象读写"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">对象读写</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#扩展：instanceOf-操作符原理"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">扩展：instanceOf 操作符原理</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、实例讲解"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、实例讲解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、实例一"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">1、实例一</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#实例二"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">实例二</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、总结"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#五、推荐链接"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、推荐链接</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-prototype-chain" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">浅显易懂的原型与原型链知识总结</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-08-08 23:58:55" datetime="2019-08-08T15:58:55.000Z" itemprop="datePublished">2019-08-08</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文总结了原型以及原型链的一些概念和规律，并且提供了代码示例进行说明。有助于更深一步的理解原型与原型链</p>
+<a id="more"></a>
+<h2 id="一、原型"><a href="#一、原型" class="headerlink" title="一、原型"></a>一、原型</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>每个函数对象都有一个 <code>prototype</code> 属性，默认指向一个空的 <code>Object</code> 实例对象（即称为原型对象）</li>
+<li>原型对象中有一个 <code>constructor</code> 属性，它指向当前的函数对象</li>
+</ul>
+<!-- - 给原型对象添加属性（一般都是方法）
+  - 作用：函数的所有实例对象自动拥有原型对象中的属性和方法（可以思考一下是因为什么，后面会有说明） -->
+<p>代码示例：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Test</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">Test.prototype.say = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Say Hello'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> t1 = <span class="keyword">new</span> Test();</span><br><span class="line"><span class="keyword">const</span> t2 = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line">Test.prototype.say = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Say Hello'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"原型对象："</span>, <span class="built_in">Object</span>.keys(Test.prototype)); <span class="comment">// []，说明函数的原型对象是一个空对象</span></span><br><span class="line"><span class="built_in">console</span>.log(Test.prototype.constructor === test);   <span class="comment">// true，说明 原型对象的 constructor 属性，它指向当前的函数对象</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="显式原型和隐式原型"><a href="#显式原型和隐式原型" class="headerlink" title="显式原型和隐式原型"></a>显式原型和隐式原型</h3><ul>
+<li>每个函数都有一个 <code>prototype</code> 属性，即显式原型</li>
+<li>每个实例对象都有一个 <code>__proto__</code> 属性，即隐式原型</li>
+<li><strong>实例对象的隐式原型的值等于对应函数的显式原型的值</strong></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Test</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> t1 = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(Test.prototype);    <span class="comment">// 一个空对象，包含 __proto__ 和 constructor 属性(指向 Test)</span></span><br><span class="line"><span class="built_in">console</span>.log(t1.__proto__);      <span class="comment">// 一个空对象，包含 __proto__ 和 constructor 属性(指向 Test)</span></span><br><span class="line"><span class="built_in">console</span>.log(Test.prototype === t1.__proto__);   <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h3 id="显式原型和隐式原型的实现机制"><a href="#显式原型和隐式原型的实现机制" class="headerlink" title="显式原型和隐式原型的实现机制"></a>显式原型和隐式原型的实现机制</h3><ul>
+<li>函数的 <code>prototype</code> 属性：在定义函数时自动添加的，默认值是一个空的 <code>Object</code> 对象</li>
+<li>对象的 <code>__proto__</code> 属性：创建对象时自动添加的，默认值为构造函数的 <code>prototype</code> 属性值</li>
+<li>开发人员一般都是通过操作函数的 <code>prototype</code> 属性来修改原型</li>
+</ul>
+<h3 id="原型补充"><a href="#原型补充" class="headerlink" title="原型补充"></a>原型补充</h3><ul>
+<li><p>函数的显式原型指向的对象默认是空 <code>Object</code> 对象（但是 <code>Object</code> 除外，<code>Object</code> 的原型不是空对象，且没有 <code>__proto__</code> 属性）</p>
+<ul>
+<li>所以 <code>Object</code> 的原型对象是原型链的尽头，<code>Object</code> 的原型对象的原型就是 <code>null</code> 了<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Test</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> o = &#123;&#125;;</span><br><span class="line"><span class="keyword">const</span> t = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(o.__proto__);       <span class="comment">// 包含多个方法的 Object 对象，没有 __proto__ 属性</span></span><br><span class="line"><span class="built_in">console</span>.log(t.__proto__);       <span class="comment">// 空对象</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(o.__proto__.__proto__);     <span class="comment">// null</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>每个函数对象既有一个隐式原型，也有一个显式原型</p>
+<ul>
+<li>所有函数都是 <code>Function</code> 的实例（包括 <code>Function</code> 自身）</li>
+<li>每个函数的隐式原型都是同一个实例对象</li>
+<li>唯一的一个隐式原型等于显式原型的函数对象就是 <code>Function</code> 这个函数对象<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Test</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Hello</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(Test.prototype);    <span class="comment">// 空对象</span></span><br><span class="line"><span class="built_in">console</span>.log(Test.__proto__);    <span class="comment">// ƒ () &#123; [native code] &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(Hello.prototype === Test.prototype)         <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(Hello.__proto__ === Test.__proto__);        <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(Hello.__proto__ === <span class="built_in">Function</span>.__proto__);    <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Function</span>.prototype === <span class="built_in">Function</span>.__proto__); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<!-- - 所有函数都是 `Function` 的实例（包括 `Function` 自身）
+- 每个函数对象既有一个隐式原型，也有一个显式原型。
+- 每个函数的隐式原型都是同一个实例对象
+- 唯一的一个隐式原型等于显式原型的函数对象就是 `Function` 这个函数对象 -->
+<hr>
+<h2 id="二、原型链（别名：隐式原型链）"><a href="#二、原型链（别名：隐式原型链）" class="headerlink" title="二、原型链（别名：隐式原型链）"></a>二、原型链（别名：隐式原型链）</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ul>
+<li><p>访问一个对象的属性时</p>
+<ul>
+<li>先在自身属性中查找，找到返回</li>
+<li>如果没有，再沿着 <code>__proto__</code> 这条链向上查找，找到返回</li>
+<li>如果最终没有找到，返回 <code>undefined</code></li>
+</ul>
+</li>
+<li><p>作用：查询对象属性</p>
+</li>
+</ul>
+<h3 id="对象读写"><a href="#对象读写" class="headerlink" title="对象读写"></a>对象读写</h3><ul>
+<li><p>读取对象的属性时，会自动到对象的原型链中查找</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.speak = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Speak Chinese!'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> p1 = <span class="keyword">new</span> Person();</span><br><span class="line"><span class="keyword">const</span> p2 = <span class="keyword">new</span> Person();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每个实例对象都拥有函数原型中的属性/方法</span></span><br><span class="line">p1.speak();     <span class="comment">// Speak Chinese!</span></span><br><span class="line">p2.speak();     <span class="comment">// Speak Chinese!</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置对象的属性时，不会查找原型链，如果当前对象中没有此属性，直接添加此属性并设置值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.name = <span class="string">'小明'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> p1 = <span class="keyword">new</span> Person();</span><br><span class="line"><span class="keyword">const</span> p2 = <span class="keyword">new</span> Person();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取属性时，会从当前对象以及原型链中进行查找</span></span><br><span class="line"><span class="built_in">console</span>.log(p1.name);    <span class="comment">// 小明</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置属性时，直接修改当前对象上的属性，当前对象上没有，则直接添加，不会修改原型链上的属性</span></span><br><span class="line">p2.name = <span class="string">'小红'</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(p1.name);   <span class="comment">// 小明</span></span><br><span class="line"><span class="built_in">console</span>.log(p2.name);   <span class="comment">// 小红</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方法一般定义在原型上，属性一般通过构造函数定义在对象本身上</p>
+</li>
+</ul>
+<h3 id="扩展：instanceOf-操作符原理"><a href="#扩展：instanceOf-操作符原理" class="headerlink" title="扩展：instanceOf 操作符原理"></a>扩展：<code>instanceOf</code> 操作符原理</h3><ul>
+<li><code>a instanceOf C</code>: 如果 <code>C</code> 的显式原型在 <code>a</code> 的隐式原型链上，返回 <code>true</code>，否则返回 <code>false</code><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">C</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 C 的原型赋值给 B 的原型，将 B 的原型赋值给 A 的原型，这两行代码位置不能颠倒</span></span><br><span class="line">B.prototype = C.prototype;</span><br><span class="line">A.prototype = B.prototype;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = <span class="keyword">new</span> A();</span><br><span class="line"><span class="built_in">console</span>.log(a <span class="keyword">instanceof</span> C);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h2 id="三、实例讲解"><a href="#三、实例讲解" class="headerlink" title="三、实例讲解"></a>三、实例讲解</h2><h3 id="1、实例一"><a href="#1、实例一" class="headerlink" title="1、实例一"></a>1、实例一</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">A.prototype.n = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对象的原型在对象初始化时赋值为函数的显示原型，因此 b 的隐式原型为 &#123; n: 1 &#125;;</span></span><br><span class="line"><span class="keyword">const</span> b = <span class="keyword">new</span> A();</span><br><span class="line"></span><br><span class="line">A.prototype = &#123;</span><br><span class="line">    n: <span class="number">2</span>,</span><br><span class="line">    m: <span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原因同上，因此 c 的隐式原型为 &#123; n: 2, m: 3 &#125;;</span></span><br><span class="line"><span class="keyword">const</span> c = <span class="keyword">new</span> A();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(b.n, b.m, c.n, c.m);    <span class="comment">// 1 undefined 2 3</span></span><br></pre></td></tr></table></figure>
+<h3 id="实例二"><a href="#实例二" class="headerlink" title="实例二"></a>实例二</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Test</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.prototype.a = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'a 方法执行'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Function</span>.prototype.b = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'b 方法执行'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> t = <span class="keyword">new</span> Test();</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 这里解释一波</span></span><br><span class="line"><span class="comment"> *  1、每个函数对象的显式原型都指向一个空对象，而每个实例对象的隐式原型 === 函数对象的显式原型，</span></span><br><span class="line"><span class="comment"> *      那么 t.a() 会按照这个顺序查找: t.__proto__ === Test.prototype = &#123;&#125;; &#123;&#125;.__proto__ === Object.prototype;</span></span><br><span class="line"><span class="comment"> *      而 Object 的显式原型中有方法 a，因此可以正确执行；</span></span><br><span class="line"><span class="comment"> *  2、t.b() 同理，在原型链中没有找到 b 方法，因此会报错：t.b is not a function;</span></span><br><span class="line"><span class="comment"> *  3、Test.a() 的查找顺序：Test.__proto__ === Function.prototype = &#123; b: function() &#123; console.log('b 方法执行'); &#125; &#125;;</span></span><br><span class="line"><span class="comment"> *      &#123;b: fucntion() &#123;console.log('b 方法执行');&#125;&#125;.__proto__ === Object.prototype;</span></span><br><span class="line"><span class="comment"> *      因此：Test.a() 和 Test.b() 都可以正确执行</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">t.a();          <span class="comment">// a(); </span></span><br><span class="line">t.b();          <span class="comment">// t.b is not a function</span></span><br><span class="line">Test.a();      <span class="comment">// a();</span></span><br><span class="line">Test.b();      <span class="comment">// b();</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><ul>
+<li>每个函数对象（<code>Object</code> 函数对象除外）都默认有一个显式原型对象，指向一个空的 <code>Object</code> 对象，空对象中有一个 constructor 属性，指向当前函数对象</li>
+<li>所有函数对象都有一个隐式原型对象（包括 <code>Function</code> 函数对象），且都默认指向 <code>Function</code> 函数对象的显式原型对象</li>
+<li>函数对象的显式原型等于实例对象的隐式原型</li>
+<li><p>访问对象属性时，会先在实例对象本身进行查找，找到则返回，没找到则在隐式原型链中继续查找，找到则返回，没找到返回 <code>undefined</code></p>
+</li>
+<li><p><em>额外补充一点：函数对象的隐式原型和显示原型没有关系（<code>Function</code> 函数对象除外），<code>Function</code> 函数对象的显式原型等于自身的隐式原型（因为所有函数都是 <code>Function</code> 的实例（包括 <code>Function</code> 自身））</em></p>
+</li>
+</ul>
+<hr>
+<h2 id="五、推荐链接"><a href="#五、推荐链接" class="headerlink" title="五、推荐链接"></a>五、推荐链接</h2><p>之前看到<a href="https://www.jianshu.com/p/aa1ebfdad661" target="_blank" rel="noopener">这篇博客</a>里有详细的原型链示意图，有兴趣的朋友可以详细去看一下：</p>
+<p><strong><a href="https://www.jianshu.com/p/aa1ebfdad661" target="_blank" rel="noopener">一个例子让你彻底明白原型对象和原型链</a></strong></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190808/prototype-chain/" target="_blank" rel="external">https://beichensky.github.io/20190808/prototype-chain/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190808/prototype-chain/&title=《浅显易懂的原型与原型链知识总结》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190808/prototype-chain/&title=《浅显易懂的原型与原型链知识总结》 — 前端小栈&source=本文总结了原型以及原型链的一些概念和规律，并且提供了代码示例进行说明。有助于更深一步的理解原型与原型链" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190808/prototype-chain/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《浅显易懂的原型与原型链知识总结》 — 前端小栈&url=https://beichensky.github.io/20190808/prototype-chain/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190808/prototype-chain/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190810/mongodb-note/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">MonogoDB 数据库基本使用和常用命令</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190802/hexo-blog/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">快速使用 Hexo + Github 搭建个人博客（超简单的步骤）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190808/prototype-chain/&title=《浅显易懂的原型与原型链知识总结》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190808/prototype-chain/&title=《浅显易懂的原型与原型链知识总结》 — 前端小栈&source=本文总结了原型以及原型链的一些概念和规律，并且提供了代码示例进行说明。有助于更深一步的理解原型与原型链" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190808/prototype-chain/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《浅显易懂的原型与原型链知识总结》 — 前端小栈&url=https://beichensky.github.io/20190808/prototype-chain/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190808/prototype-chain/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190808/prototype-chain/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

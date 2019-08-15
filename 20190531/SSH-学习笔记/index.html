@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>SSH 学习笔记 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="SSH,Shell">
+    <meta name="description" content="一、创建命令 1ssh-keygen -t rsa -C &quot;这里换上你的邮箱&quot;   二、ssh-add 命令 将 ssh 添加到 ssh-agent：ssh-add ~/admin/.ssh/id_rsa 将 ssh 从 ssh-agent 中删除：ssh-add -d ~/admin/.ssh/id_rsa 切换用户，只需要将 前一个秘钥使用 ssh-add 删除，将后一个秘钥使用 ssh-ad">
+<meta name="keywords" content="SSH,Shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSH 学习笔记">
+<meta property="og:url" content="https://beichensky.github.io/20190531/SSH-学习笔记/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="一、创建命令 1ssh-keygen -t rsa -C &quot;这里换上你的邮箱&quot;   二、ssh-add 命令 将 ssh 添加到 ssh-agent：ssh-add ~/admin/.ssh/id_rsa 将 ssh 从 ssh-agent 中删除：ssh-add -d ~/admin/.ssh/id_rsa 切换用户，只需要将 前一个秘钥使用 ssh-add 删除，将后一个秘钥使用 ssh-ad">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-03T09:27:33.916Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSH 学习笔记">
+<meta name="twitter:description" content="一、创建命令 1ssh-keygen -t rsa -C &quot;这里换上你的邮箱&quot;   二、ssh-add 命令 将 ssh 添加到 ssh-agent：ssh-add ~/admin/.ssh/id_rsa 将 ssh 从 ssh-agent 中删除：ssh-add -d ~/admin/.ssh/id_rsa 切换用户，只需要将 前一个秘钥使用 ssh-add 删除，将后一个秘钥使用 ssh-ad">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">SSH 学习笔记</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">SSH 学习笔记</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-05-31T08:59:02.000Z" itemprop="datePublished" class="page-time">
+  2019-05-31
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、创建命令"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、创建命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二、ssh-add-命令"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、ssh-add 命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三、ssh-命令"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、ssh 命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#四、查看-git-凭证"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、查看 git 凭证</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#五、其他命令"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、其他命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#六、可能遇到的问题"><span class="post-toc-number">6.</span> <span class="post-toc-text">六、可能遇到的问题</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#七、参考文档"><span class="post-toc-number">7.</span> <span class="post-toc-text">七、参考文档</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-SSH-学习笔记" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">SSH 学习笔记</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-05-31 16:59:02" datetime="2019-05-31T08:59:02.000Z" itemprop="datePublished">2019-05-31</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h3 id="一、创建命令"><a href="#一、创建命令" class="headerlink" title="一、创建命令"></a>一、创建命令</h3><ul>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"这里换上你的邮箱"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="二、ssh-add-命令"><a href="#二、ssh-add-命令" class="headerlink" title="二、ssh-add 命令"></a>二、ssh-add 命令</h3><ul>
+<li>将 ssh 添加到 ssh-agent：<code>ssh-add ~/admin/.ssh/id_rsa</code></li>
+<li>将 ssh 从 ssh-agent 中删除：<code>ssh-add -d ~/admin/.ssh/id_rsa</code></li>
+<li>切换用户，只需要将 前一个秘钥使用 <code>ssh-add</code> 删除，将后一个秘钥使用 <code>ssh-add</code> 添加上即可 </li>
+<li>检查当前秘钥：<code>ssh-add -l</code></li>
+<li><a href="http://man.linuxde.net/ssh-add" target="_blank" rel="noopener">更多命令</a></li>
+</ul>
+<h3 id="三、ssh-命令"><a href="#三、ssh-命令" class="headerlink" title="三、ssh 命令"></a>三、ssh 命令</h3><ul>
+<li>检查当前用户：<code>ssh -T git@github.com</code></li>
+<li>测试能不能连接到远程仓库服务器，并获取信息：<code>ssh 172.16.6.1</code></li>
+</ul>
+<h3 id="四、查看-git-凭证"><a href="#四、查看-git-凭证" class="headerlink" title="四、查看 git 凭证"></a>四、查看 git 凭证</h3><ul>
+<li>查看当前系统支持的git 凭证：<code>git help -a | grep credential</code></li>
+<li>查看自己电脑的全局配置：<code>git config —list</code></li>
+<li>查看本机的 git 凭证是否全部删除：<code>git config credential.helper</code>，如果出现osxkeychain， store 或者 cache 等文件说明没有全部删除，没有任何反应，说明凭证文件全部清除了</li>
+<li>查看凭证文件所在目录：<code>git config --show-origin --get credential.helper</code></li>
+<li>如果你的Mac上还有Xcode的话，那么Xcode中还会有一个.gitconfig文件，找出他然后打开，清空[credential]。</li>
+</ul>
+<h3 id="五、其他命令"><a href="#五、其他命令" class="headerlink" title="五、其他命令"></a>五、其他命令</h3><ul>
+<li>查看指定目录下指定文件是否存在：<code>ls -al 文件目录/文件</code><ul>
+<li>eg：<code>ls -al ~/admin/.ssh</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="六、可能遇到的问题"><a href="#六、可能遇到的问题" class="headerlink" title="六、可能遇到的问题"></a>六、可能遇到的问题</h3><ul>
+<li><p>The authenticity of host ‘github.com (52.74.223.119)’ can’t be established.</p>
+<p>RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.</p>
+<p>Are you sure you want to continue connecting (yes/no)?</p>
+<ul>
+<li>解决办法：直接输入 yes 即可，会在 .ssh 文件中生成一个 <code>known_hosts</code> 文件，之后在 clone 项目就不会出现这个问题了</li>
+</ul>
+</li>
+</ul>
+<h3 id="七、参考文档"><a href="#七、参考文档" class="headerlink" title="七、参考文档"></a>七、参考文档</h3><ul>
+<li><a href="https://blog.csdn.net/lqlqlq007/article/details/78983879" target="_blank" rel="noopener">git ssh key配置</a></li>
+<li><a href="https://blog.csdn.net/lqlqlq007/article/details/80613272" target="_blank" rel="noopener">git多用户切换</a></li>
+<li><a href="https://blog.csdn.net/qq_36602939/article/details/79794686" target="_blank" rel="noopener">多个git账号的登录与切换</a></li>
+<li><a href="https://www.jianshu.com/p/77b0340a02f3" target="_blank" rel="noopener">git 缓存密码导致的不能和远程仓库交互unable to access… 403错误</a></li>
+<li><a href="https://blog.csdn.net/m_wbcg/article/details/79156781" target="_blank" rel="noopener">git—如何解决The authenticity of host ‘gitee.com (120.55.226.24)’ can’t be established</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190531/SSH-学习笔记/" target="_blank" rel="external">https://beichensky.github.io/20190531/SSH-学习笔记/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SSH/">SSH</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shell/">Shell</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190531/SSH-学习笔记/&title=《SSH 学习笔记》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190531/SSH-学习笔记/&title=《SSH 学习笔记》 — 前端小栈&source=个人博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190531/SSH-学习笔记/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《SSH 学习笔记》 — 前端小栈&url=https://beichensky.github.io/20190531/SSH-学习笔记/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190531/SSH-学习笔记/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190709/jsbridge-native/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">使用 JSBridge 与原生 IOS、Android 进行交互（含H5、Android、IOS端代码，附 Demo）</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190528/JS-小数运算出现误差的解决办法/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JS 小数运算出现误差的两种解决办法</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190531/SSH-学习笔记/&title=《SSH 学习笔记》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190531/SSH-学习笔记/&title=《SSH 学习笔记》 — 前端小栈&source=个人博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190531/SSH-学习笔记/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《SSH 学习笔记》 — 前端小栈&url=https://beichensky.github.io/20190531/SSH-学习笔记/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190531/SSH-学习笔记/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190531/SSH-学习笔记/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

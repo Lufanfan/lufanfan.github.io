@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>JavaScript性能优化（五） | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript,性能优化,String,Regex">
+    <meta name="description" content="本文是阅读《高性能JavaScript》一书后，从 字符串和正则表达式 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+<meta name="keywords" content="JavaScript,性能优化,String,Regex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript性能优化（五）">
+<meta property="og:url" content="https://beichensky.github.io/20181220/js-hack5/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文是阅读《高性能JavaScript》一书后，从 字符串和正则表达式 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-21T13:00:03.584Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript性能优化（五）">
+<meta name="twitter:description" content="本文是阅读《高性能JavaScript》一书后，从 字符串和正则表达式 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JavaScript性能优化（五）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JavaScript性能优化（五）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-20T07:20:16.000Z" itemprop="datePublished" class="page-time">
+  2018-12-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#字符串连接"><span class="post-toc-number">1.</span> <span class="post-toc-text">字符串连接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用循环"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">使用循环</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用-或者-操作符"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">使用 + 或者 += 操作符</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Firefox-和编译器合并"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Firefox 和编译器合并</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#数据项合并（Array-prototype-join）"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">数据项合并（Array.prototype.join）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#String-prototype-concat"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">String.prototype.concat</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#正则表达式优化"><span class="post-toc-number">2.</span> <span class="post-toc-text">正则表达式优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#正则表达式处理的基本步骤"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">正则表达式处理的基本步骤</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#回溯"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">回溯</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#提高正则表达式效率的方法"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">提高正则表达式效率的方法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#何时不使用正则表达式"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">何时不使用正则表达式</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#去除字符串首尾空白"><span class="post-toc-number">3.</span> <span class="post-toc-text">去除字符串首尾空白</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用正则表达式去首尾空白"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">使用正则表达式去首尾空白</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#不使用正则表达式去除字符串首尾空白"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">不使用正则表达式去除字符串首尾空白</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#混合解决方案"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">混合解决方案</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#不同-trim-实现版本在各种浏览器上的性能"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">不同 trim 实现版本在各种浏览器上的性能</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#小结"><span class="post-toc-number">4.</span> <span class="post-toc-text">小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-js-hack5" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JavaScript性能优化（五）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-20 15:20:16" datetime="2018-12-20T07:20:16.000Z" itemprop="datePublished">2018-12-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文是阅读《高性能JavaScript》一书后，从 <strong><em>字符串和正则表达式</em></strong> 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！</p>
+<a id="more"></a>
+<hr>
+<h3 id="字符串连接"><a href="#字符串连接" class="headerlink" title="字符串连接"></a>字符串连接</h3><h4 id="使用循环"><a href="#使用循环" class="headerlink" title="使用循环"></a>使用循环</h4><ul>
+<li>向字符串末尾不断地添加内容。这种方式在某些浏览器中性能很糟糕</li>
+</ul>
+<h4 id="使用-或者-操作符"><a href="#使用-或者-操作符" class="headerlink" title="使用 + 或者 += 操作符"></a>使用 + 或者 += 操作符</h4><ul>
+<li><p>常用方法：<code>str += &quot;one&quot; + &quot;two&quot;</code><br>此代码运行会经历四个步骤</p>
+<ol>
+<li>在内存中穿件一个临时字符串</li>
+<li>连接后的字符串 “onetwo” 被赋值给临时字符串</li>
+<li>临时字符串与 str 当前的值连接</li>
+<li>结果赋值给 str</li>
+</ol>
+</li>
+<li><p>优化版本</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">str += <span class="string">"one"</span>;</span><br><span class="line">str += <span class="string">"two"</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更简化的写法：<code>str = str + &quot;one&quot; + &quot;two&quot;</code></p>
+</li>
+</ul>
+<blockquote>
+<p>下面这两种优化写法避免了产生临时字符串。但是如果改变连接顺序（例如：str = “one” + str + “two”），本优化将失效。<br>这与浏览器合并字符串时分配内存的方法有关。除 IE 外，其他浏览器会尝试为表达式左侧的字符串分配更多的内存，然后简单地将第二个字符串拷贝至它的欧威。如果在一个循环中，基础字符串位于最左端的位置，就可以避免重复拷贝一个逐渐变大的基础字符串。</p>
+</blockquote>
+<h4 id="Firefox-和编译器合并"><a href="#Firefox-和编译器合并" class="headerlink" title="Firefox 和编译器合并"></a>Firefox 和编译器合并</h4><p>  在复制变大是中所有要连接的字符串都属于编译期常量，Firefox 会在编译过程中自动合并它们。下面的方式可以看到这一过程：<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foldingDemo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str = <span class="string">"complie"</span> + <span class="string">"time"</span> + <span class="string">"folding"</span>;</span><br><span class="line">    str += <span class="string">"this"</span> + <span class="string">"works"</span> + <span class="string">"too"</span>;</span><br><span class="line">    str = str + <span class="string">"but"</span> + <span class="string">"not"</span> + <span class="string">"this"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(foldingDemo.toString);</span><br><span class="line"></span><br><span class="line"><span class="comment">// alert 出的结果</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foldingDemo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str = <span class="string">"complietimefolding"</span>;</span><br><span class="line">    str += <span class="string">"thisworkstoo"</span>;</span><br><span class="line">    str = str + <span class="string">"but"</span> + <span class="string">"not"</span> + <span class="string">"this"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>当字符串通过这种方式合并在一起时，由于运行期没有中间字符串，所以花在连接过程的时间和内存可以减少到零。这种做法非常不错，但它不是经常起作用，因为更多的时候是用运行期的数据构建字符串，而不是用编译期常量。</p>
+</blockquote>
+<h4 id="数据项合并（Array-prototype-join）"><a href="#数据项合并（Array-prototype-join）" class="headerlink" title="数据项合并（Array.prototype.join）"></a>数据项合并（Array.prototype.join）</h4><blockquote>
+<p>在大多数浏览器中，数据项合并比其他字符串连接方法更慢，但事实上，它却是IE7及更早版本浏览器中合并大量字符串 <strong>唯一高效的途径</strong>。<br>因为 IE7 的连接算法要求浏览器在循环过程中为逐渐增大的字符串不断复制并分配内存。结果是运行时间和内存消耗以平方关系递增。</p>
+</blockquote>
+<ul>
+<li><p>实例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">"I'm a thirty-five character string."</span>,</span><br><span class="line">    newStr = <span class="string">""</span>,</span><br><span class="line">    appends = <span class="number">5000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (appends --) &#123;</span><br><span class="line">    newStr += str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 IE 中优化</span></span><br><span class="line"><span class="keyword">var</span> str = <span class="string">"I'm a thirty-five character string."</span>,</span><br><span class="line">    strs = [],</span><br><span class="line">    newStr,</span><br><span class="line">    appends = <span class="number">5000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (appends --) &#123;</span><br><span class="line">    strs[strs.length] = str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">newStr = strs.join(<span class="string">""</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>性能提升原因：当把所有的数组元素连接在一起时，浏览器会分配足够的内存来存放整个字符串，而且不会多次拷贝最终字符串中相同的部分。</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="String-prototype-concat"><a href="#String-prototype-concat" class="headerlink" title="String.prototype.concat"></a>String.prototype.concat</h4><p>  这是最灵活的字符串合并方法，因为你可以用它只附加一个字符串，或者同事附加多个字符串，以至整个字符串数组。</p>
+<blockquote>
+<p>遗憾的是，在多数情况下，使用 concat 比使用简单的 + 和 += 稍慢，尤其是在 IE、Opear、Chrome 中慢的更明显。<br>此外，尽管使用 concat 合并字符串数组与前面讨论的数组项连接类似，但它通常更慢一些（Opera 除外），并且它也潜伏着灾难性的性能问题，就像在 IE7 及早期版本中使用 + 和 += 构建大字符串时那样。</p>
+</blockquote>
+<hr>
+<h3 id="正则表达式优化"><a href="#正则表达式优化" class="headerlink" title="正则表达式优化"></a>正则表达式优化</h3><h4 id="正则表达式处理的基本步骤"><a href="#正则表达式处理的基本步骤" class="headerlink" title="正则表达式处理的基本步骤"></a>正则表达式处理的基本步骤</h4><ol>
+<li>编译</li>
+<li>设置起始位置</li>
+<li>匹配每个正则表达式字元</li>
+<li>匹配成功或失败</li>
+</ol>
+<h4 id="回溯"><a href="#回溯" class="headerlink" title="回溯"></a>回溯</h4><p>回溯先关篇幅过长，文字描述过多，想要更多了解请参阅《高性能 JavaScript》第五章：“字符串和正则表达式”。第 89 页</p>
+<h4 id="提高正则表达式效率的方法"><a href="#提高正则表达式效率的方法" class="headerlink" title="提高正则表达式效率的方法"></a>提高正则表达式效率的方法</h4><ul>
+<li><p>关注如何让匹配更快失败<br>正则表达式处理慢往往是因为匹配失败过程慢，而不是匹配成功过程慢。如果你使用正则表达式匹配一个很大字符串的一小部分，情况更为严重，正则表达式匹配失败的位置比匹配成功的位置要多得多。如果 一个修改使正则表达式匹配更快但失败更慢（例如，通过增加所需的回溯次数去尝试所有分支的排列组合），这通常是一个失败的修改。</p>
+</li>
+<li><p>正则表达式以简单、必需的字元开始<br>最理想的情况是，一个正则表达式的起始字元应当尽可能快速地测试并排除明显不匹配的位置。用于此目的好的起始字元通常是一个锚（^或$），特定字符（例如 x 或\u363A），字符类（例如，[a-z]或速记符例如\d），和单词边界（\b）。如果可能的话，避免以分组或选择字元开头，避免顶级分支例如/one|two/，因为它强迫正则表达式识别多种起始字元。Firefox 对起始字元中使用的任何量词都很敏感，能够优化的更好，例如，以\s\s*替代\s+或\s{1,}。其他浏览器大多优化掉这些差异。</p>
+</li>
+<li><p>使用量词模式，使它们后年的字元互斥<br>当字符与字元毗邻或子表达式能够重叠匹配时，一个正则表达式尝试分解文本的路径数量将增加。为避免此现象，尽量具体化你的模板。当你想表达<code>“[^&quot;\r\n]*”</code>时不要使用<code>“.*?”</code>（依赖回溯）</p>
+</li>
+<li><p>减少分支数量，缩小分支范围<br>分支使用 | ，竖线，可能要求在字符串的每一个位置上测试所有的分支选项。你通常可通过使用字符类和选项组件减少对分支的需求，或将分支在正则表达式上的位置推后（允许到达分支之前的一些匹配尝试失败）。</p>
+</li>
+<li><p>使用非捕获组<br>捕获组花费时间和内存用于记录后向引用，并保持它们是最新的。如果你不需要一个后向引用，可通过使用非捕获组避免这种开销——例如，(?:…)替代（…）。有些人当他们需要一个完全匹配的后向引用时，喜欢将他们的正则表达式包装在一个捕获组中。这是不必要的，因为你能够通过其他方法引用完全匹配，例如，使用 regex.exec()返回数组的第一个元素，或替换字符串中的$&amp;。</p>
+</li>
+<li><p>只捕获感兴趣的文本以减少后处理<br>作为上一条的补充说明，如果你需要引用匹配的一部分，应当通过一切手段，捕获那些片断，再使用后向引用处理。例如，如果你写代码处理一个正则表达式所匹配的引号中的字符串内容，使用<code>/&quot;([^&quot;]*)&quot;/</code>然后使用一次后向引用，而不是使用<code>/&quot;[^&quot;]*&quot;/</code>然后从结果中手工剥离引号。当在循环中使用时，减少这方面的工作可以节省大量时间。</p>
+</li>
+<li><p>暴露必须的字元<br>为帮助正则表达式引擎在如何优化查询例程时做出明智的决策，应尽量简单地判断出那些必需的字元。当字元应用在子表达式或者分支中，正则表达式引擎很难判断他们是不是必需的，有些引擎并不作此方面努力。例如，正则表达式/^(ab|cd)/暴露它的字符串起始锚。IE 和 Chrome 会注意到这一点，并阻止正则表达式尝试查找字符串头端之后的匹配，从而使查找瞬间完成而不管字符串长度。但是，由于等价正则表达式/(^ab|^cd)/不暴露它的^锚，IE 无法应用同样的优化，最终无意义地搜索字符串并在每一个位置上匹配。</p>
+</li>
+<li><p>使用适当的量词<br>在确保正确等价的前提下，使用更合适的量词类型（基于预期的回溯次数）可以显著提高性能，尤其在处理长字符串时。</p>
+</li>
+<li><p>把正则表达式赋值给变量并重用它们<br>将正则表达式赋给变量以避免对它们重新编译。有人做的太过火，使用正则表达式缓存池，以避免对给定的模板和标记组合进行多次编译。不要过分忧虑，正则表达式编译很快，这样的缓存池所增加的负担可能超过他们所避免的。重要的是避免在循环体中重复编译正则表达式。</p>
+</li>
+<li><p>将复杂的正则表达式拆分成简单的片段（化繁为简）<br>尽量避免一个正则表达式做太多的工作。复杂的搜索问题需要条件逻辑，拆分为两个或多个正则表达式更容易解决，通常也更高效，每个正则表达式只在最后的匹配结果中执行查找。在一个模板中完成所有工作的正则表达式怪兽很难维护，而且容易引起回溯相关的问题。</p>
+</li>
+</ul>
+<h4 id="何时不使用正则表达式"><a href="#何时不使用正则表达式" class="headerlink" title="何时不使用正则表达式"></a>何时不使用正则表达式</h4><ul>
+<li>当只是搜索字面字符串时，可以使用 string 的 charAt()、slice()、 substr、substring() 等方法替代正则表达式</li>
+</ul>
+<hr>
+<h3 id="去除字符串首尾空白"><a href="#去除字符串首尾空白" class="headerlink" title="去除字符串首尾空白"></a>去除字符串首尾空白</h3><h4 id="使用正则表达式去首尾空白"><a href="#使用正则表达式去首尾空白" class="headerlink" title="使用正则表达式去首尾空白"></a>使用正则表达式去首尾空白</h4><ul>
+<li><p>第一种</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!Strig.prototype.trim) &#123;</span><br><span class="line">    <span class="comment">// trim 1</span></span><br><span class="line">    Strig.prototype.trim = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.replace(<span class="regexp">/^\s+/</span>, <span class="string">""</span>).replace(<span class="regexp">/\s+$/</span>, <span class="string">""</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试新方法</span></span><br><span class="line"><span class="comment">// 头部空白中包含了制表(\t)和换行符(\n)</span></span><br><span class="line"><span class="keyword">var</span> str = <span class="string">"\t\n test string "</span>.trim();</span><br><span class="line">alert(str == <span class="string">"test string"</span>); <span class="comment">// 弹出信息为 true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二种：使用分支功能合并了两个简单正则表达式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trim 2</span></span><br><span class="line">Strig.prototype.trim = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.replace(<span class="regexp">/^\s+|\s+$/g</span>, <span class="string">""</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在处理较长字符串时要比第一种使用两个简单的子表达式要慢。</p>
+</blockquote>
+</li>
+<li><p>第三种</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trim 3</span></span><br><span class="line">Strig.prototype.trim = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.replace(<span class="regexp">/^\s*([\s\S]*?)\s*$/</span>, <span class="string">"$1"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这个正则表达式的作用是匹配整个字符串，捕获从第一个到最后一个非空白字符串。在处理较长字符串时就变得很慢。</p>
+</blockquote>
+</li>
+<li><p>第四种</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trim 4</span></span><br><span class="line">Strig.prototype.trim = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">this</span>.replace(<span class="regexp">/^\s*([\s\S]*\S)?\s*$/</span>, <span class="string">"$1"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这个与第三种类似，但是考虑到性能原因，它把惰性量词替换成了一个贪婪量词。速度很快，甚至超过第一种使用两个子表达式的方案。（除非字符串里的尾部空白比其他文字还多）。但是这个方案在 Firefox 和 Opera 9 中相当慢。因此，第一种方案目前仍是最好的跨浏览器方案。</p>
+</blockquote>
+</li>
+<li><p>第五种</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trim 5</span></span><br><span class="line"><span class="built_in">String</span>.prototype.trim = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.replace(<span class="regexp">/^\s*(\S*(\s+\S+)\s*$/</span>), <span class="string">"$1"</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>无论在何种情况下，这种方案都是上述所有方法中最慢的。</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>使用正则表达式去除空白时的缺陷：当字符串的末尾有一小段空白时，正则表达式会陷入疯狂工作状态，这是因为正则表达式很好的去除了字符串头部的空白，但它们却不能同样快速地去除长字符串尾部的空白。</p>
+</blockquote>
+<h4 id="不使用正则表达式去除字符串首尾空白"><a href="#不使用正则表达式去除字符串首尾空白" class="headerlink" title="不使用正则表达式去除字符串首尾空白"></a>不使用正则表达式去除字符串首尾空白</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trim 6</span></span><br><span class="line"><span class="built_in">String</span>.prototype.trim = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">    <span class="keyword">var</span> start = <span class="number">0</span>, </span><br><span class="line">        end = <span class="keyword">this</span>.length - <span class="number">1</span>, </span><br><span class="line">        ws = <span class="string">" \n\r\t\f\x0b\xa0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u202f\u205f\u3000\ufeff"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (ws.indexOf(<span class="keyword">this</span>.charAt(start)) &gt; <span class="number">-1</span>) &#123; </span><br><span class="line">        start++; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (end &gt; start &amp;&amp; ws.indexOf(<span class="keyword">this</span>.charAt(end)) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">        end--; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.slice(start, end + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>不使用正则表达式去除字符串首尾空白时的缺陷：不宜用来处理前后打断的空白字符。因为通过循环遍历字符串来确定白字符的效率比不上正则表达式使用的优化后的搜索代码。</p>
+</blockquote>
+<h4 id="混合解决方案"><a href="#混合解决方案" class="headerlink" title="混合解决方案"></a>混合解决方案</h4><p>使用正则表达式方法过滤头部空白，用非正则表达式的方法过滤尾部字符。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trim 7</span></span><br><span class="line"><span class="built_in">String</span>.prototype.trim = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str = <span class="keyword">this</span>.replace(<span class="regexp">/^\s+/</span>, <span class="string">""</span>),</span><br><span class="line">        end = str.length - <span class="number">1</span>,</span><br><span class="line">        ws  = <span class="regexp">/\s/</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (ws.test(str.charAt(end))) &#123;</span><br><span class="line">        end --;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> str.slice(<span class="number">0</span>, end + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这种混合方法在过来吧一小段空白时速度非常快，在处理头部有很多空白或者仅由空白组成的字符串时，也没有性能风险（尽管在处理尾部长空白时仍然存在不足）。</p>
+</blockquote>
+<h4 id="不同-trim-实现版本在各种浏览器上的性能"><a href="#不同-trim-实现版本在各种浏览器上的性能" class="headerlink" title="不同 trim 实现版本在各种浏览器上的性能"></a>不同 trim 实现版本在各种浏览器上的性能</h4><table>
+<thead>
+<tr>
+<th style="text-align:left">浏览器类别</th>
+<th style="text-align:left">Trim1</th>
+<th style="text-align:left">Trim2</th>
+<th style="text-align:left">Trim3</th>
+<th style="text-align:left">Trim4</th>
+<th style="text-align:left">Trim5</th>
+<th style="text-align:left">Trim6</th>
+<th style="text-align:left">Trim6    </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">IE 7</td>
+<td style="text-align:left">80/80</td>
+<td style="text-align:left">315/312</td>
+<td style="text-align:left">547/539</td>
+<td style="text-align:left">36/42</td>
+<td style="text-align:left">218/224</td>
+<td style="text-align:left">14/1015</td>
+<td style="text-align:left">18/409</td>
+</tr>
+<tr>
+<td style="text-align:left">IE 8</td>
+<td style="text-align:left">70/70</td>
+<td style="text-align:left">252/256</td>
+<td style="text-align:left">512/425</td>
+<td style="text-align:left">26/30</td>
+<td style="text-align:left">216/222</td>
+<td style="text-align:left">4/334</td>
+<td style="text-align:left">12/205</td>
+</tr>
+<tr>
+<td style="text-align:left">Firefox 3</td>
+<td style="text-align:left">136/147</td>
+<td style="text-align:left">164/174</td>
+<td style="text-align:left">650/600</td>
+<td style="text-align:left">1098/1525</td>
+<td style="text-align:left">1416/1488</td>
+<td style="text-align:left">21/151</td>
+<td style="text-align:left">20/144</td>
+</tr>
+<tr>
+<td style="text-align:left">Firefox 3.5</td>
+<td style="text-align:left">130/147</td>
+<td style="text-align:left">157/172</td>
+<td style="text-align:left">500/510</td>
+<td style="text-align:left">1004/1437</td>
+<td style="text-align:left">1344/1394</td>
+<td style="text-align:left">21/332</td>
+<td style="text-align:left">18/50</td>
+</tr>
+<tr>
+<td style="text-align:left">Safari 3.2.3</td>
+<td style="text-align:left">253/253</td>
+<td style="text-align:left">424/425</td>
+<td style="text-align:left">351/359</td>
+<td style="text-align:left">27/29</td>
+<td style="text-align:left">541/554</td>
+<td style="text-align:left">2/140</td>
+<td style="text-align:left">5/80</td>
+</tr>
+<tr>
+<td style="text-align:left">Safari 4</td>
+<td style="text-align:left">37/37</td>
+<td style="text-align:left">33/31</td>
+<td style="text-align:left">69/68</td>
+<td style="text-align:left">32/33</td>
+<td style="text-align:left">510/514</td>
+<td style="text-align:left">&lt;0.5/29</td>
+<td style="text-align:left">4/18</td>
+</tr>
+<tr>
+<td style="text-align:left">Opera 9.64</td>
+<td style="text-align:left">494/517</td>
+<td style="text-align:left">731/748</td>
+<td style="text-align:left">9066/9601</td>
+<td style="text-align:left">901/955</td>
+<td style="text-align:left">1953/2016</td>
+<td style="text-align:left">&lt;0.5/210</td>
+<td style="text-align:left">20/241</td>
+</tr>
+<tr>
+<td style="text-align:left">Opera 10</td>
+<td style="text-align:left">75/75</td>
+<td style="text-align:left">94/100</td>
+<td style="text-align:left">360/370</td>
+<td style="text-align:left">46/46</td>
+<td style="text-align:left">514/514</td>
+<td style="text-align:left">2/186</td>
+<td style="text-align:left">12/198</td>
+</tr>
+<tr>
+<td style="text-align:left">Chrome 2</td>
+<td style="text-align:left">78/78</td>
+<td style="text-align:left">66/68</td>
+<td style="text-align:left">100/101</td>
+<td style="text-align:left">59/59</td>
+<td style="text-align:left">140/142</td>
+<td style="text-align:left">1/37</td>
+<td style="text-align:left">24/55</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>报告时间以毫秒为单位，是修剪一个大字符串（40KB）100次所用的时间，每个字符串以 10 个空格开头，以 1000 个空格结尾</li>
+<li>trim 1 方案测试时关闭 /\s\s*$\优化</li>
+<li>trim 5 方案测试时关闭非捕获组优化</li>
+</ul>
+<hr>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>密集的字符串操作和草率地编写正则表达式可能产生严重的性能障碍，下面的的优化方案可以帮助你避免这些常见的陷阱：</p>
+<ul>
+<li><p>当连接数量巨大或尺寸巨大的字符串时，数组项合并是唯一在 IE7 及更早版本中性能合理的方法</p>
+</li>
+<li><p>如果不考虑 IE7 及更早版本的性能，数组向合并是最慢的字符串链接方法之一。推荐使用简单的 + 或者 += 操作符替代，避免不必要的中间字符串</p>
+</li>
+<li><p>回溯既是正则表达式匹配功能的基本组成部分，也是正则表达式的低效之源</p>
+</li>
+<li><p>回溯失控发生在正则表达式本应快速匹配的地方，但因为某些特殊的字符串匹配动作导致运行缓慢甚至浏览器崩溃。避免这个问题的方法是：使相邻的字元互斥，避免嵌套两次对同一字符串的相同部分多次匹配，通过重复利用预查的原子组去除不必要的回溯</p>
+</li>
+<li><p>提高正则表达式效率的各种手段会有助于正则表达式更快的匹配，并在非匹配位置上花更少的时间</p>
+</li>
+<li><p>正则表达式并不总是完成工作的最佳工具，尤其当你只搜索字面字符串的时候</p>
+</li>
+<li><p>尽管有许多方法可以去除字符串的首尾空白，但使用两个简单的正则表达式（一个用来去除头部空白，一个用来去除尾部空白）来去除大量字符串内容能提供一个简洁而跨浏览器的方法。从字符串末尾开始循环向前搜索第一个非空白字符，或者将此技术同正则表达式结合起来，会提供一个更好的替代方案，它很少受到字符串长度的影响</p>
+</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20181220/js-hack5/" target="_blank" rel="external">https://beichensky.github.io/20181220/js-hack5/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Regex/">Regex</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/String/">String</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181220/js-hack5/&title=《JavaScript性能优化（五）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181220/js-hack5/&title=《JavaScript性能优化（五）》 — 前端小栈&source=本文是阅读《高性能JavaScript》一书后，从 字符串和正则表达式 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181220/js-hack5/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript性能优化（五）》 — 前端小栈&url=https://beichensky.github.io/20181220/js-hack5/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181220/js-hack5/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20181220/js-hack6/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JavaScript性能优化（六）</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20181219/js-hack4/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript性能优化（四）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181220/js-hack5/&title=《JavaScript性能优化（五）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181220/js-hack5/&title=《JavaScript性能优化（五）》 — 前端小栈&source=本文是阅读《高性能JavaScript》一书后，从 字符串和正则表达式 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181220/js-hack5/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript性能优化（五）》 — 前端小栈&url=https://beichensky.github.io/20181220/js-hack5/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181220/js-hack5/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20181220/js-hack5/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

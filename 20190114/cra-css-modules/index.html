@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>在 Create React App 中使用 CSS Modules | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="React,CSS Modules">
+    <meta name="description" content="本文介绍了如何在 Create React App 脚手架中使用 CSS Modules 的两种方式">
+<meta name="keywords" content="React,CSS Modules">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Create React App 中使用 CSS Modules">
+<meta property="og:url" content="https://beichensky.github.io/20190114/cra-css-modules/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文介绍了如何在 Create React App 脚手架中使用 CSS Modules 的两种方式">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://beichensky.github.io/images/cra/cra-css-modules.png">
+<meta property="og:updated_time" content="2019-02-17T03:48:50.857Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在 Create React App 中使用 CSS Modules">
+<meta name="twitter:description" content="本文介绍了如何在 Create React App 脚手架中使用 CSS Modules 的两种方式">
+<meta name="twitter:image" content="https://beichensky.github.io/images/cra/cra-css-modules.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">在 Create React App 中使用 CSS Modules</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">在 Create React App 中使用 CSS Modules</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-01-14T08:02:02.000Z" itemprop="datePublished" class="page-time">
+  2019-01-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前提条件"><span class="post-toc-number">1.</span> <span class="post-toc-text">前提条件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#先使用-create-react-app-命令下载一个脚手架工程，安装命令："><span class="post-toc-number">1.1.</span> <span class="post-toc-text">先使用 create-react-app 命令下载一个脚手架工程，安装命令：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#运行项目"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">运行项目</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用-CSS-Module-的第一种方式"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用 CSS Module 的第一种方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方式"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">方式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#用法"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">用法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#编写一个-css-文件：Button-module-css"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">编写一个 css 文件：Button.module.css</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在编写一个普通的-css-文件：another-stylesheet-css"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">在编写一个普通的 css 文件：another-stylesheet.css</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在-js-文件中使用-CSS-Modules-的方式进行引用：Button-js"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">在 js 文件中使用 CSS Modules 的方式进行引用：Button.js</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在浏览器中查看效果"><span class="post-toc-number">2.2.4.</span> <span class="post-toc-text">在浏览器中查看效果</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用-CSS-Module-的第二种方式"><span class="post-toc-number">3.</span> <span class="post-toc-text">使用 CSS Module 的第二种方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方式-1"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">方式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#用法-1"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">用法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#编写一个-css-文件：Button-css"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">编写一个 css 文件：Button.css</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#再编写一个普通的-css-文件：another-stylesheet-css"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">再编写一个普通的 css 文件：another-stylesheet.css</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在-js-文件中使用-CSS-Modules-的方式进行引用：Button-js-1"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">在 js 文件中使用 CSS Modules 的方式进行引用：Button.js</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在浏览器中查看效果-1"><span class="post-toc-number">3.2.4.</span> <span class="post-toc-text">在浏览器中查看效果</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意"><span class="post-toc-number">4.</span> <span class="post-toc-text">注意</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-cra-css-modules" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">在 Create React App 中使用 CSS Modules</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-01-14 16:02:02" datetime="2019-01-14T08:02:02.000Z" itemprop="datePublished">2019-01-14</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文介绍了如何在 Create React App 脚手架中使用 CSS Modules 的两种方式</p>
+<a id="more"></a>
+<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><blockquote>
+<p>请先进行全局安装 create-react-app 插件哈，安装命令：npm install create-react-app -g</p>
+</blockquote>
+<h3 id="先使用-create-react-app-命令下载一个脚手架工程，安装命令："><a href="#先使用-create-react-app-命令下载一个脚手架工程，安装命令：" class="headerlink" title="先使用 create-react-app 命令下载一个脚手架工程，安装命令："></a>先使用 create-react-app 命令下载一个脚手架工程，安装命令：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 npx</span></span><br><span class="line">$ npx create-react-app my-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 npm </span></span><br><span class="line">$ npm init npx create-react-app my-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 yarn</span></span><br><span class="line">$ yarn create react-app my-app</span><br></pre></td></tr></table></figure>
+<h3 id="运行项目"><a href="#运行项目" class="headerlink" title="运行项目"></a>运行项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> my-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 npm</span></span><br><span class="line">$ npm start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者使用yarn</span></span><br><span class="line"><span class="comment"># yarn start</span></span><br></pre></td></tr></table></figure>
+<p>在浏览器中输入 <code>http://localhost:3000</code> 查看项目效果</p>
+<hr>
+<h2 id="使用-CSS-Module-的第一种方式"><a href="#使用-CSS-Module-的第一种方式" class="headerlink" title="使用 CSS Module 的第一种方式"></a>使用 CSS Module 的第一种方式</h2><blockquote>
+<p>create-react-app 中内置了使用 CSS Modules 的配置，当前方式就是使用 create-react-app 内置的用法</p>
+</blockquote>
+<h3 id="方式"><a href="#方式" class="headerlink" title="方式"></a>方式</h3><blockquote>
+<p>将所有的 .css/.lee/.scss 等样式文件都修改成 .module.css/.module.less/.module.scss 等。即可使用 CSS Modules 的方式进行引入使用了。</p>
+</blockquote>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><h4 id="编写一个-css-文件：Button-module-css"><a href="#编写一个-css-文件：Button-module-css" class="headerlink" title="编写一个 css 文件：Button.module.css"></a>编写一个 css 文件：Button.module.css</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.error</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在编写一个普通的-css-文件：another-stylesheet-css"><a href="#在编写一个普通的-css-文件：another-stylesheet-css" class="headerlink" title="在编写一个普通的 css 文件：another-stylesheet.css"></a>在编写一个普通的 css 文件：another-stylesheet.css</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.error</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在-js-文件中使用-CSS-Modules-的方式进行引用：Button-js"><a href="#在-js-文件中使用-CSS-Modules-的方式进行引用：Button-js" class="headerlink" title="在 js 文件中使用 CSS Modules 的方式进行引用：Button.js"></a>在 js 文件中使用 CSS Modules 的方式进行引用：Button.js</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">'./Button.module.css'</span>; <span class="comment">// 使用 CSS Modules 的方式引入</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./another-stylesheet.css'</span>; <span class="comment">// 普通引入</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Button</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="comment">// reference as a js object</span></span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#123;styles.error&#125;</span>&gt;</span>Error Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在浏览器中查看效果"><a href="#在浏览器中查看效果" class="headerlink" title="在浏览器中查看效果"></a>在浏览器中查看效果</h4><p>此时 Button 组件的背景颜色是红色，但是字体颜色却不是红色，因为使用了 Css Modules 之后，普通的 css 样式就不起效果了，需要用全局的方式编写才可以(:global)。<br>最后添加到元素上的样式结果为：<code>&lt;button class=&quot;Button_error_ax7yz&quot;&gt;Error Button&lt;/button&gt;</code></p>
+<hr>
+<h2 id="使用-CSS-Module-的第二种方式"><a href="#使用-CSS-Module-的第二种方式" class="headerlink" title="使用 CSS Module 的第二种方式"></a>使用 CSS Module 的第二种方式</h2><h3 id="方式-1"><a href="#方式-1" class="headerlink" title="方式"></a>方式</h3><ul>
+<li><p>在命令行运行 <code>npm run eject</code> 命令</p>
+<blockquote>
+<p>此命令会将脚手架中隐藏的配置都展示出来，此过程不可逆</p>
+</blockquote>
+</li>
+<li><p>运行完成之后，打开 config 目录下的 webpack.config.js 文件，找到 <code>test: cssRegex</code> 这一行</p>
+</li>
+<li><p>在 use 属性执行的方法中添加 <code>modules: true</code>，如下图：<br><img src="/images/cra/cra-css-modules.png" alt="添加 modules 属性"></p>
+</li>
+</ul>
+<h3 id="用法-1"><a href="#用法-1" class="headerlink" title="用法"></a>用法</h3><blockquote>
+<p>和第一种方式的用法一致，只是不需要在 css 文件后面加 .module 后缀了</p>
+</blockquote>
+<h4 id="编写一个-css-文件：Button-css"><a href="#编写一个-css-文件：Button-css" class="headerlink" title="编写一个 css 文件：Button.css"></a>编写一个 css 文件：Button.css</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.error</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="再编写一个普通的-css-文件：another-stylesheet-css"><a href="#再编写一个普通的-css-文件：another-stylesheet-css" class="headerlink" title="再编写一个普通的 css 文件：another-stylesheet.css"></a>再编写一个普通的 css 文件：another-stylesheet.css</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.error</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在-js-文件中使用-CSS-Modules-的方式进行引用：Button-js-1"><a href="#在-js-文件中使用-CSS-Modules-的方式进行引用：Button-js-1" class="headerlink" title="在 js 文件中使用 CSS Modules 的方式进行引用：Button.js"></a>在 js 文件中使用 CSS Modules 的方式进行引用：Button.js</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">'./Button.css'</span>; <span class="comment">// 可以直接使用 CSS Modules 的方式引入了</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./another-stylesheet.css'</span>; <span class="comment">// 普通引入</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Button</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="comment">// reference as a js object</span></span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#123;styles.error&#125;</span>&gt;</span>Error Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在浏览器中查看效果-1"><a href="#在浏览器中查看效果-1" class="headerlink" title="在浏览器中查看效果"></a>在浏览器中查看效果</h4><p>此时 Button 组件的背景颜色是红色，但是字体颜色却不是红色，因为使用了 Css Modules 之后，普通的 css 样式就不起效果了，需要用全局的方式编写才可以(:global)。<br>最后添加到元素上的样式结果为：<code>&lt;button class=&quot;Button_error_ax7yz&quot;&gt;Error Button&lt;/button&gt;</code></p>
+<p><strong>如想使用第二种方式对 sass 和 less 也使用 CSS Modules 的方式进行引用，则类似的在 sass 和 less 解析配置上也添加<code>modules: true</code> 即可。</strong></p>
+<hr>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><blockquote>
+<p>默认 create-react-app 脚手架不能直接使用 sass 和 less 直接编写 css，需要先进行相应配置。</p>
+</blockquote>
+<p>关于如何在 create-react-app 脚手架中启用 sass 和 less 语法，可参考我的下一篇文章：</p>
+<p><strong><a href="https://juejin.im/post/5c3d67066fb9a049f06a8323" target="_blank" rel="noopener">在 Create React App 中启用 Sass 和 Less</a>。</strong></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190114/cra-css-modules/" target="_blank" rel="external">https://beichensky.github.io/20190114/cra-css-modules/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS-Modules/">CSS Modules</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190114/cra-css-modules/&title=《在 Create React App 中使用 CSS Modules》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190114/cra-css-modules/&title=《在 Create React App 中使用 CSS Modules》 — 前端小栈&source=本文介绍了如何在 Create React App 脚手架中使用 CSS Modules 的两种方式" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190114/cra-css-modules/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在 Create React App 中使用 CSS Modules》 — 前端小栈&url=https://beichensky.github.io/20190114/cra-css-modules/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190114/cra-css-modules/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190115/cra-sass-less/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">在 Create React App 中启用 Sass 和 Less</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190109/redux-devtools/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用 redux-devtools-extension 查看 Redux 中状态变化</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190114/cra-css-modules/&title=《在 Create React App 中使用 CSS Modules》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190114/cra-css-modules/&title=《在 Create React App 中使用 CSS Modules》 — 前端小栈&source=本文介绍了如何在 Create React App 脚手架中使用 CSS Modules 的两种方式" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190114/cra-css-modules/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在 Create React App 中使用 CSS Modules》 — 前端小栈&url=https://beichensky.github.io/20190114/cra-css-modules/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190114/cra-css-modules/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190114/cra-css-modules/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

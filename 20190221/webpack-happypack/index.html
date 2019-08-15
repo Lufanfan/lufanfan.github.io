@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>使用 happypack 提升 Webpack 项目构建速度 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Webpack,Externals">
+    <meta name="description" content="本文简单介绍了 Happypack 的简单使用，不了解的同学可以进来看一看。也许会有所帮助。  Happypack 作用在使用 Webpack 对项目进行构建时，会对大量文件进行解析和处理。当文件数量变多之后，Webpack 构件速度就会变慢。由于运行在 Node.js 之上的 Webpack 是单线程模型的，所以 Webpack 需要处理的任务要一个一个进行操作。 而 Happypack 的作用">
+<meta name="keywords" content="Webpack,Externals">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 happypack 提升 Webpack 项目构建速度">
+<meta property="og:url" content="https://beichensky.github.io/20190221/webpack-happypack/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文简单介绍了 Happypack 的简单使用，不了解的同学可以进来看一看。也许会有所帮助。  Happypack 作用在使用 Webpack 对项目进行构建时，会对大量文件进行解析和处理。当文件数量变多之后，Webpack 构件速度就会变慢。由于运行在 Node.js 之上的 Webpack 是单线程模型的，所以 Webpack 需要处理的任务要一个一个进行操作。 而 Happypack 的作用">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-03T09:27:33.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 happypack 提升 Webpack 项目构建速度">
+<meta name="twitter:description" content="本文简单介绍了 Happypack 的简单使用，不了解的同学可以进来看一看。也许会有所帮助。  Happypack 作用在使用 Webpack 对项目进行构建时，会对大量文件进行解析和处理。当文件数量变多之后，Webpack 构件速度就会变慢。由于运行在 Node.js 之上的 Webpack 是单线程模型的，所以 Webpack 需要处理的任务要一个一个进行操作。 而 Happypack 的作用">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">使用 happypack 提升 Webpack 项目构建速度</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">使用 happypack 提升 Webpack 项目构建速度</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-02-21T02:58:55.000Z" itemprop="datePublished" class="page-time">
+  2019-02-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/Webpack/">Webpack</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Happypack-作用"><span class="post-toc-number">1.</span> <span class="post-toc-text">Happypack 作用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Happypack-的使用"><span class="post-toc-number">2.</span> <span class="post-toc-text">Happypack 的使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#安装"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">安装</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用（三步操作即可完成）"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">使用（三步操作即可完成）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、安装完成之后引入-HappyPack"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">一、安装完成之后引入 HappyPack</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、将常用的-loader-替换为-happypack-loader"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">二、将常用的 loader 替换为 happypack/loader</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、创建-HappyPack-插件"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">三、创建 HappyPack 插件</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Happypack-示例"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Happypack 示例</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用单个-loader-时"><span class="post-toc-number">2.3.1.</span> <span class="post-toc-text">使用单个 loader 时</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用多个-loader-时"><span class="post-toc-number">2.3.2.</span> <span class="post-toc-text">使用多个 loader 时</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Happypack-配置项"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">Happypack 配置项</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#个人总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">个人总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#本文-Demo-地址"><span class="post-toc-number">4.</span> <span class="post-toc-text">本文 Demo 地址</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-webpack-happypack" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">使用 happypack 提升 Webpack 项目构建速度</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-02-21 10:58:55" datetime="2019-02-21T02:58:55.000Z" itemprop="datePublished">2019-02-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/Webpack/">Webpack</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文简单介绍了 Happypack 的简单使用，不了解的同学可以进来看一看。也许会有所帮助。</p>
+<hr>
+<h2 id="Happypack-作用"><a href="#Happypack-作用" class="headerlink" title="Happypack 作用"></a>Happypack 作用</h2><p>在使用 Webpack 对项目进行构建时，会对大量文件进行解析和处理。当文件数量变多之后，Webpack 构件速度就会变慢。由于运行在 Node.js 之上的 Webpack 是单线程模型的，所以 Webpack 需要处理的任务要一个一个进行操作。</p>
+<p>而 Happypack 的作用就是将文件解析任务分解成多个子进程并发执行。子进程处理完任务后再将结果发送给主进程。所以可以大大提升 Webpack 的项目构件速度</p>
+<blockquote>
+<p>由于 JavaScript 是单线程模型，要想发挥多核 CPU 的能力，只能通过多进程去实现，而无法通过多线程实现。</p>
+</blockquote>
+<p>本文项目代码地址：<strong><a href="https://github.com/beichensky/webpack-demo/tree/master/webpack-happypack-demo" target="_blank" rel="noopener">webpack-happypack-demo</a></strong></p>
+<p>欢迎 Star！</p>
+<hr>
+<h2 id="Happypack-的使用"><a href="#Happypack-的使用" class="headerlink" title="Happypack 的使用"></a>Happypack 的使用</h2><p>Happypack 只是作用在 loader 上，使用多个进程同时对文件进行编译。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install happypack --save-dev</span><br></pre></td></tr></table></figure>
+<h3 id="使用（三步操作即可完成）"><a href="#使用（三步操作即可完成）" class="headerlink" title="使用（三步操作即可完成）"></a>使用（三步操作即可完成）</h3><h4 id="一、安装完成之后引入-HappyPack"><a href="#一、安装完成之后引入-HappyPack" class="headerlink" title="一、安装完成之后引入 HappyPack"></a>一、安装完成之后引入 HappyPack</h4><p>webpack.config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HappyPack = <span class="built_in">require</span>(<span class="string">'happypack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="二、将常用的-loader-替换为-happypack-loader"><a href="#二、将常用的-loader-替换为-happypack-loader" class="headerlink" title="二、将常用的 loader 替换为 happypack/loader"></a>二、将常用的 <code>loader</code> 替换为 <code>happypack/loader</code></h4><p>webpack.config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HappyPack = <span class="built_in">require</span>(<span class="string">'happypack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">module</span>: &#123;</span><br><span class="line">        rules: [</span><br><span class="line">            test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">            <span class="comment">// use: ['babel-loader?cacheDirectory'] 之前是使用这种方式直接使用 loader</span></span><br><span class="line">            <span class="comment">// 现在用下面的方式替换成 happypack/loader，并使用 id 指定创建的 HappyPack 插件</span></span><br><span class="line">            use: [<span class="string">'happypack/loader?id=babel'</span>],</span><br><span class="line">            <span class="comment">// 排除 node_modules 目录下的文件</span></span><br><span class="line">            exclude: <span class="regexp">/node_modules/</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="三、创建-HappyPack-插件"><a href="#三、创建-HappyPack-插件" class="headerlink" title="三、创建 HappyPack 插件"></a>三、创建 HappyPack 插件</h4><p>webpack.config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HappyPack = <span class="built_in">require</span>(<span class="string">'happypack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">module</span>: &#123;</span><br><span class="line">        rules: [</span><br><span class="line">            test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">            <span class="comment">// use: ['babel-loader?cacheDirectory'] 之前是使用这种方式直接使用 loader</span></span><br><span class="line">            <span class="comment">// 现在用下面的方式替换成 happypack/loader，并使用 id 指定创建的 HappyPack 插件</span></span><br><span class="line">            use: [<span class="string">'happypack/loader?id=babel'</span>],</span><br><span class="line">            <span class="comment">// 排除 node_modules 目录下的文件</span></span><br><span class="line">            exclude: <span class="regexp">/node_modules/</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">        ...,</span><br><span class="line">        <span class="keyword">new</span> HappyPack(&#123;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">             * 必须配置</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="comment">// id 标识符，要和 rules 中指定的 id 对应起来</span></span><br><span class="line">            id: <span class="string">'babel'</span>,</span><br><span class="line">            <span class="comment">// 需要使用的 loader，用法和 rules 中 Loader 配置一样</span></span><br><span class="line">            <span class="comment">// 可以直接是字符串，也可以是对象形式</span></span><br><span class="line">            loaders: [<span class="string">'babel-loader?cacheDirectory'</span>]</span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样 Happypack 的使用就配置完了，运行项目，可以看到控制台打印如下提示：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Happy[babel]: Version: 5.0.1. Threads: 3</span><br><span class="line">Happy[babel]: All <span class="built_in">set</span>; signaling webpack to proceed.</span><br></pre></td></tr></table></figure></p>
+<p>说明配置生效了。</p>
+<h3 id="Happypack-示例"><a href="#Happypack-示例" class="headerlink" title="Happypack 示例"></a><code>Happypack</code> 示例</h3><h4 id="使用单个-loader-时"><a href="#使用单个-loader-时" class="headerlink" title="使用单个 loader 时"></a>使用单个 <code>loader</code> 时</h4><p>上面的使用中就是单个 loader 时的配置，这里再写一次</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">exports.module = &#123;</span><br><span class="line">    rules: [</span><br><span class="line">        &#123;</span><br><span class="line">            test: <span class="regexp">/.js$/</span>,</span><br><span class="line">            use: <span class="string">'happypack/loader?id=babel'</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">exports.plugins = [</span><br><span class="line">    <span class="keyword">new</span> HappyPack(&#123;</span><br><span class="line">        id: <span class="string">'babel'</span>,</span><br><span class="line">        loaders: [ <span class="string">'babel-loader?cacheDirectory'</span> ]</span><br><span class="line">    &#125;);</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<h4 id="使用多个-loader-时"><a href="#使用多个-loader-时" class="headerlink" title="使用多个 loader 时"></a>使用多个 <code>loader</code> 时</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">exports.module = &#123;</span><br><span class="line">    rules: [</span><br><span class="line">        &#123;</span><br><span class="line">            test: <span class="regexp">/\.(css|less)$/</span>,</span><br><span class="line">            use: <span class="string">'happypack/loader?id=styles'</span></span><br><span class="line">        &#125;,</span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">exports.plugins = [</span><br><span class="line">    <span class="keyword">new</span> HappyPack(&#123;</span><br><span class="line">        id: <span class="string">'styles'</span>,</span><br><span class="line">        loaders: [ <span class="string">'style-loader'</span>, <span class="string">'css-loader'</span>, <span class="string">'less-loader'</span> ]</span><br><span class="line">    &#125;);</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<h3 id="Happypack-配置项"><a href="#Happypack-配置项" class="headerlink" title="Happypack 配置项"></a><code>Happypack</code> 配置项</h3><ul>
+<li><p><code>id</code>: <code>String</code>类型，对于 <code>happypack</code> 来说唯一的 id 标识，用来关联 <code>module.rules</code> 中的 <code>happypack/loader</code></p>
+</li>
+<li><p><code>loaders</code>: <code>Array</code>类型，设置各种 <code>loader</code> 配置，与  <code>module.rules</code> 中 <code>loader</code> 的配置用法一样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 无配置时，可直接使用字符串形式</span></span><br><span class="line"><span class="keyword">new</span> HappyPack(&#123;</span><br><span class="line">    id: <span class="string">'babel'</span>,</span><br><span class="line">    loaders: [<span class="string">'babel-loader?cacheDirectory'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 有配置项时，可以使用对象形式</span></span><br><span class="line"><span class="keyword">new</span> HappyPack(&#123;</span><br><span class="line">    id: <span class="string">'babel'</span>,</span><br><span class="line">    loaders: [</span><br><span class="line">        &#123;</span><br><span class="line">            loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">            options: &#123;</span><br><span class="line">                cacheDirectory: <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>threads</code>: <code>Number</code>类型，指示对应 loader 编译源文件时同时使用的进程数，默认是 3</p>
+</li>
+<li><p><code>threadPool</code>: <code>HappyThreadPool</code>对象，代表共享进程池，即多个 HappyPack 实例都使用同一个共享进程池中的子进程去处理任务，以防止资源占用过多</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个 HappyThreadPool，作为所有 loader 共用的线程池</span></span><br><span class="line"><span class="keyword">const</span> happyThreadPool = HappyPack.ThreadPool(&#123; <span class="attr">size</span>: <span class="number">5</span> &#125;);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="keyword">new</span> HappyPack(&#123;</span><br><span class="line">    id: <span class="string">'babel'</span>,</span><br><span class="line">    loaders: [</span><br><span class="line">        &#123;</span><br><span class="line">            loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">            options: &#123;</span><br><span class="line">                cacheDirectory: <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    threadPool: happyThreadPool</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>verbose</code>: 是否允许 <code>happypack</code> 输出日志，默认是 <code>true</code></p>
+</li>
+<li><p><code>verboseWhenProfiling</code>: 是否允许 <code>happypack</code> 在运行 <code>webpack --profile</code> 时输出日志，默认是 <code>false</code></p>
+</li>
+<li><p><code>debug</code>: 是否允许 <code>happypack</code> 打印 log 分析信息，默认是 <code>false</code></p>
+</li>
+</ul>
+<hr>
+<h2 id="个人总结"><a href="#个人总结" class="headerlink" title="个人总结"></a>个人总结</h2><blockquote>
+<p>个人的一点小总结，不足以作为参考依据</p>
+</blockquote>
+<ul>
+<li><p>在测试 Demo 或者小型项目中，使用 <code>happypack</code> 对项目构建速度的提升不明显，甚至会增加项目的构建速度</p>
+</li>
+<li><p>在比较复杂的大中型项目中，使用 <code>happypack</code> 才能看到比较明显的构建速度提升</p>
+</li>
+<li><p>因此，在使用 <code>happypack</code> 时请根据具体情况进行选择，如果反而延长了项目的构建速度，就没有必要使用 <code>happypack</code></p>
+</li>
+</ul>
+<hr>
+<h2 id="本文-Demo-地址"><a href="#本文-Demo-地址" class="headerlink" title="本文 Demo 地址"></a>本文 Demo 地址</h2><p>本文项目代码地址：<strong><a href="https://github.com/beichensky/webpack-demo/tree/master/webpack-happypack-demo" target="_blank" rel="noopener">webpack-happypack-demo</a></strong></p>
+<p>欢迎 Star！</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190221/webpack-happypack/" target="_blank" rel="external">https://beichensky.github.io/20190221/webpack-happypack/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Externals/">Externals</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Webpack/">Webpack</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190221/webpack-happypack/&title=《使用 happypack 提升 Webpack 项目构建速度》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190221/webpack-happypack/&title=《使用 happypack 提升 Webpack 项目构建速度》 — 前端小栈&source=个人博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190221/webpack-happypack/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用 happypack 提升 Webpack 项目构建速度》 — 前端小栈&url=https://beichensky.github.io/20190221/webpack-happypack/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190221/webpack-happypack/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190308/cra-ts-react/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190215/dllplugin/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用 Webpack 的 DllPlugin 提升项目构建速度</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190221/webpack-happypack/&title=《使用 happypack 提升 Webpack 项目构建速度》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190221/webpack-happypack/&title=《使用 happypack 提升 Webpack 项目构建速度》 — 前端小栈&source=个人博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190221/webpack-happypack/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用 happypack 提升 Webpack 项目构建速度》 — 前端小栈&url=https://beichensky.github.io/20190221/webpack-happypack/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190221/webpack-happypack/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190221/webpack-happypack/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

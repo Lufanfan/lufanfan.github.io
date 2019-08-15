@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>PureComponent 使用注意事项以及源码解析 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="React,PureComponent">
+    <meta name="description" content="本文简要介绍了 React 中 PureComponent 与 Component 的区别以及使用时需要注意的问题，并在后面附上了源码解析，希望对有疑惑的朋友提供一些帮助。">
+<meta name="keywords" content="React,PureComponent">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PureComponent 使用注意事项以及源码解析">
+<meta property="og:url" content="https://beichensky.github.io/20190116/pure-component/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文简要介绍了 React 中 PureComponent 与 Component 的区别以及使用时需要注意的问题，并在后面附上了源码解析，希望对有疑惑的朋友提供一些帮助。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://beichensky.github.io/images/pure-component/pure.png">
+<meta property="og:image" content="https://beichensky.github.io/images/pure-component/pure.png">
+<meta property="og:updated_time" content="2019-02-17T03:48:50.857Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PureComponent 使用注意事项以及源码解析">
+<meta name="twitter:description" content="本文简要介绍了 React 中 PureComponent 与 Component 的区别以及使用时需要注意的问题，并在后面附上了源码解析，希望对有疑惑的朋友提供一些帮助。">
+<meta name="twitter:image" content="https://beichensky.github.io/images/pure-component/pure.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">PureComponent 使用注意事项以及源码解析</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">PureComponent 使用注意事项以及源码解析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-01-16T09:42:05.000Z" itemprop="datePublished" class="page-time">
+  2019-01-16
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/React/">React</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#对比-Component-和-PureComponent"><span class="post-toc-number">2.</span> <span class="post-toc-text">对比 Component 和 PureComponent</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#继承-Component-创建组件"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">继承 Component 创建组件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#App-js"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">App.js</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#浏览器中界面"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">浏览器中界面</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#测试"><span class="post-toc-number">2.1.3.</span> <span class="post-toc-text">测试</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#继承-PureComponent"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">继承 PureComponent</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#App-js-1"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">App.js</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#浏览器中界面-1"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">浏览器中界面</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#测试-1"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">测试</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用时可能遇到的问题"><span class="post-toc-number">2.2.4.</span> <span class="post-toc-text">使用时可能遇到的问题</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#PureComponent-源码解析"><span class="post-toc-number">3.</span> <span class="post-toc-text">PureComponent 源码解析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ReactBaseClasses-js-（Github-代码位置）"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">ReactBaseClasses.js （Github 代码位置）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ReactFiberClassComponent-js-（Github-代码位置）"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">ReactFiberClassComponent.js （Github 代码位置）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#shallowEqual-js-（Github-代码位置）"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">shallowEqual.js （Github 代码位置）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#objectIs-js-（Github-代码位置）"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">objectIs.js （Github 代码位置）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PureComponent-源码分析总结"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">PureComponent 源码分析总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">4.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-pure-component" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">PureComponent 使用注意事项以及源码解析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-01-16 17:42:05" datetime="2019-01-16T09:42:05.000Z" itemprop="datePublished">2019-01-16</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/React/">React</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文简要介绍了 React 中 PureComponent 与 Component 的区别以及使用时需要注意的问题，并在后面附上了源码解析，希望对有疑惑的朋友提供一些帮助。</p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>先介绍一下 PureComponent，平时我们创建 React 组件一般是继承于 Component，而 PureComponent 相当于是一个更纯净的 Component，对更新前后的数据进行了一次浅比较。只有在数据真正发生改变时，才会对组件重新进行 render。这样的话可以大大提高组件的性能。</p>
+<hr>
+<h2 id="对比-Component-和-PureComponent"><a href="#对比-Component-和-PureComponent" class="headerlink" title="对比 Component 和 PureComponent"></a>对比 Component 和 PureComponent</h2><h3 id="继承-Component-创建组件"><a href="#继承-Component-创建组件" class="headerlink" title="继承 Component 创建组件"></a>继承 Component 创建组件</h3><h4 id="App-js"><a href="#App-js" class="headerlink" title="App.js"></a>App.js</h4><p>里面的 state 有两个属性，text 属性是基本数据类型，todo 属性是引用类型。针对这两种数据类型分别进行对比</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component, PureComponent &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./App.css'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">        <span class="keyword">super</span>(props)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.state = &#123;</span><br><span class="line">            text: <span class="string">'Hello'</span>,</span><br><span class="line">            todo: &#123;</span><br><span class="line">                id: <span class="number">1</span>,</span><br><span class="line">                message: <span class="string">'学习 React'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 修改 state 中 text 属性的函数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    changeText = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">            text: <span class="string">'World'</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 修改 state 中 todo 对象的函数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    changeTodo = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">            id: <span class="number">1</span>,</span><br><span class="line">            message: <span class="string">'学习 Vue'</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">        <span class="comment">// 打印 log，查看渲染情况</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'tag'</span>, <span class="string">'render'</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">const</span> &#123; text, todo &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;div className=<span class="string">"App"</span>&gt;</span><br><span class="line">                &lt;div&gt;</span><br><span class="line">                    &lt;span&gt;文字：&#123; text &#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;button onClick=&#123; this.changeText &#125;&gt;更改文字&lt;/</span>button&gt;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">                &lt;br /</span>&gt;</span><br><span class="line">                &lt;div&gt;</span><br><span class="line">                    &lt;span&gt;计划：&#123; todo.message &#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">                    &lt;button onClick=&#123; this.changeTodo &#125;&gt;更改计划&lt;/</span>button&gt;</span><br><span class="line">                &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>div&gt;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<h4 id="浏览器中界面"><a href="#浏览器中界面" class="headerlink" title="浏览器中界面"></a>浏览器中界面</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/images/pure-component/pure.png" alt="界面显示" title="">
+                </div>
+                <div class="image-caption">界面显示</div>
+            </figure>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>运行项目，打开控制台，此时看到只有一个 log：<code>tag render</code></p>
+<ul>
+<li><p>点击 5 次 ·更改文字· 按钮，可以看到控制台再次多打印了 5 次 log，浏览器中的 <code>Hello</code> 文字变成了 <code>World</code></p>
+</li>
+<li><p>点击 5 次 ·更改计划· 按钮，控制台一样多打印 5 次 log，浏览器中的 <code>学习 React</code> 计划变成了 <code>学习 Vue</code></p>
+</li>
+</ul>
+<p>分析一下，其实 5 次点击中只有一次是有效的，后来的数据其实并没有真正改变，但是由于依然使用了 setState()，所以还是会重新 render。所以这种模式是比较消耗性能的。</p>
+<h3 id="继承-PureComponent"><a href="#继承-PureComponent" class="headerlink" title="继承 PureComponent"></a>继承 PureComponent</h3><p>其实 PureComponent 用法也是和 Component 一样，只不过是将继承 Component 换成了 PureComponent。</p>
+<h4 id="App-js-1"><a href="#App-js-1" class="headerlink" title="App.js"></a>App.js</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="comment">// 上面的代码和之前一致</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">PureComponent</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 下面的代码也和之前一样</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<h4 id="浏览器中界面-1"><a href="#浏览器中界面-1" class="headerlink" title="浏览器中界面"></a>浏览器中界面</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/images/pure-component/pure.png" alt="界面显示" title="">
+                </div>
+                <div class="image-caption">界面显示</div>
+            </figure>
+<h4 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h4><p>和上面 Component 的测试方式一样</p>
+<ul>
+<li><p>点击 5 次 ·更改文字· 按钮，可以看到控制台只多打印了一次 log，浏览器中的 <code>Hello</code> 文字变成了 <code>World</code></p>
+</li>
+<li><p>点击 5 次 ·更改计划· 按钮，控制台只多打印了一次 log，浏览器中的 <code>学习 React</code> 计划变成了 <code>学习 Vue</code></p>
+</li>
+</ul>
+<blockquote>
+<p>由此可以看出，使用 PureComponent 还是比较节省性能的，即便是使用了 setState()，也会在数据真正改变时才会重新渲染组件</p>
+</blockquote>
+<h4 id="使用时可能遇到的问题"><a href="#使用时可能遇到的问题" class="headerlink" title="使用时可能遇到的问题"></a>使用时可能遇到的问题</h4><p>下面我们将代码中 <code>changeText</code> 和 <code>changeTodo</code> 方法修改一下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 修改 state 中 text 属性的函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">changeText = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> &#123; text &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">    text = <span class="string">'World'</span>;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">        text</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 修改 state 中 todo 对象的函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">changeTodo = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> &#123; todo &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">    todo.message = <span class="string">"学习 Vue"</span>;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">        todo</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时我们再重新测试一下：</p>
+<ul>
+<li><p>点击 ·更改文字· 按钮，控制台多打印一次 log，浏览器中的 <code>Hello</code> 文字变成了 <code>World</code></p>
+</li>
+<li><p><strong>注意：</strong>点击 ·更改计划· 按钮，控制台没有 log 打印，浏览器中的计划也没有发生改变</p>
+</li>
+</ul>
+<blockquote>
+<p>为什么代码修改之后，明明 todo 里的 message 属性也已经发生变化了，调用 setState()，却不进行渲染了呢？这是因为 PureComponent 在调用 shouldComponent 生命周期的时候，对数据进行了一次浅比较，判断数据是否发生改变，没发生改变，返回 false，改变了，就返回 true。那这个浅比较的机制是怎么做的呢？我们一起看下面源码解析，来分析一下。</p>
+</blockquote>
+<hr>
+<h2 id="PureComponent-源码解析"><a href="#PureComponent-源码解析" class="headerlink" title="PureComponent 源码解析"></a>PureComponent 源码解析</h2><h3 id="ReactBaseClasses-js-（Github-代码位置）"><a href="#ReactBaseClasses-js-（Github-代码位置）" class="headerlink" title="ReactBaseClasses.js （Github 代码位置）"></a>ReactBaseClasses.js （<a href="https://github.com/facebook/react/blob/master/packages/react/src/ReactBaseClasses.js" target="_blank" rel="noopener">Github 代码位置</a>）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ComponentDummy</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">ComponentDummy.prototype = Component.prototype;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Convenience component with default shallow equality check for sCU.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">PureComponent</span>(<span class="params">props, context, updater</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.props = props;</span><br><span class="line">    <span class="keyword">this</span>.context = context;</span><br><span class="line">    <span class="comment">// If a component has string refs, we will assign a different object later.</span></span><br><span class="line">    <span class="keyword">this</span>.refs = emptyObject;</span><br><span class="line">    <span class="keyword">this</span>.updater = updater || ReactNoopUpdateQueue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> pureComponentPrototype = (PureComponent.prototype = <span class="keyword">new</span> ComponentDummy());</span><br><span class="line">pureComponentPrototype.constructor = PureComponent;</span><br><span class="line"><span class="comment">// Avoid an extra prototype jump for these methods.</span></span><br><span class="line"><span class="built_in">Object</span>.assign(pureComponentPrototype, Component.prototype);</span><br><span class="line">pureComponentPrototype.isPureReactComponent = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<p>可以看到 PureComponent 的使用和 Component 一致，只时最后为其添加了一个 isPureReactComponent 属性。ComponentDummy 就是通过原型模拟继承的方式将 Component 原型中的方法和属性传递给了 PureComponent。同时为了避免原型链拉长导致属性查找的性能消耗，通过 Object.assign 把属性从 Component 拷贝了过来。</p>
+<p>但是这里只是 PureComponent 的声明创建，没有显示如何进行比较更新的，那我们继续看下面的代码。</p>
+<h3 id="ReactFiberClassComponent-js-（Github-代码位置）"><a href="#ReactFiberClassComponent-js-（Github-代码位置）" class="headerlink" title="ReactFiberClassComponent.js （Github 代码位置）"></a>ReactFiberClassComponent.js （<a href="https://github.com/facebook/react/blob/master/packages/react-reconciler/src/ReactFiberClassComponent.js" target="_blank" rel="noopener">Github 代码位置</a>）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkShouldComponentUpdate</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  workInProgress,</span></span></span><br><span class="line"><span class="function"><span class="params">  ctor,</span></span></span><br><span class="line"><span class="function"><span class="params">  oldProps,</span></span></span><br><span class="line"><span class="function"><span class="params">  newProps,</span></span></span><br><span class="line"><span class="function"><span class="params">  oldState,</span></span></span><br><span class="line"><span class="function"><span class="params">  newState,</span></span></span><br><span class="line"><span class="function"><span class="params">  nextContext,</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里根据上面 PureComponent 设置的属性 isPureReactComponent 判断一下，如果是 PureComponent，就会走里面的代码，将比较的值返回出去</span></span><br><span class="line">    <span class="keyword">if</span> (ctor.prototype &amp;&amp; ctor.prototype.isPureReactComponent) &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            !shallowEqual(oldProps, newProps) || !shallowEqual(oldState, newState)</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>shallowEqual 是在 <code>share</code> 包中一个工具方法，看一下其中的内部实现吧。</p>
+<h3 id="shallowEqual-js-（Github-代码位置）"><a href="#shallowEqual-js-（Github-代码位置）" class="headerlink" title="shallowEqual.js （Github 代码位置）"></a>shallowEqual.js （<a href="https://github.com/facebook/react/blob/master/packages/shared/shallowEqual.js" target="_blank" rel="noopener">Github 代码位置</a>）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> is <span class="keyword">from</span> <span class="string">'./objectIs'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> hasOwnProperty = <span class="built_in">Object</span>.prototype.hasOwnProperty;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Performs equality by iterating through keys on an object and returning false</span></span><br><span class="line"><span class="comment"> * when any key has values which are not strictly equal between the arguments.</span></span><br><span class="line"><span class="comment"> * Returns true when the values of all keys are strictly equal.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shallowEqual</span>(<span class="params">objA: mixed, objB: mixed</span>): <span class="title">boolean</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (is(objA, objB)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    <span class="keyword">typeof</span> objA !== <span class="string">'object'</span> ||</span><br><span class="line">    objA === <span class="literal">null</span> ||</span><br><span class="line">    <span class="keyword">typeof</span> objB !== <span class="string">'object'</span> ||</span><br><span class="line">    objB === <span class="literal">null</span></span><br><span class="line">  ) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> keysA = <span class="built_in">Object</span>.keys(objA);</span><br><span class="line">  <span class="keyword">const</span> keysB = <span class="built_in">Object</span>.keys(objB);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (keysA.length !== keysB.length) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Test for A's keys different from B.</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keysA.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (</span><br><span class="line">      !hasOwnProperty.call(objB, keysA[i]) ||</span><br><span class="line">      !is(objA[keysA[i]], objB[keysA[i]])</span><br><span class="line">    ) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> shallowEqual;</span><br></pre></td></tr></table></figure>
+<p>这里面还调用了 is 函数，这个函数也是 share 包中的一个工具方法。</p>
+<h3 id="objectIs-js-（Github-代码位置）"><a href="#objectIs-js-（Github-代码位置）" class="headerlink" title="objectIs.js （Github 代码位置）"></a>objectIs.js （<a href="https://github.com/facebook/react/blob/master/packages/shared/objectIs.js" target="_blank" rel="noopener">Github 代码位置</a>）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * inlined Object.is polyfill to avoid requiring consumers ship their own</span></span><br><span class="line"><span class="comment"> * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">is</span>(<span class="params">x: any, y: any</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        (x === y &amp;&amp; (x !== <span class="number">0</span> || <span class="number">1</span> / x === <span class="number">1</span> / y)) || (x !== x &amp;&amp; y !== y) <span class="comment">// eslint-disable-line no-self-compare</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> is;</span><br></pre></td></tr></table></figure>
+<h3 id="PureComponent-源码分析总结"><a href="#PureComponent-源码分析总结" class="headerlink" title="PureComponent 源码分析总结"></a>PureComponent 源码分析总结</h3><p>由上面的源码可以发现，其实 PureComponent 和 Component 中的方法和属性基本一致，只不过 PureComponent 多了一个 isPureReactComponent 为 true 的属性。在 checkShouldComponentUpdate 的时候，会根据这个属性判断是否是 PureComponent，如果是的话，就会根据 !shallowEqual(oldProps, newProps) || !shallowEqual(oldState, newState) 这个判断语句的返回值作为更新依据。所以，查看了 shallowEqual 和 objectIs 的文件源码，我们可以得出 PureComponent 的浅比较结论：</p>
+<ul>
+<li><p>先通过 is 函数判断两个参数是否相同，相同则直接返回 ture，也就是不更新组件。</p>
+<ul>
+<li>根据 objectIs.js 代码可知，基本属性类型判断值是否相同（包括 NaN），引用数据类型判断是否是一个引用</li>
+</ul>
+</li>
+<li><p>若 is 函数判断为 false，则判断两个参数是否都为 对象 且 都不为 null，若任意一个 不是对象 或 任意一个为 null，直接返回 false，也就是更新组件</p>
+</li>
+<li><p>若前两个判断都通过，则可断定两个参数皆为对象，此时判断它们 keys 的长度是否相同，若不同，则直接返回 false，即更新组件</p>
+</li>
+<li><p>若 keys 长度不同，则对两个对象中的第一层属性进行比较，若都相同，则返回 true，有任一属性不同，则返回 false</p>
+</li>
+</ul>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>阅读源码之后，可以发现之前我们修改了 changeTodo 方法的逻辑之后，为什么数据改变，组件却依然不更新的原因了。是因为修改的是同一个对象，所以 PureComponent 默认引用相同，不进行组件更新，所以才会出现这个陷阱，在使用的过程中希望大家注意一下这个问题。</p>
+<ul>
+<li><p>对比 PureComponent 和 Component，可以发现，PureComponent 性能更高，一般有几次有效修改，就会进行几次有效更新</p>
+</li>
+<li><p>为了避免出现上面所说的陷阱问题，建议将 React 和 Immutable.js 配合使用，因为 Immutable.js 中的数据类型都是不可变，每个变量都不会相同。但是由于 Immutable 学习成本较高，可以在项目中使用 immutability-helper 插件，也能实现类似的功能。关于 immutability-helper 的使用，可以查看我的另一篇博客：<a href="http://localhost:4000/20190104/immutability-helper-basic/" target="_blank" rel="noopener">immutability-helper 插件的基本使用</a></p>
+</li>
+<li><p>虽然 PureComponent 提高了性能，但是也只是对数据进行了一次浅比较，最能优化性能的方式还是自己在 shouldComponent 生命周期中实现响应逻辑</p>
+</li>
+<li><p>关于 PureComponent 浅比较的总结可以查看上面的<a href="#PureComponent-源码分析总结">PureComponent 源码分析总结</a></p>
+</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190116/pure-component/" target="_blank" rel="external">https://beichensky.github.io/20190116/pure-component/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PureComponent/">PureComponent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190116/pure-component/&title=《PureComponent 使用注意事项以及源码解析》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190116/pure-component/&title=《PureComponent 使用注意事项以及源码解析》 — 前端小栈&source=本文简要介绍了 React 中 PureComponent 与 Component 的区别以及使用时需要注意的问题，并在后面附上了源码解析，希望对有疑惑的..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190116/pure-component/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《PureComponent 使用注意事项以及源码解析》 — 前端小栈&url=https://beichensky.github.io/20190116/pure-component/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190116/pure-component/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190121/react-component-lifecycle/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">React 组件生命周期详解</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190115/cra-sass-less/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">在 Create React App 中启用 Sass 和 Less</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190116/pure-component/&title=《PureComponent 使用注意事项以及源码解析》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190116/pure-component/&title=《PureComponent 使用注意事项以及源码解析》 — 前端小栈&source=本文简要介绍了 React 中 PureComponent 与 Component 的区别以及使用时需要注意的问题，并在后面附上了源码解析，希望对有疑惑的..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190116/pure-component/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《PureComponent 使用注意事项以及源码解析》 — 前端小栈&url=https://beichensky.github.io/20190116/pure-component/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190116/pure-component/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190116/pure-component/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

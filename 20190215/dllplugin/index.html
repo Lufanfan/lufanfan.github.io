@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>使用 Webpack 的 DllPlugin 提升项目构建速度 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Webpack,DllPlugin">
+    <meta name="description" content="本文介绍了 Webpack 中 DllPlugin 插件的使用，以及配合使用 AddAssetHtmlPlugin 将构建好的 JS 文件插入到 html 页面中。">
+<meta name="keywords" content="Webpack,DllPlugin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 Webpack 的 DllPlugin 提升项目构建速度">
+<meta property="og:url" content="https://beichensky.github.io/20190215/dllplugin/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文介绍了 Webpack 中 DllPlugin 插件的使用，以及配合使用 AddAssetHtmlPlugin 将构建好的 JS 文件插入到 html 页面中。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-17T03:48:50.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 Webpack 的 DllPlugin 提升项目构建速度">
+<meta name="twitter:description" content="本文介绍了 Webpack 中 DllPlugin 插件的使用，以及配合使用 AddAssetHtmlPlugin 将构建好的 JS 文件插入到 html 页面中。">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">使用 Webpack 的 DllPlugin 提升项目构建速度</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">使用 Webpack 的 DllPlugin 提升项目构建速度</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-02-15T08:07:40.000Z" itemprop="datePublished" class="page-time">
+  2019-02-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/Webpack/">Webpack</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#本文-Demo-地址"><span class="post-toc-number">1.</span> <span class="post-toc-text">本文 Demo 地址</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DLLPlugin-和-DllReferencePlugin-简介"><span class="post-toc-number">2.</span> <span class="post-toc-text">DLLPlugin 和 DllReferencePlugin 简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在-Webpack-中进行使用"><span class="post-toc-number">3.</span> <span class="post-toc-text">在 Webpack 中进行使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#需要插件"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">需要插件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建项目"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">创建项目</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#找一个空文件夹，打开命令行，执行命令"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">找一个空文件夹，打开命令行，执行命令</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在-public-目录下创建-index-html-文件"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">在 public 目录下创建 index.html 文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在-src-目录下创建-index-js-文件"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">在 src 目录下创建 index.js 文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#当前项目目录结构"><span class="post-toc-number">3.2.4.</span> <span class="post-toc-text">当前项目目录结构</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用-DllPlugin-和-DllReferencePlugin（分为三步）"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">使用 DllPlugin 和 DllReferencePlugin（分为三步）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、先编写一个配置文件专门用来编译生成动态链接库（使用-DllPlugin）"><span class="post-toc-number">3.3.1.</span> <span class="post-toc-text">一、先编写一个配置文件专门用来编译生成动态链接库（使用 DllPlugin）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、编写配置文件用来打包项目（使用-DllReferencePlugin）"><span class="post-toc-number">3.3.2.</span> <span class="post-toc-text">二、编写配置文件用来打包项目（使用 DllReferencePlugin）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、在-index-html-文件中引入动态链接库"><span class="post-toc-number">3.3.3.</span> <span class="post-toc-text">三、在 index.html 文件中引入动态链接库</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#运行"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">运行</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DllPlugin-和-DllReferencePlugin-分别做了什么"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">DllPlugin 和 DllReferencePlugin 分别做了什么</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#lodash-dll-js"><span class="post-toc-number">3.5.1.</span> <span class="post-toc-text">lodash.dll.js</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#lodash-manifest-json"><span class="post-toc-number">3.5.2.</span> <span class="post-toc-text">lodash.manifest.json</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#add-asset-html-webpack-plugin-的使用"><span class="post-toc-number">4.</span> <span class="post-toc-text">add-asset-html-webpack-plugin 的使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#安装插件"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">安装插件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">使用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#运行项目"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">运行项目</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-dllplugin" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">使用 Webpack 的 DllPlugin 提升项目构建速度</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-02-15 16:07:40" datetime="2019-02-15T08:07:40.000Z" itemprop="datePublished">2019-02-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/Webpack/">Webpack</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文介绍了 Webpack 中 DllPlugin 插件的使用，以及配合使用 AddAssetHtmlPlugin 将构建好的 JS 文件插入到 html 页面中。</p>
+<a id="more"></a>
+<h2 id="本文-Demo-地址"><a href="#本文-Demo-地址" class="headerlink" title="本文 Demo 地址"></a>本文 Demo 地址</h2><p>本文项目代码位置：<strong><a href="https://github.com/beichensky/webpack-demo/tree/master/webpack-dll-demo" target="_blank" rel="noopener">源码地址</a></strong><br>欢迎 Star！</p>
+<hr>
+<h2 id="DLLPlugin-和-DllReferencePlugin-简介"><a href="#DLLPlugin-和-DllReferencePlugin-简介" class="headerlink" title="DLLPlugin 和 DllReferencePlugin 简介"></a>DLLPlugin 和 DllReferencePlugin 简介</h2><p>DLLPlugin 就是将包含大量复用模块且不会频繁更新的库进行编译，只需要编译一次，编译完成后存在指定的文件（这里可以称为动态链接库）中。在之后的构建过程中不会再对这些模块进行编译，而是直接使用 DllReferencePlugin 来引用动态链接库的代码。因此可以大大提高构建速度。一般会对常用的第三方模块使用这种方式，例如 react、react-dom、lodash 等等。只要这些模块不升级更新，这些动态链接库就不需要重新编译。</p>
+<hr>
+<h2 id="在-Webpack-中进行使用"><a href="#在-Webpack-中进行使用" class="headerlink" title="在 Webpack 中进行使用"></a>在 Webpack 中进行使用</h2><h3 id="需要插件"><a href="#需要插件" class="headerlink" title="需要插件"></a>需要插件</h3><p>Webpack 已经内置了对动态链接库的支持，需要通过两个内置插件的配合使用。它们分别是：</p>
+<ul>
+<li>DllPlugin 插件：用于打包出一个个单独的动态链接库文件</li>
+<li>DllReferencePlugin 插件：用于在主配置文件中去引入 DllPlugin 插件打包好的动态链接库文件</li>
+</ul>
+<h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><h4 id="找一个空文件夹，打开命令行，执行命令"><a href="#找一个空文件夹，打开命令行，执行命令" class="headerlink" title="找一个空文件夹，打开命令行，执行命令"></a>找一个空文件夹，打开命令行，执行命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建项目目录</span></span><br><span class="line">$ mkdir webpack-dll-demo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化 package.json 文件</span></span><br><span class="line">$ npm init -y </span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 src 文件夹</span></span><br><span class="line">$ mkdir src</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 public 文件夹</span></span><br><span class="line">$ mkdir public</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装需要用到的插件</span></span><br><span class="line">$ npm install webpack webpack-cli html-webpacl-plugin clean-webpacl-plugin friendly-errors-webpack-plugin -D</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 lodash 插件，用于演示 DllPlugin 用法</span></span><br><span class="line">$ npm install lodash</span><br></pre></td></tr></table></figure>
+<h4 id="在-public-目录下创建-index-html-文件"><a href="#在-public-目录下创建-index-html-文件" class="headerlink" title="在 public 目录下创建 index.html 文件"></a>在 public 目录下创建 index.html 文件</h4><p>index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Webpak DllPlugin 的使用<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"root"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="在-src-目录下创建-index-js-文件"><a href="#在-src-目录下创建-index-js-文件" class="headerlink" title="在 src 目录下创建 index.js 文件"></a>在 src 目录下创建 index.js 文件</h4><p>index.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; join &#125; <span class="keyword">from</span> <span class="string">'lodash'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createSpan</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> element = <span class="built_in">document</span>.createElement(<span class="string">'span'</span>);</span><br><span class="line">    element.innerHTML = join([<span class="string">'Hello'</span>, <span class="string">'DllPlugin'</span>], <span class="string">' , '</span>);</span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">document</span>.querySelector(<span class="string">'#root'</span>).appendChild(createSpan());</span><br></pre></td></tr></table></figure></p>
+<h4 id="当前项目目录结构"><a href="#当前项目目录结构" class="headerlink" title="当前项目目录结构"></a>当前项目目录结构</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">webpack-prod-demo</span><br><span class="line">|- /public</span><br><span class="line">  |- index.html</span><br><span class="line">|- /src</span><br><span class="line">  |- index.js</span><br><span class="line">|- package.json</span><br></pre></td></tr></table></figure>
+<h3 id="使用-DllPlugin-和-DllReferencePlugin（分为三步）"><a href="#使用-DllPlugin-和-DllReferencePlugin（分为三步）" class="headerlink" title="使用 DllPlugin 和 DllReferencePlugin（分为三步）"></a>使用 DllPlugin 和 DllReferencePlugin（分为三步）</h3><h4 id="一、先编写一个配置文件专门用来编译生成动态链接库（使用-DllPlugin）"><a href="#一、先编写一个配置文件专门用来编译生成动态链接库（使用-DllPlugin）" class="headerlink" title="一、先编写一个配置文件专门用来编译生成动态链接库（使用 DllPlugin）"></a>一、先编写一个配置文件专门用来编译生成动态链接库（使用 DllPlugin）</h4><p>webpack_dll.config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"><span class="keyword">const</span> CleanWebpaclPlugin = <span class="built_in">require</span>(<span class="string">'clean-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> FirendlyErrorePlugin = <span class="built_in">require</span>(<span class="string">'friendly-errors-webpack-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    mode: <span class="string">'production'</span>,</span><br><span class="line">    entry: &#123;</span><br><span class="line">        <span class="comment">// 将 lodash 模块作为入口编译成动态链接库</span></span><br><span class="line">        lodash: [<span class="string">'lodash'</span>]</span><br><span class="line">    &#125;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        <span class="comment">// 指定生成文件所在目录</span></span><br><span class="line">        <span class="comment">// 由于每次打包生产环境时会清空 dist 文件夹，因此这里我将它们存放在了 public 文件夹下</span></span><br><span class="line">        path: path.resolve(__dirname, <span class="string">'public/vendor'</span>),</span><br><span class="line">        <span class="comment">// 指定文件名</span></span><br><span class="line">        filename: <span class="string">'[name].dll.js'</span>,</span><br><span class="line">        <span class="comment">// 存放动态链接库的全局变量名称，例如对应 lodash 来说就是 lodash_dll_lib</span></span><br><span class="line">        <span class="comment">// 这个名称需要与 DllPlugin 插件中的 name 属性值对应起来</span></span><br><span class="line">        <span class="comment">// 之所以在前面 _dll_lib 是为了防止全局变量冲突</span></span><br><span class="line">        library: <span class="string">'[name]_dll_lib'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> CleanWebpaclPlugin([<span class="string">'vendor'</span>], &#123;</span><br><span class="line">            root: path.resolve(__dirname, <span class="string">'public'</span>)</span><br><span class="line">        &#125;),</span><br><span class="line">        <span class="keyword">new</span> FirendlyErrorePlugin(),</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 接入 DllPlugin</span></span><br><span class="line">        <span class="keyword">new</span> webpack.DllPlugin(&#123;</span><br><span class="line">            <span class="comment">// 描述动态链接库的 manifest.json 文件输出时的文件名称</span></span><br><span class="line">            <span class="comment">// 由于每次打包生产环境时会清空 dist 文件夹，因此这里我将它们存放在了 public 文件夹下</span></span><br><span class="line">            path: path.join(__dirname, <span class="string">'public'</span>, <span class="string">'vendor'</span>, <span class="string">'[name].manifest.json'</span>),</span><br><span class="line">            <span class="comment">// 动态链接库的全局变量名称，需要和 output.library 中保持一致</span></span><br><span class="line">            <span class="comment">// 该字段的值也就是输出的 manifest.json 文件 中 name 字段的值</span></span><br><span class="line">            <span class="comment">// 例如 lodash.manifest.json 中就有 "name": "lodash_dll_lib"</span></span><br><span class="line">            name: <span class="string">'[name]_dll_lib'</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="二、编写配置文件用来打包项目（使用-DllReferencePlugin）"><a href="#二、编写配置文件用来打包项目（使用-DllReferencePlugin）" class="headerlink" title="二、编写配置文件用来打包项目（使用 DllReferencePlugin）"></a>二、编写配置文件用来打包项目（使用 DllReferencePlugin）</h4><p>webpack.config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"><span class="keyword">const</span> HTMLWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> CleanWebpaclPlugin = <span class="built_in">require</span>(<span class="string">'clean-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> FirendlyErrorePlugin = <span class="built_in">require</span>(<span class="string">'friendly-errors-webpack-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    mode: <span class="string">'production'</span>,</span><br><span class="line">    devtool: <span class="string">'source-map'</span>,</span><br><span class="line">    entry: <span class="string">'./src/index.js'</span>,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">        filename: <span class="string">'build-[hash:5].js'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> HTMLWebpackPlugin(&#123;</span><br><span class="line">            title: <span class="string">'Webpak DllPlugin 的使用'</span>,</span><br><span class="line">            template: <span class="string">'./public/index.html'</span></span><br><span class="line">        &#125;),</span><br><span class="line">        <span class="keyword">new</span> CleanWebpaclPlugin([<span class="string">'dist'</span>]),</span><br><span class="line">        <span class="keyword">new</span> FirendlyErrorePlugin(),</span><br><span class="line">        <span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">            <span class="string">'process.env.NODE_ENV'</span>: <span class="built_in">JSON</span>.stringify(<span class="string">'production'</span>)</span><br><span class="line">        &#125;),</span><br><span class="line">        <span class="comment">// 告诉 Webpack 使用了哪些动态链接库</span></span><br><span class="line">        <span class="keyword">new</span> webpack.DllReferencePlugin(&#123;</span><br><span class="line">            <span class="comment">// 描述 lodash 动态链接库的文件内容</span></span><br><span class="line">            manifest: <span class="built_in">require</span>(<span class="string">'./public/vendor/lodash.manifest.json'</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="三、在-index-html-文件中引入动态链接库"><a href="#三、在-index-html-文件中引入动态链接库" class="headerlink" title="三、在 index.html 文件中引入动态链接库"></a>三、在 index.html 文件中引入动态链接库</h4><p>由于动态链接库我们一般只编译一次，之后就不用编译，复用模块都被打包到了动态链接库中，因此入口的 index.js 文件中已经不包含这些模块了，所以要在 index.html 中单独引入。</p>
+<p>index.html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Webpak DllPlugin 的使用<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"root"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../public/vendor/lodash.dll.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><strong>注意</strong>：由于在打包项目的时候会清理掉 dist 文件，所以我将生成的动态链接库放到了 public 目录下，所以这里是引入 public 下的动态链接库。</p>
+</blockquote>
+<p>我们在 package.json 中添加两条指令：</p>
+<ul>
+<li>build：打包项目</li>
+<li>build:dll：编译生成动态链接库</li>
+</ul>
+<p>package.json<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">"scripts": &#123;</span><br><span class="line">    "build": "webpack --config webpack.config.js",</span><br><span class="line">    "build:dll": "webpack --config webpack_dll.config.js"</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>根据上面所说的三个步骤，Dll 的用法已经结束了。现在我们运行一下看看结果。</p>
+<p>打开命令行，执行命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成动态链接库，只需要运行一次这个指令，以后打包项目不需要再执行这个指令</span></span><br><span class="line">$ npm run build:dll</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打包项目</span></span><br><span class="line">$ npm run build</span><br></pre></td></tr></table></figure>
+<p>在浏览器中打开 dist 文件夹下的 index.html 文件，可以看到浏览器上出现：Hello , DllPlugin。说明项目配置成功。</p>
+<h3 id="DllPlugin-和-DllReferencePlugin-分别做了什么"><a href="#DllPlugin-和-DllReferencePlugin-分别做了什么" class="headerlink" title="DllPlugin 和 DllReferencePlugin 分别做了什么"></a>DllPlugin 和 DllReferencePlugin 分别做了什么</h3><p>运行 <code>npm run build:dll</code> 指令之后，可以看到项目中 public 目录下多出了一个 vendor 的文件夹，可以看到其中包含两个文件：</p>
+<ul>
+<li><code>lodash.dll.js</code>    里面包含 <code>lodash</code> 的基础运行环境，也就是 lodash 模块</li>
+<li><code>lodash.manifest.json</code>    也是由 DllPlugin 生成出，用于描述动态链接库文件中包含哪些模块</li>
+</ul>
+<h4 id="lodash-dll-js"><a href="#lodash-dll-js" class="headerlink" title="lodash.dll.js"></a>lodash.dll.js</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> lodash_dll_lib=...  <span class="comment">// 此处代码过多，进行省略</span></span><br></pre></td></tr></table></figure>
+<h4 id="lodash-manifest-json"><a href="#lodash-manifest-json" class="headerlink" title="lodash.manifest.json"></a>lodash.manifest.json</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"name"</span>:<span class="string">"lodash_dll_lib"</span>,<span class="attr">"content"</span>:&#123;<span class="attr">"./node_modules/lodash/lodash.js"</span>:&#123;<span class="attr">"id"</span>:<span class="number">1</span>,<span class="attr">"buildMeta"</span>:&#123;<span class="attr">"providedExports"</span>:<span class="literal">true</span>&#125;&#125;,<span class="attr">"./node_modules/webpack/buildin/global.js"</span>:&#123;<span class="attr">"id"</span>:<span class="number">2</span>,<span class="attr">"buildMeta"</span>:&#123;<span class="attr">"providedExports"</span>:<span class="literal">true</span>&#125;&#125;,<span class="attr">"./node_modules/webpack/buildin/module.js"</span>:&#123;<span class="attr">"id"</span>:<span class="number">3</span>,<span class="attr">"buildMeta"</span>:&#123;<span class="attr">"providedExports"</span>:<span class="literal">true</span>&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>对比之后可以明白</strong>：</p>
+<ul>
+<li><p>一个动态链接库文件中包含了大量模块的代码，这些模块存放在一个数组里，用数组的索引号作为 ID。 并且还通过 lodash_dll_lib 变量把自己暴露在了全局中，也就是可以通过 window.lodash_dll_lib 可以访问到它里面包含的模块</p>
+</li>
+<li><p>manifest.json 文件清楚地描述了与其对应的 dll.js 文件中包含了哪些模块，以及每个模块的路径和 ID</p>
+</li>
+</ul>
+<blockquote>
+<p>至此，Dll 的使用以及配置完成了。但是这里还有值得思考的地方：目前看来，项目可以正常运行，但是现在动态链接库是存放到 public 目录下的，如果我们需要将项目打包上线的话，如何能够让动态链接库自动也存放到 dist 目录下呢？如何在我们不手动添加脚本的情况下，自动将动态链接库引入到 index.html 文件中呢？如果有兴趣的话，可以继续往下来看一看配合 add-asset-html-webpack-plugin 的使用。</p>
+</blockquote>
+<hr>
+<h2 id="add-asset-html-webpack-plugin-的使用"><a href="#add-asset-html-webpack-plugin-的使用" class="headerlink" title="add-asset-html-webpack-plugin 的使用"></a>add-asset-html-webpack-plugin 的使用</h2><p>上面也已经说了，虽然 Dll 的使用和配置没有问题了，但是还不是很满意，打包的时候不能将动态链接库自动的存放到 dist 文件夹，也不能自动在 html 文件中引入动态链接库脚本。所以这时候 add-asset-html-webpack-plugin 就派上用场了。</p>
+<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install add-asset-html-webpack-plugin -D</span><br></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>在 webpack.config.js 文件中进行使用</p>
+<p>webpack.config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">...;</span><br><span class="line"><span class="keyword">const</span> AddAssetHtmlPlugin = <span class="built_in">require</span>(<span class="string">'add-asset-html-webpack-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    ...,</span><br><span class="line">    plugins: [</span><br><span class="line">        ...,</span><br><span class="line">        <span class="comment">// 该插件将把给定的 JS 或 CSS 文件添加到 webpack 配置的文件中，并将其放入资源列表 html webpack插件注入到生成的 html 中。</span></span><br><span class="line">        <span class="keyword">new</span> AddAssetHtmlPlugin([</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// 要添加到编译中的文件的绝对路径，以及生成的HTML文件。支持globby字符串</span></span><br><span class="line">                filepath: <span class="built_in">require</span>.resolve(path.resolve(__dirname, <span class="string">'public/vendor/lodash.dll.js'</span>)),</span><br><span class="line">                <span class="comment">// 文件输出目录</span></span><br><span class="line">                outputPath: <span class="string">'vendor'</span>,</span><br><span class="line">                <span class="comment">// 脚本或链接标记的公共路径</span></span><br><span class="line">                publicPath: <span class="string">'vendor'</span></span><br><span class="line">            &#125;</span><br><span class="line">        ])</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时可以删除 index.html 文件中手动引入的脚本了<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Webpak DllPlugin 的使用<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"root"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 删除下面这行引入脚本 --&gt;</span></span><br><span class="line">-    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../public/vendor/lodash.dll.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="运行项目"><a href="#运行项目" class="headerlink" title="运行项目"></a>运行项目</h3><p>打开命令行，执行命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打包项目</span></span><br><span class="line">$ npm run build</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>现在查看项目中 dist 文件夹，可以看到 public 目录下 vendor 文件夹中的 js 文件已经全部自动拷贝到 dist 目录中的 vendor 文件夹下了</p>
+</li>
+<li><p>打开 dist 文件夹中的 index.html 文件，可以看到已经自动将生成的脚本文件引入了</p>
+</li>
+<li><p>在浏览器中打开 index.html，可以看到 ‘Hello , DllPlugin’ 也能够正常显示</p>
+</li>
+</ul>
+<p>add-asset-html-webpack-plugin 更多配置请参考 github 地址：<strong><a href="https://github.com/SimenB/add-asset-html-webpack-plugin" target="_blank" rel="noopener">AddAssetHtmlPlugin 配置</a></strong></p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>Dll 动态链接库的使用可以提高项目构建速度，因为对于大量复用的模块可以提前进行编译，且只需要编译一次，之后的开发中，使用这些模块的地方都不会再重新进行编译</p>
+</li>
+<li><p>DllPlugin 和 DllReferencePlugin 需要配合使用</p>
+<ul>
+<li>DllPlugin 用于打包出一个个单独的动态链接库文件并生成对应的主清单文件用于描述动态链接库中包含哪些模块</li>
+<li>DllReferencePlugin 用于在主清单文件中去引入 DllPlugin 插件打包好的动态链接库文件</li>
+</ul>
+</li>
+<li><p>可以使用 AddAssetHtmlPlugin 将生成的动态链接库文件拷贝到出口文件夹下，然后 HTMLWebpackPlugin 就会自动的将脚本文件注入到生成的 html 文件中去</p>
+</li>
+<li><p><strong>注意：</strong>如想测试一下构建速度是否有提升，可以将 <code>webpack.config.js</code> 中的 DllReferencePlugin 和 AddAssetHtmlPlugin 使用注释起来，运行 <code>npm run build</code>，观察打包时间；再将注释打开，运行 <code>npm run build</code>，观察打包时间，进行对比，即可发现区别</p>
+<blockquote>
+<p>如是第一次打包，请先运行 <code>npm run build:dll</code> 生成动态链接库。</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>本文 Demo 地址：<strong><a href="https://github.com/beichensky/webpack-demo/tree/master/webpack-dll-demo" target="_blank" rel="noopener">源码地址</a></strong><br>欢迎 Star！</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190215/dllplugin/" target="_blank" rel="external">https://beichensky.github.io/20190215/dllplugin/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DllPlugin/">DllPlugin</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Webpack/">Webpack</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190215/dllplugin/&title=《使用 Webpack 的 DllPlugin 提升项目构建速度》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190215/dllplugin/&title=《使用 Webpack 的 DllPlugin 提升项目构建速度》 — 前端小栈&source=本文介绍了 Webpack 中 DllPlugin 插件的使用，以及配合使用 AddAssetHtmlPlugin 将构建好的 JS 文件插入到 html..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190215/dllplugin/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用 Webpack 的 DllPlugin 提升项目构建速度》 — 前端小栈&url=https://beichensky.github.io/20190215/dllplugin/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190215/dllplugin/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190221/webpack-happypack/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">使用 happypack 提升 Webpack 项目构建速度</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190201/webpack-prod/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用 Webpack 进行生产环境配置（附 Demo）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190215/dllplugin/&title=《使用 Webpack 的 DllPlugin 提升项目构建速度》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190215/dllplugin/&title=《使用 Webpack 的 DllPlugin 提升项目构建速度》 — 前端小栈&source=本文介绍了 Webpack 中 DllPlugin 插件的使用，以及配合使用 AddAssetHtmlPlugin 将构建好的 JS 文件插入到 html..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190215/dllplugin/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用 Webpack 的 DllPlugin 提升项目构建速度》 — 前端小栈&url=https://beichensky.github.io/20190215/dllplugin/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190215/dllplugin/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190215/dllplugin/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

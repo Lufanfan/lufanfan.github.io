@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Express 的基本使用 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Node,Express">
+    <meta name="description" content="本文从安装、用法、常用 API 等方面简单介绍了 Express 的用法。">
+<meta name="keywords" content="Node,Express">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Express 的基本使用">
+<meta property="og:url" content="https://beichensky.github.io/20190801/express-note/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文从安装、用法、常用 API 等方面简单介绍了 Express 的用法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-03T09:27:33.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Express 的基本使用">
+<meta name="twitter:description" content="本文从安装、用法、常用 API 等方面简单介绍了 Express 的用法。">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Express 的基本使用</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Express 的基本使用</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-08-01T15:29:30.000Z" itemprop="datePublished" class="page-time">
+  2019-08-01
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Node/">Node</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Node/Express/">Express</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、Express-简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、Express 简介</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、Express-是什么？"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">1、Express 是什么？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、为什么使用-Express"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">2、为什么使用 Express</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、安装与使用"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、安装与使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、安装"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1、安装</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、基本使用"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2、基本使用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、路由"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">3、路由</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#基本路由"><span class="post-toc-number">2.3.1.</span> <span class="post-toc-text">基本路由</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特殊路由：app-all-path-callback"><span class="post-toc-number">2.3.2.</span> <span class="post-toc-text">特殊路由：app.all([path,] callback)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#app-use-path-callback"><span class="post-toc-number">2.3.3.</span> <span class="post-toc-text">app.use([path,] callback)</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、路由拆分：express-Router-options"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">4、路由拆分：express.Router([options])</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5、访问静态资源"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">5、访问静态资源</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6、中间件的使用"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">6、中间件的使用</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、常用-API"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、常用 API</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、Application"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">1、Application</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#app-listen（-port-，host-，backlog-，callback-）"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">app.listen（[port [，host [，backlog]]] [，callback]）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#app-METHOD（path，callback-，callback-）"><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">app.METHOD（path，callback [，callback ...]）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#app-path"><span class="post-toc-number">3.1.3.</span> <span class="post-toc-text">app.path()</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#app-set-name-value-app-get-name"><span class="post-toc-number">3.1.4.</span> <span class="post-toc-text">app.set(name, value) / app.get(name)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#错误处理中间件的使用"><span class="post-toc-number">3.1.5.</span> <span class="post-toc-text">错误处理中间件的使用</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、Request"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">2、Request</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#req-params"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">req.params</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#req-query"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">req.query</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#req-body"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">req.body</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#req-获取路径"><span class="post-toc-number">3.2.4.</span> <span class="post-toc-text">req 获取路径</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#其他属性"><span class="post-toc-number">3.2.5.</span> <span class="post-toc-text">其他属性</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、Response"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">3、Response</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-end（-data-，encoding-）"><span class="post-toc-number">3.3.1.</span> <span class="post-toc-text">res.end（[data] [，encoding]）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-send-body"><span class="post-toc-number">3.3.2.</span> <span class="post-toc-text">res.send([body])</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-sendFile（path-，options-，fn-）"><span class="post-toc-number">3.3.3.</span> <span class="post-toc-text">res.sendFile（path [，options] [，fn]）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-sendStatus（statusCode）"><span class="post-toc-number">3.3.4.</span> <span class="post-toc-text">res.sendStatus（statusCode）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-status"><span class="post-toc-number">3.3.5.</span> <span class="post-toc-text">res.status</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-set-field-，value"><span class="post-toc-number">3.3.6.</span> <span class="post-toc-text">res.set(field [，value])</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-get-field"><span class="post-toc-number">3.3.7.</span> <span class="post-toc-text">res.get(field)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-redirect-status，-path"><span class="post-toc-number">3.3.8.</span> <span class="post-toc-text">res.redirect([status，] path)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-json（-body-）"><span class="post-toc-number">3.3.9.</span> <span class="post-toc-text">res.json（[body]）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-append-field-，value"><span class="post-toc-number">3.3.10.</span> <span class="post-toc-text">res.append(field [，value])</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-cookie-name，value-options"><span class="post-toc-number">3.3.11.</span> <span class="post-toc-text">res.cookie(name，value [, options])</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#res-clearCookie-name-，options"><span class="post-toc-number">3.3.12.</span> <span class="post-toc-text">res.clearCookie(name [，options])</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Router"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">Router</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、参考文档"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、参考文档</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-express-note" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Express 的基本使用</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-08-01 23:29:30" datetime="2019-08-01T15:29:30.000Z" itemprop="datePublished">2019-08-01</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Node/">Node</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Node/Express/">Express</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文从安装、用法、常用 API 等方面简单介绍了 Express 的用法。</p>
+<a id="more"></a>
+<h2 id="一、Express-简介"><a href="#一、Express-简介" class="headerlink" title="一、Express 简介"></a>一、<code>Express</code> 简介</h2><h3 id="1、Express-是什么？"><a href="#1、Express-是什么？" class="headerlink" title="1、Express 是什么？"></a>1、Express 是什么？</h3><ul>
+<li><p>基于 <code>Node</code> 平台开发的 <code>Web</code> 开发框架</p>
+</li>
+<li><p>提供一系列强大的特性，帮助创建各种 Web和移动设备应用</p>
+</li>
+<li><p>是 NodeJS 的一个模块</p>
+</li>
+</ul>
+<h3 id="2、为什么使用-Express"><a href="#2、为什么使用-Express" class="headerlink" title="2、为什么使用 Express"></a>2、为什么使用 <code>Express</code></h3><ul>
+<li>为了基于 NodeJS 开发 web 应用程序更高效</li>
+</ul>
+<hr>
+<h2 id="二、安装与使用"><a href="#二、安装与使用" class="headerlink" title="二、安装与使用"></a>二、安装与使用</h2><h3 id="1、安装"><a href="#1、安装" class="headerlink" title="1、安装"></a>1、安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新建 my-app 文件夹</span></span><br><span class="line">mkdir my-app</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> my-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化 package-json 文件</span></span><br><span class="line">npm init -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 express 依赖</span></span><br><span class="line">npm install express -S</span><br></pre></td></tr></table></figure>
+<h3 id="2、基本使用"><a href="#2、基本使用" class="headerlink" title="2、基本使用"></a>2、基本使用</h3><p>根目录下新建 <code>index.js</code> 文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">300</span>, () =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.dir(<span class="string">'服务启动：http://localhost:3000/'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>根目录下运行 <code>node index.js</code>，即可看到控制台打印输出。说明服务已经启动</p>
+<h3 id="3、路由"><a href="#3、路由" class="headerlink" title="3、路由"></a>3、路由</h3><h4 id="基本路由"><a href="#基本路由" class="headerlink" title="基本路由"></a>基本路由</h4><p>基本使用方式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Get 请求</span></span><br><span class="line">app.get(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    res.send(<span class="string">'欢迎使用 Express(GET)'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// POST 请求</span></span><br><span class="line">app.post(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    res.send(<span class="string">'欢迎使用 Express(POST)'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Put 请求</span></span><br><span class="line">app.put(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    res.send(<span class="string">'欢迎使用 Express(PUT)'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.delete(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    res.send(<span class="string">'欢迎使用 Express(DELETE)'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// ... 等等其他请求方式</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 路径支持正则表达式</span></span><br><span class="line">app.get(<span class="string">'/a+b'</span>, (req, res) =&gt; &#123;</span><br><span class="line">	res.send(<span class="string">'类似于 /ab、/aab、/aaab 等的路径均可访问'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>或者使用 app.route() 的方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">app.route(<span class="string">'/'</span>)</span><br><span class="line">    .get(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">        res.send(<span class="string">'欢迎使用 Express(GET)'</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">    .post(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">        res.send(<span class="string">'欢迎使用 Express(POST)'</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">    .put(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">        res.send(<span class="string">'欢迎使用 Express(PUT)'</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">    .delete(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">        res.send(<span class="string">'欢迎使用 Express(DELETE)'</span>);</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="特殊路由：app-all-path-callback"><a href="#特殊路由：app-all-path-callback" class="headerlink" title="特殊路由：app.all([path,] callback)"></a>特殊路由：<code>app.all([path,] callback)</code></h4><ul>
+<li>不写 path 参数，默认是根路径</li>
+<li>请求路径（<code>pathname</code>）必须要全等于 <code>path</code>，才会执行 <code>callback</code>；</li>
+<li>任意请求方式都会执行 <code>callback</code> 函数</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.all(<span class="string">'/book'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    res.send(<span class="string">'无论任意请求方式，只要请求路径（pathname）为 /book，都会返回这句话'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="app-use-path-callback"><a href="#app-use-path-callback" class="headerlink" title="app.use([path,] callback)"></a><code>app.use([path,] callback)</code></h4><ul>
+<li>不写 path 参数，默认是根路径</li>
+<li>只要请求路径（<code>pathname</code>）第一段为 <code>path</code>，就会执行 <code>callback</code>；</li>
+<li>任意请求方式都会执行 <code>callback</code> 函数</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="string">'/book'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    res.send(<span class="string">'无论任意请求方式，只要请求路径（pathname）第一段为 /book，都会返回这句话'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="4、路由拆分：express-Router-options"><a href="#4、路由拆分：express-Router-options" class="headerlink" title="4、路由拆分：express.Router([options])"></a>4、路由拆分：<code>express.Router([options])</code></h3><p><code>options</code> 中的参数：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th style="text-align:center">描述</th>
+<th style="text-align:right">默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>caseSensitive</td>
+<td style="text-align:center">启用区分大小写。</td>
+<td style="text-align:right">默认情况下禁用，将“/ Foo”和“/ foo”视为相同。</td>
+</tr>
+<tr>
+<td>mergeParams</td>
+<td style="text-align:center">保留req.params父路由器的值。如果父级和子级具有冲突的参数名称，则子级的值优先。</td>
+<td style="text-align:right">false</td>
+</tr>
+<tr>
+<td>strict</td>
+<td style="text-align:center">启用严格路由。</td>
+<td style="text-align:right">默认情况下禁用，“/ foo”和“/ foo /”由路由器处理相同。</td>
+</tr>
+</tbody>
+</table>
+<p>将所有的路由都写在 <code>index.js</code> 文件中，不易维护而且也不安全，所以我们可以把不同路径下的路由进行拆分，分别放在不同文件下，易于维护。这个时候就会用到 <code>express.Router()</code>;</p>
+<blockquote>
+<p>与 <code>app</code> 类似，也可以使用 <code>route()</code>、<code>all()</code>、<code>use()</code> 等方法</p>
+</blockquote>
+<p>编写路由文件 order.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> router = express.Router();</span><br><span class="line"></span><br><span class="line">router.use(<span class="function">(<span class="params">req, resp, next</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>().toLocaleString());</span><br><span class="line">    next();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">router.get(<span class="string">'/list'</span>, (req, resp) =&gt; &#123;</span><br><span class="line">    resp.send(<span class="string">'订单列表'</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">router.get(<span class="string">'/detail'</span>, (req, resp) =&gt; &#123;</span><br><span class="line">    resp.send(<span class="string">'订单详情'</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">router.post(<span class="string">'/submit'</span>, (req, resp) =&gt; &#123;</span><br><span class="line">    resp.send(<span class="string">'提交订单'</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = router;</span><br></pre></td></tr></table></figure>
+<p>即可在 index.js 中使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> order = <span class="built_in">require</span>(<span class="string">'./order.js'</span>);</span><br><span class="line"></span><br><span class="line">app.use(<span class="string">'/order'</span>, order);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<p>访问 <code>http://localhost: 3000/order/list</code> 或者其他 <code>order</code> 文件中的路径即可获取到对应返回结果</p>
+<h3 id="5、访问静态资源"><a href="#5、访问静态资源" class="headerlink" title="5、访问静态资源"></a>5、访问静态资源</h3><ul>
+<li><code>api: app.use([pathname,] express.static(root，[options]))</code><ul>
+<li><code>pathname</code>: 访问路径</li>
+<li><code>root</code>:     静态资源文件夹路径</li>
+<li><code>options</code>： 其他配置项，可参考<a href="http://expressjs.com/en/4x/api.html" target="_blank" rel="noopener">这里</a></li>
+</ul>
+</li>
+</ul>
+<p>此时假如 <code>public</code> 文件是静态文件存放目录，文件夹下有 <code>a.png</code> 的图片文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="string">'/public'</span>, express.static(path.join(__dirname, <span class="string">'public'</span>)));</span><br></pre></td></tr></table></figure>
+<p>则此时访问 <code>http://localhost: 3000/public/a.png</code>，可以看到图片正常显示。</p>
+<h3 id="6、中间件的使用"><a href="#6、中间件的使用" class="headerlink" title="6、中间件的使用"></a>6、中间件的使用</h3><p><code>app.use([path, ] (req, res, next) =&gt; { ...; next() })</code></p>
+<ul>
+<li><code>path</code> 参数可写可不写，不写则默认为根路径，所有访问路径均可使用；</li>
+<li>比一般回调函数多一个 <code>next</code> 参数，必须执行，否则不会继续向下执行。</li>
+</ul>
+<hr>
+<h2 id="三、常用-API"><a href="#三、常用-API" class="headerlink" title="三、常用 API"></a>三、常用 API</h2><h3 id="1、Application"><a href="#1、Application" class="headerlink" title="1、Application"></a>1、<code>Application</code></h3><h4 id="app-listen（-port-，host-，backlog-，callback-）"><a href="#app-listen（-port-，host-，backlog-，callback-）" class="headerlink" title="app.listen（[port [，host [，backlog]]] [，callback]）"></a><code>app.listen（[port [，host [，backlog]]] [，callback]）</code></h4><p>启动服务，监听端口地址</p>
+<h4 id="app-METHOD（path，callback-，callback-）"><a href="#app-METHOD（path，callback-，callback-）" class="headerlink" title="app.METHOD（path，callback [，callback ...]）"></a><code>app.METHOD（path，callback [，callback ...]）</code></h4><p>路由请求方式：</p>
+<ul>
+<li><code>METHOD</code> 为各种请求方式</li>
+<li><code>path</code>：请求路径</li>
+<li><code>callback</code>：中间件及回调函数，可包含多个，出最后一个外，其他的必须在最后执行 <code>next()</code> ，否则不会再继续向下执行</li>
+</ul>
+<h4 id="app-path"><a href="#app-path" class="headerlink" title="app.path()"></a><code>app.path()</code></h4><p>返回应用程序的规范路径，一个字符串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"><span class="keyword">var</span> blog = express();</span><br><span class="line"><span class="keyword">var</span> blogAdmin = express();</span><br><span class="line"></span><br><span class="line">app.use(<span class="string">'/blog'</span>, blog);</span><br><span class="line">blog.use(<span class="string">'/admin'</span>, blogAdmin);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.dir(app.path()); <span class="comment">// ''</span></span><br><span class="line"><span class="built_in">console</span>.dir(blog.path()); <span class="comment">// '/blog'</span></span><br><span class="line"><span class="built_in">console</span>.dir(blogAdmin.path()); <span class="comment">// '/blog/admin'</span></span><br></pre></td></tr></table></figure>
+<h4 id="app-set-name-value-app-get-name"><a href="#app-set-name-value-app-get-name" class="headerlink" title="app.set(name, value) / app.get(name)"></a><code>app.set(name, value) / app.get(name)</code></h4><ul>
+<li><code>app.set(name, value)</code>：为 <code>name</code> 属性设置 <code>value</code>，存储到服务器中</li>
+<li><code>app.get(name)</code>：获取 <code>name</code> 属性对应的 <code>value</code></li>
+</ul>
+<h4 id="错误处理中间件的使用"><a href="#错误处理中间件的使用" class="headerlink" title="错误处理中间件的使用"></a>错误处理中间件的使用</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function">(<span class="params">err, req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="comment">// 错误处理逻辑</span></span><br><span class="line">	<span class="built_in">console</span>.error(err.stack)</span><br><span class="line">	res.status(<span class="number">500</span>).send(<span class="string">'Something broke!'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="2、Request"><a href="#2、Request" class="headerlink" title="2、Request"></a>2、<code>Request</code></h3><h4 id="req-params"><a href="#req-params" class="headerlink" title="req.params"></a>req.params</h4><p>获取请求路径中的 param</p>
+<p>例如请求路径为：<code>http://localhost:3000/news/2019/10</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/news/:year/:month'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    res.send(req.params);	<span class="comment">// &#123;"year":"2019","month":"10"&#125;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="req-query"><a href="#req-query" class="headerlink" title="req.query"></a><code>req.query</code></h4><p>获取 <code>Get</code> 请求路径中传递的查询参数</p>
+<p>例如 <code>Get</code> 请求为：<code>http://localhost:3000?name=zgd</code><br><!-- `Post` 请求为：`curl -d "name=zgd" http://localhost:3000` --></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/'</span>, (req, resp) =&gt; &#123;</span><br><span class="line">    resp.send(req.query);	<span class="comment">// &#123;"name": "zgd"&#125;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="req-body"><a href="#req-body" class="headerlink" title="req.body"></a><code>req.body</code></h4><p>获取 <code>Post</code> 请求中能够传递的查询参数</p>
+<p>例如 <code>Post</code> 请求为：<code>curl -d &quot;name=zgd&quot; http://localhost:3000</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.use(express.json()) <span class="comment">// for parsing application/json</span></span><br><span class="line">app.use(express.urlencoded(&#123; <span class="attr">extended</span>: <span class="literal">true</span> &#125;)) <span class="comment">// for parsing application/x-www-form-urlencoded</span></span><br><span class="line"></span><br><span class="line">app.post(<span class="string">'/'</span>, (req, resp) =&gt; &#123;</span><br><span class="line">    resp.send(req.body);	<span class="comment">// &#123;"name": "zgd"&#125;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="req-获取路径"><a href="#req-获取路径" class="headerlink" title="req 获取路径"></a>req 获取路径</h4><ul>
+<li>req.baseUrl：安装路由器实例的URL路径，不包含请求参数</li>
+<li>req.path: 当前请求路径，不包含请求参数</li>
+<li>req.originalUrl：院士路径，即全路径，包含请求参数</li>
+<li>req.url：当前请求路径，包含请求参数<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/book/list'</span>, (req, res) =&gt; &#123;</span><br><span class="line">	res.write(req.baseUrl);	<span class="comment">// ''</span></span><br><span class="line">	res.write(req.path);	<span class="comment">// '/book/list'</span></span><br><span class="line">	res.write(req.originalUrl);	<span class="comment">// '/book/list'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.use(<span class="string">'/book'</span>, book);</span><br><span class="line"></span><br><span class="line"><span class="comment">// book.js</span></span><br><span class="line"></span><br><span class="line">router.get(<span class="string">'/list'</span>, (req, res) =&gt; &#123;</span><br><span class="line">	res.write(req.baseUrl);	<span class="comment">// '/book'</span></span><br><span class="line">	res.write(req.path);	<span class="comment">// '/list'</span></span><br><span class="line">	res.write(req.originalUrl);	<span class="comment">// '/book/list'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="其他属性"><a href="#其他属性" class="headerlink" title="其他属性"></a>其他属性</h4><table>
+<thead>
+<tr>
+<th>属性</th>
+<th style="text-align:center">描述</th>
+<th style="text-align:right">例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>req.baseUrl</td>
+<td style="text-align:center">安装路由器实例的URL路径。</td>
+<td style="text-align:right">用法查看<a href="http://expressjs.com/en/4x/api.html#req" target="_blank" rel="noopener">这里</a></td>
+</tr>
+<tr>
+<td>req.path</td>
+<td style="text-align:center">当前请求路径</td>
+<td style="text-align:right">用法查看<a href="http://expressjs.com/en/4x/api.html#req" target="_blank" rel="noopener">这里</a></td>
+</tr>
+<tr>
+<td>req.originalUrl</td>
+<td style="text-align:center">原始 URL 请求路径。后面没有跟请求参数时，相当于是 baseUrl + path；路径后面跟了请求参数，则请求参数也包含在内</td>
+<td style="text-align:right">/<em> GET /search?q=something  </em>/    console.dir(req.originalUrl);    // =&gt; ‘/search?q=something’</td>
+</tr>
+<tr>
+<td>req.cookies</td>
+<td style="text-align:center">此属性是包含请求发送的cookie的对象。如果请求不包含cookie，则默认为{}。</td>
+<td style="text-align:right">console.dir(req.cookies.name)</td>
+</tr>
+<tr>
+<td>req.signedCookies</td>
+<td style="text-align:center">同 req.cookies</td>
+<td style="text-align:right">如果cookie已签名，必须使用这个，而不能使用 req.cookies</td>
+</tr>
+<tr>
+<td>req.fresh</td>
+<td style="text-align:center">指示请求是否“新鲜”。它是相反的req.stale。</td>
+<td style="text-align:right">用法查看<a href="http://expressjs.com/en/4x/api.html#req" target="_blank" rel="noopener">这里</a></td>
+</tr>
+<tr>
+<td>req.stale</td>
+<td style="text-align:center">指示请求是否“陈旧”，并且与之相反req.fresh。</td>
+<td style="text-align:right">用法查看<a href="http://expressjs.com/en/4x/api.html#req" target="_blank" rel="noopener">这里</a></td>
+</tr>
+<tr>
+<td>req.hostname</td>
+<td style="text-align:center">包含从HostHTTP标头派生的主机名。</td>
+<td style="text-align:right">/<em> Host: “example.com:3000” </em>/        console.dir(req.hostname);    // =&gt; ‘example.com’</td>
+</tr>
+<tr>
+<td>req.ip</td>
+<td style="text-align:center">包含请求的远程IP地址。</td>
+<td style="text-align:right">console.dir(req.ip);    // =&gt; ‘127.0.0.1’</td>
+</tr>
+<tr>
+<td>req.method</td>
+<td style="text-align:center">包含对应于该请求的HTTP方法的字符串：  GET，POST，PUT，等。</td>
+<td style="text-align:right">- </td>
+</tr>
+<tr>
+<td>req.protocol</td>
+<td style="text-align:center">包含请求协议字符串：http或者（对于TLS请求）https。</td>
+<td style="text-align:right">console.dir(req.protocol);        // =&gt; ‘http’</td>
+</tr>
+<tr>
+<td>req.route</td>
+<td style="text-align:center">包含当前匹配的路由，一个对象。</td>
+<td style="text-align:right">用法查看<a href="http://expressjs.com/en/4x/api.html#req" target="_blank" rel="noopener">这里</a></td>
+</tr>
+<tr>
+<td>req.secure</td>
+<td style="text-align:center">一个布尔属性，如果建立了TLS连接，则该属性为true。</td>
+<td style="text-align:right">相当于：console.dir(req.protocol === ‘https’);    // =&gt; true</td>
+</tr>
+<tr>
+<td>req.subdomains</td>
+<td style="text-align:center">请求的域名中的一组子域。</td>
+<td style="text-align:right">/<em> Host: “tobi.ferrets.example.com” </em>/        console.dir(req.subdomains);    // =&gt; [‘ferrets’, ‘tobi’]</td>
+</tr>
+<tr>
+<td>req.xhr</td>
+<td style="text-align:center">一个布尔属性，true如果请求的X-Requested-With头字段是“XMLHttpRequest”，则表示该请求是由客户端库（如jQuery）发出的。</td>
+<td style="text-align:right">console.dir(req.xhr);        // =&gt; true</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3、Response"><a href="#3、Response" class="headerlink" title="3、Response"></a>3、<code>Response</code></h3><h4 id="res-end（-data-，encoding-）"><a href="#res-end（-data-，encoding-）" class="headerlink" title="res.end（[data] [，encoding]）"></a>res.end（[data] [，encoding]）</h4><p>结束响应过程。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res.end()</span><br><span class="line">res.status(<span class="number">404</span>).end()</span><br></pre></td></tr></table></figure>
+<h4 id="res-send-body"><a href="#res-send-body" class="headerlink" title="res.send([body])"></a><code>res.send([body])</code></h4><p>与 <code>res.end()</code> 的区别：</p>
+<ul>
+<li>参数 <code>body</code> 可以是 <code>String</code>、<code>Buffer</code>，也可以是 <code>Array</code>、<code>Object</code></li>
+<li>会自动添加响应头：”Content-Type: text/html; charset=utf-8” </li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">res.send(Buffer.from(<span class="string">'whoop'</span>))</span><br><span class="line">res.send(&#123; <span class="attr">some</span>: <span class="string">'json'</span> &#125;)</span><br><span class="line">res.send(<span class="string">'&lt;p&gt;some html&lt;/p&gt;'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="res-sendFile（path-，options-，fn-）"><a href="#res-sendFile（path-，options-，fn-）" class="headerlink" title="res.sendFile（path [，options] [，fn]）"></a><code>res.sendFile（path [，options] [，fn]）</code></h4><p>在指定时间发送文件到客户端。<code>Content-Type</code> 会根据文件的扩展名设置响应 <code>HTTP</code> 响应头字段。除非在 <code>options</code> 对象中设置了该选项，否则 <code>path</code> 必须是该文件的绝对路径。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/file/:name'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> options = &#123;</span><br><span class="line">    root: path.join(__dirname, <span class="string">'public'</span>),</span><br><span class="line">    dotfiles: <span class="string">'deny'</span>,</span><br><span class="line">    headers: &#123;</span><br><span class="line">      <span class="string">'x-timestamp'</span>: <span class="built_in">Date</span>.now(),</span><br><span class="line">      <span class="string">'x-sent'</span>: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> fileName = req.params.name</span><br><span class="line">  res.sendFile(fileName, options, <span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      next(err)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Sent:'</span>, fileName)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="res-sendStatus（statusCode）"><a href="#res-sendStatus（statusCode）" class="headerlink" title="res.sendStatus（statusCode）"></a><code>res.sendStatus（statusCode）</code></h4><p>设置响应状态码并结束响应</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.sendStatus(<span class="number">200</span>) <span class="comment">// equivalent to res.status(200).send('OK')</span></span><br></pre></td></tr></table></figure>
+<h4 id="res-status"><a href="#res-status" class="headerlink" title="res.status"></a><code>res.status</code></h4><p>设置响应状态码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.status(<span class="number">200</span>).send(<span class="string">'OK'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="res-set-field-，value"><a href="#res-set-field-，value" class="headerlink" title="res.set(field [，value])"></a><code>res.set(field [，value])</code></h4><p>将响应的 <code>HTTP</code> 请求头 <code>field</code> 设置为 <code>value</code>。要一次设置多个字段，请传递一个对象作为参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">res.set(<span class="string">'Content-Type'</span>, <span class="string">'text/plain'</span>)</span><br><span class="line"></span><br><span class="line">res.set(&#123;</span><br><span class="line">  <span class="string">'Content-Type'</span>: <span class="string">'text/plain'</span>,</span><br><span class="line">  <span class="string">'Content-Length'</span>: <span class="string">'123'</span>,</span><br><span class="line">  <span class="string">'ETag'</span>: <span class="string">'12345'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="res-get-field"><a href="#res-get-field" class="headerlink" title="res.get(field)"></a><code>res.get(field)</code></h4><p>返回由指定的HTTP响应头field。该匹配不区分大小写。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res.get(<span class="string">'Content-Type'</span>)</span><br><span class="line"><span class="comment">// =&gt; "text/plain"</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="res-redirect-status，-path"><a href="#res-redirect-status，-path" class="headerlink" title="res.redirect([status，] path)"></a><code>res.redirect([status，] path)</code></h4><p>重定向到指定的 <code>URL path</code>，具有指定的status与HTTP状态代码对应的正整数。如果未指定，则status默认为”302”。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">res.redirect(<span class="string">'/foo/bar'</span>)</span><br><span class="line">res.redirect(<span class="string">'http://example.com'</span>)</span><br><span class="line">res.redirect(<span class="number">301</span>, <span class="string">'http://example.com'</span>)</span><br><span class="line">res.redirect(<span class="string">'../login'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="res-json（-body-）"><a href="#res-json（-body-）" class="headerlink" title="res.json（[body]）"></a><code>res.json（[body]）</code></h4><p>用法同 <code>res.send()</code>;</p>
+<h4 id="res-append-field-，value"><a href="#res-append-field-，value" class="headerlink" title="res.append(field [，value])"></a><code>res.append(field [，value])</code></h4><p>将指定的内容追加 <code>value</code> 到 <code>HTTP</code> 响应头 <code>field</code>。如果尚未设置标头，则会创建具有指定值的标头。所述 <code>value</code> 参数可以是字符串或数组。</p>
+<blockquote>
+<p>注意：调用res.set()after res.append()将重置先前设置的标头值。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">res.append(<span class="string">'Link'</span>, [<span class="string">'&lt;http://localhost/&gt;'</span>, <span class="string">'&lt;http://localhost:3000/&gt;'</span>])</span><br><span class="line">res.append(<span class="string">'Set-Cookie'</span>, <span class="string">'foo=bar; Path=/; HttpOnly'</span>)</span><br><span class="line">res.append(<span class="string">'Warning'</span>, <span class="string">'199 Miscellaneous warning'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="res-cookie-name，value-options"><a href="#res-cookie-name，value-options" class="headerlink" title="res.cookie(name，value [, options])"></a><code>res.cookie(name，value [, options])</code></h4><p>设置 <code>cookie</code> 中的 <code>name</code> 属性为 <code>value</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res.cookie(<span class="string">'name'</span>, <span class="string">'tobi'</span>, &#123; <span class="attr">domain</span>: <span class="string">'.example.com'</span>, <span class="attr">path</span>: <span class="string">'/admin'</span>, <span class="attr">secure</span>: <span class="literal">true</span> &#125;)</span><br><span class="line">res.cookie(<span class="string">'rememberme'</span>, <span class="string">'1'</span>, &#123; <span class="attr">expires</span>: <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="built_in">Date</span>.now() + <span class="number">900000</span>), <span class="attr">httpOnly</span>: <span class="literal">true</span> &#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="res-clearCookie-name-，options"><a href="#res-clearCookie-name-，options" class="headerlink" title="res.clearCookie(name [，options])"></a><code>res.clearCookie(name [，options])</code></h4><p>清除 <code>cookie</code> 中对应的 <code>name</code> 属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res.cookie(<span class="string">'name'</span>, <span class="string">'tobi'</span>, &#123; <span class="attr">path</span>: <span class="string">'/admin'</span> &#125;)</span><br><span class="line">res.clearCookie(<span class="string">'name'</span>, &#123; <span class="attr">path</span>: <span class="string">'/admin'</span> &#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="Router"><a href="#Router" class="headerlink" title="Router"></a>Router</h3><p>与 app 中使用 路由的方式类似：</p>
+<ul>
+<li><p>router.Method(path, callback)</p>
+</li>
+<li><p>router.use()</p>
+</li>
+<li><p>router.all()</p>
+</li>
+<li><p>router.route()</p>
+</li>
+</ul>
+<hr>
+<h2 id="四、参考文档"><a href="#四、参考文档" class="headerlink" title="四、参考文档"></a>四、参考文档</h2><ul>
+<li><a href="http://expressjs.com/zh-cn/" target="_blank" rel="noopener">express 中文文档</a></li>
+<li><a href="http://expressjs.com/" target="_blank" rel="noopener">express 英文文档</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190801/express-note/" target="_blank" rel="external">https://beichensky.github.io/20190801/express-note/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Express/">Express</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/">Node</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190801/express-note/&title=《Express 的基本使用》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190801/express-note/&title=《Express 的基本使用》 — 前端小栈&source=本文从安装、用法、常用 API 等方面简单介绍了 Express 的用法。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190801/express-note/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Express 的基本使用》 — 前端小栈&url=https://beichensky.github.io/20190801/express-note/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190801/express-note/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190802/hexo-blog/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">快速使用 Hexo + Github 搭建个人博客（超简单的步骤）</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190709/jsbridge-native/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用 JSBridge 与原生 IOS、Android 进行交互（含H5、Android、IOS端代码，附 Demo）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190801/express-note/&title=《Express 的基本使用》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190801/express-note/&title=《Express 的基本使用》 — 前端小栈&source=本文从安装、用法、常用 API 等方面简单介绍了 Express 的用法。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190801/express-note/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Express 的基本使用》 — 前端小栈&url=https://beichensky.github.io/20190801/express-note/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190801/express-note/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190801/express-note/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

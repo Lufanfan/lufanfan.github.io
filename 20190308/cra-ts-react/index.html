@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码） | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="TypeScript,Redux,React,前端开发">
+    <meta name="description" content="本文详细介绍了如何使用 Create-React-App 编写 TypeScript + React 项目">
+<meta name="keywords" content="TypeScript,Redux,React,前端开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）">
+<meta property="og:url" content="https://beichensky.github.io/20190308/cra-ts-react/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文详细介绍了如何使用 Create-React-App 编写 TypeScript + React 项目">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-03T09:27:33.900Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）">
+<meta name="twitter:description" content="本文详细介绍了如何使用 Create-React-App 编写 TypeScript + React 项目">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-08T02:48:10.000Z" itemprop="datePublished" class="page-time">
+  2019-03-08
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#本文-Demo-地址"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">本文 Demo 地址</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装-Create-React-App"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装 Create-React-App</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建项目"><span class="post-toc-number">3.</span> <span class="post-toc-text">创建项目</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#先创建一个新的项目，这里我们命名为-typescript-react-app"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">先创建一个新的项目，这里我们命名为 typescript-react-app</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#React-配合-TypeScript-的基本使用"><span class="post-toc-number">4.</span> <span class="post-toc-text">React 配合 TypeScript 的基本使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#定义一个-Counter-组件"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">定义一个 Counter 组件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#在-App-tsx-中引用-Counter-组件并展示"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">在 App.tsx 中引用 Counter 组件并展示</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用类的方式定义-Counter-组件"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">使用类的方式定义 Counter 组件</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#进阶：在项目中配合-Redux-进行使用"><span class="post-toc-number">5.</span> <span class="post-toc-text">进阶：在项目中配合 Redux 进行使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#安装项目需要的插件"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">安装项目需要的插件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#定义应用的状态-State"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">定义应用的状态 State</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#添加-actions"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">添加 actions</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#添加-reducer"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">添加 reducer</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建容器组件"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">创建容器组件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建-store"><span class="post-toc-number">5.6.</span> <span class="post-toc-text">创建 store</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">6.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#本文-Demo-地址-1"><span class="post-toc-number">7.</span> <span class="post-toc-text">本文 Demo 地址</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-cra-ts-react" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-08 10:48:10" datetime="2019-03-08T02:48:10.000Z" itemprop="datePublished">2019-03-08</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文详细介绍了如何使用 Create-React-App 编写 TypeScript + React 项目</p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于 TypeScript + React 开发，MicroSoft 编写了一个 TypeScript-React-Starter 的例子：<a href="https://github.com/Microsoft/TypeScript-Node-Starter" target="_blank" rel="noopener">Github 地址</a>。有需要的朋友可以去看一下。</p>
+<p>我自己也看了一下，文档说明讲解的很好，但是 Demo 拉下来却无法正常运行，一直报错。所以我自己使用 TypeScript + React + Redux 写了 Demo，作为范例来用一下。</p>
+<h3 id="本文-Demo-地址"><a href="#本文-Demo-地址" class="headerlink" title="本文 Demo 地址"></a>本文 Demo 地址</h3><ul>
+<li><p>本文 Counter Demo 是一个简易的例子，可以用来作为入门参考：<strong><a href="https://github.com/beichensky/typescript-react-example/tree/master/typescript-react-app" target="_blank" rel="noopener">Counter Demo</a></strong></p>
+</li>
+<li><p>另外还写了一个 TodoList 的例子，稍微更有难度一些，代码量和组件更多更详细。有需要的朋友也可以参考一下：<strong><a href="https://github.com/beichensky/typescript-react-example/tree/master/typescript-react-todos" target="_blank" rel="noopener">TodoList Demo</a></strong></p>
+</li>
+</ul>
+<p><strong>建议：</strong> 可以先下载 Counter Demo 后，运行项目，查看运行效果，然后对照本文进行阅读，效果更佳！</p>
+<p><strong>使用 <code>TypeScript</code> 编写 <code>React</code> 需要注意的规范</strong><br>必须遵守的要求：</p>
+<ul>
+<li>所有用到 <code>jsx</code> 语法的文件都需要以 <code>tsx</code> 后缀命名</li>
+<li>使用组件声明时的 <code>Component&lt;P, S&gt;</code> 泛型参数声明，来代替 <code>PropTypes</code>进行类型校验</li>
+</ul>
+<p>额外的代码规范：</p>
+<ul>
+<li>全局变量或者自定义的 <code>window</code> 对象属性，统一在项目根下的 <code>global.d.ts</code> 中进行声明定义</li>
+<li>对于项目中常用到的接口数据对象，最好在 <code>types/</code> 目录下定义好其结构化类型声明</li>
+</ul>
+<h2 id="安装-Create-React-App"><a href="#安装-Create-React-App" class="headerlink" title="安装 Create-React-App"></a>安装 Create-React-App</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install create-react-app -g</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><h3 id="先创建一个新的项目，这里我们命名为-typescript-react-app"><a href="#先创建一个新的项目，这里我们命名为-typescript-react-app" class="headerlink" title="先创建一个新的项目，这里我们命名为 typescript-react-app"></a>先创建一个新的项目，这里我们命名为 typescript-react-app</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ create-react-app typescript-react-app --scripts-version=react-scripts-ts</span><br></pre></td></tr></table></figure>
+<p><a href="https://www.npmjs.com/package/react-scripts-ts" target="_blank" rel="noopener">react-scripts-ts</a>是一系列适配器，它利用标准的create-react-app工程管道并把TypeScript混入进来。</p>
+<p>项目创建成功后，此时项目结构如下所示：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">my-app/</span><br><span class="line">├─ node_modules/</span><br><span class="line">├─ public/</span><br><span class="line">├─ src/</span><br><span class="line">│  └─ ...</span><br><span class="line">├─ .gitignore</span><br><span class="line">├─ images.d.ts</span><br><span class="line">├─ package.json</span><br><span class="line">├─ README.md</span><br><span class="line">├─ tsconfig.json</span><br><span class="line">├─ tsconfig.prod.json</span><br><span class="line">├─ tsconfig.test.json</span><br><span class="line">├─ tslint.json</span><br><span class="line">└─ yarn.lock</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 注意：</span></span><br><span class="line"></span><br><span class="line">  - tsconfig.json包含了工程里TypeScript特定的选项。</span><br><span class="line">  - tslint.json保存了要使用的代码检查器的设置，TSLint。</span><br><span class="line">  - package.json包含了依赖，还有一些命令的快捷方式，如测试命令，预览命令和发布应用的命令。</span><br><span class="line">  - public包含了静态资源如HTML页面或图片。除了index.html文件外，其它的文件都可以删除。</span><br><span class="line">  - src包含了TypeScript和CSS源码。index.tsx是强制使用的入口文件。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 运行项目</span></span><br><span class="line">先运行项目，看看是否能够正常启动，如果可以，说明项目创建没有问题。</span><br><span class="line">运行命令：</span><br><span class="line">``` bash</span><br><span class="line">$ npm run start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者运行 yarn run start</span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="React-配合-TypeScript-的基本使用"><a href="#React-配合-TypeScript-的基本使用" class="headerlink" title="React 配合 TypeScript 的基本使用"></a>React 配合 TypeScript 的基本使用</h2><p>在当前项目中，可以看到 index.tsx 和 App.jsx 文件中已经使用了 TypeScript，我们现在自己来用 TypeScript 编写一个 React 组件吧。</p>
+<h3 id="定义一个-Counter-组件"><a href="#定义一个-Counter-组件" class="headerlink" title="定义一个 Counter 组件"></a>定义一个 Counter 组件</h3><p>我们在 src 下创建一个 components 目录，新增 Counter 组件：</p>
+<p>Counter.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import * as React from &apos;react&apos;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 创建类型接口</span><br><span class="line">export interface Iprops &#123;</span><br><span class="line">    value: number</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 使用接口代替 PropTypes 进行类型校验</span><br><span class="line">const Counter = (&#123; value &#125;: Iprops) =&gt; &#123;</span><br><span class="line">    return &lt;p&gt;Clicked: &#123; value &#125; times&lt;/p&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default Counter;</span><br></pre></td></tr></table></figure></p>
+<h3 id="在-App-tsx-中引用-Counter-组件并展示"><a href="#在-App-tsx-中引用-Counter-组件并展示" class="headerlink" title="在 App.tsx 中引用 Counter 组件并展示"></a>在 App.tsx 中引用 Counter 组件并展示</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import * as React from &apos;react&apos;;</span><br><span class="line">import &apos;./App.css&apos;;</span><br><span class="line"></span><br><span class="line">import Counter from &apos;./components/Counter.jsx&apos;;</span><br><span class="line">// import logo from &apos;./logo.svg&apos;;</span><br><span class="line"></span><br><span class="line">class App extends React.Component &#123;</span><br><span class="line">  public render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div className=&quot;App&quot;&gt;</span><br><span class="line">        &lt;Counter value=&#123; 0 &#125; /&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default App;</span><br></pre></td></tr></table></figure>
+<p>运行项目：<code>npm run start</code>，可以看到浏览器中展示出了 <code>Clicked: 0 times</code>，说明我们第一个 Counter 组件已经编写并使用成功了。</p>
+<h3 id="使用类的方式定义-Counter-组件"><a href="#使用类的方式定义-Counter-组件" class="headerlink" title="使用类的方式定义 Counter 组件"></a>使用类的方式定义 Counter 组件</h3><p>刚才是使用函数组件的方式定义的 Counter 组件，现在我们使用类的方式来改写一下。两种方式都试一试：</p>
+<p>Counter.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import * as React from &apos;react&apos;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 创建类型接口</span><br><span class="line">export interface IProps &#123;</span><br><span class="line">    value: number</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 使用接口代替 PropTypes 进行类型校验</span><br><span class="line">export default class Counter extends React.PureComponent&lt;IProps&gt; &#123;</span><br><span class="line">    public render() &#123;</span><br><span class="line">        return &lt;p&gt;Clicked: &#123; this.props.value &#125; times&lt;/p&gt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="进阶：在项目中配合-Redux-进行使用"><a href="#进阶：在项目中配合-Redux-进行使用" class="headerlink" title="进阶：在项目中配合 Redux 进行使用"></a>进阶：在项目中配合 Redux 进行使用</h2><h3 id="安装项目需要的插件"><a href="#安装项目需要的插件" class="headerlink" title="安装项目需要的插件"></a>安装项目需要的插件</h3><p>安装redux和react-redux以及它们的类型文件做为依赖。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -S redux react-redux @types/react-redux</span><br></pre></td></tr></table></figure></p>
+<p>这里我们不需要安装@types/redux，因为Redux已经自带了声明文件（.d.ts文件）。</p>
+<h3 id="定义应用的状态-State"><a href="#定义应用的状态-State" class="headerlink" title="定义应用的状态 State"></a>定义应用的状态 State</h3><p>一般会将常用的结构类型存放到 /types 目录下。所以我们在 src 目录下新建 types 目录。<br>此时项目中只有一个 state，就是 Counter 中的点击次数，所以就没有使用借口来作为约束，而是直接使用了 type。</p>
+<p>type/index.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 定义 State 结构类型</span><br><span class="line">export type StoreState = number;</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加-actions"><a href="#添加-actions" class="headerlink" title="添加 actions"></a>添加 actions</h3><p>在 src 下创建 constants 目录，在 index.tsx 文件中添加需要响应的消息类型</p>
+<p>constants/index.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 定义增加 state 类型常量</span><br><span class="line">export const INCREMENT = &quot;INCREMENT&quot;;</span><br><span class="line">export type INCREMENT = typeof INCREMENT;</span><br><span class="line"></span><br><span class="line">// 定义减少 state 类型常量</span><br><span class="line">export const DECREMENT = &quot;DECREMENT&quot;;</span><br><span class="line">export type DECREMENT = typeof DECREMENT;</span><br></pre></td></tr></table></figure></p>
+<p>这里的const/type模式允许我们以容易访问和重构的方式使用TypeScript的字符串字面量类型。<br>接下来，我们创建一些 actions 以及创建这些 actions 的函数，src/actions/index.tsx。</p>
+<p>actions/index.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">export interface IINCREMENTAction &#123;</span><br><span class="line">    type: INCREMENT;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export interface IDECREMENTAction &#123;</span><br><span class="line">    type: DECREMENT;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 定义 modifyAction 类型，包含 IINCREMENTAction 和 IDECREMENTAction 接口类型</span><br><span class="line">export type ModifyAction = IINCREMENTAction | IDECREMENTAction;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 增加 state 次数的方法</span><br><span class="line">export const increment = (): IINCREMENTAction =&gt; (&#123;</span><br><span class="line">    type: INCREMENT,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 减少 state 次数的方法</span><br><span class="line">export const decrement = (): IDECREMENTAction =&gt; (&#123;</span><br><span class="line">    type: DECREMENT</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p><code>actions/index.tsx</code> 中定义了两个类型，分别负责添加和减少操作的行为。我们还定义了一个类型（<code>ModifyAction</code>），它描述了哪些 <code>action</code> 是可以增加或减少的。 最后，我们定义了两个函数用来创建实际的 <code>actions</code>。</p>
+<h3 id="添加-reducer"><a href="#添加-reducer" class="headerlink" title="添加 reducer"></a>添加 reducer</h3><p>我们的reducer将放在src/reducers/index.tsx文件里。 它的功能是保证增加操作会让 <code>times</code> 加1，减少操作则要将 <code>times</code> 减1。</p>
+<p>reducers/index.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import &#123; ModifyAction &#125; from &apos;../actions&apos;;</span><br><span class="line">import &#123; DECREMENT, INCREMENT &#125; from &apos;../constants&apos;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 处理并返回 state </span><br><span class="line">export default (state = 0, action: ModifyAction): number =&gt; &#123;</span><br><span class="line">    switch (action.type) &#123;</span><br><span class="line">      case INCREMENT:</span><br><span class="line">        return state + 1</span><br><span class="line">      case DECREMENT:</span><br><span class="line">        return state - 1</span><br><span class="line">      default:</span><br><span class="line">        return state</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建容器组件"><a href="#创建容器组件" class="headerlink" title="创建容器组件"></a>创建容器组件</h3><p>之前我们已经使用了 Counter 组件，但是这个组件是一个纯组件，此时我们需要一个组件将 Counter 和 数据连接起来。我们先修改一下原先的 Counter 组件，在其中添加一些操作按钮</p>
+<p>components/Counter.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">import * as React from &apos;react&apos;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 创建类型接口</span><br><span class="line">export interface IProps &#123;</span><br><span class="line">    value: number,</span><br><span class="line">    onIncrement: () =&gt; void,</span><br><span class="line">    onDecrement: () =&gt; void</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 使用接口代替 PropTypes 进行类型校验</span><br><span class="line">export default class Counter extends React.PureComponent&lt;IProps&gt; &#123;</span><br><span class="line">    public render() &#123;</span><br><span class="line">        const &#123; value, onIncrement, onDecrement &#125; = this.props;</span><br><span class="line">        return (</span><br><span class="line">            &lt;p&gt;</span><br><span class="line">                Clicked: &#123; value &#125; times</span><br><span class="line">                &lt;br /&gt;</span><br><span class="line">                &lt;br /&gt;</span><br><span class="line">                &lt;button onClick=&#123; onIncrement &#125; style=&#123;&#123; marginRight: 20 &#125;&#125;&gt; +  &lt;/button&gt;</span><br><span class="line">                &lt;button onClick=&#123; onDecrement &#125;&gt; - &lt;/button&gt;</span><br><span class="line">            &lt;/p&gt;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后我们再创建一个 <code>container</code> 目录，用来存放需要与数据交互的组件，新建 <code>CounterCon.tsx</code> 文件.</p>
+<p>两个关键点是初始的 <code>Counter</code> 组件和 <code>react-redux</code> 的 <code>connect</code> 函数。 <code>connect</code> 可以将我们的 <code>Counter</code> 组件转换成一个容器，通过以下两个函数：</p>
+<ul>
+<li>mapStateToProps将当前store里的数据以我们的组件需要的形式传递到组件。</li>
+<li>mapDispatchToProps利用dispatch函数，创建回调props将actions送到store。</li>
+</ul>
+<p>container/CounterCon.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import &#123; connect &#125; from &apos;react-redux&apos;;</span><br><span class="line">import &#123; Dispatch &#125; from &apos;redux&apos;;</span><br><span class="line"></span><br><span class="line">import &#123; decrement, increment &#125; from &apos;../actions&apos;;</span><br><span class="line">import Counter from &apos;../components/Counter&apos;;</span><br><span class="line">import &#123; StoreState &#125; from &apos;../types&apos;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 将 reducer 中的状态插入到组件的 props 中</span><br><span class="line">const mapStateToProps = (state: StoreState): &#123; value: number &#125; =&gt; (&#123;</span><br><span class="line">    value: state</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 将 对应action 插入到组件的 props 中</span><br><span class="line">const mapDispatchToProps = (dispatch: Dispatch) =&gt; (&#123;</span><br><span class="line">    onDecrement: () =&gt; dispatch(decrement()),</span><br><span class="line">    onIncrement: () =&gt; dispatch(increment())</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 使用 connect 高阶组件对 Counter 进行包裹</span><br><span class="line">export default connect(mapStateToProps, mapDispatchToProps)(Counter);</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建-store"><a href="#创建-store" class="headerlink" title="创建 store"></a>创建 store</h3><p>让我们回到src/index.tsx。 要把所有的东西合到一起，我们需要创建一个带初始状态的store，并用我们所有的reducers来设置它。<br>并且使用 react-redux 的 Provider 将 props 和 容器连接起来</p>
+<p>index.tsx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">import * as React from &apos;react&apos;;</span><br><span class="line">import * as ReactDOM from &apos;react-dom&apos;;</span><br><span class="line">import &#123; Provider &#125; from &apos;react-redux&apos;;</span><br><span class="line">import &#123; createStore &#125; from &apos;redux&apos;;</span><br><span class="line"></span><br><span class="line">import App from &apos;./App&apos;;</span><br><span class="line">import &apos;./index.css&apos;;</span><br><span class="line">import reducer from &apos;./reducer&apos;; </span><br><span class="line">import registerServiceWorker from &apos;./registerServiceWorker&apos;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 1、创建 store</span><br><span class="line">const store = createStore(reducer);</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">    // 2、然后使用react-redux的Provider将props与容器连通起来</span><br><span class="line">    &lt;Provider store=&#123; store &#125;&gt;</span><br><span class="line">        &lt;App /&gt;</span><br><span class="line">    &lt;/Provider&gt; ,</span><br><span class="line">    document.getElementById(&apos;root&apos;) as HTMLElement</span><br><span class="line">);</span><br><span class="line">registerServiceWorker();</span><br></pre></td></tr></table></figure></p>
+<p>回到我们的 App.jsx 文件中，之前我们引用的是 components 中的 Counter 组件，但是此时我们需要使用的是与数据有交互的 CounterCon 组件。改写如下：</p>
+<p>App.jsx<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./App.css'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入 container 组件 CountCon</span></span><br><span class="line"><span class="keyword">import</span> CountCon <span class="keyword">from</span> <span class="string">'./container/CountCon'</span>;</span><br><span class="line"><span class="comment">// import logo from './logo.svg';</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  public render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=<span class="string">"App"</span>&gt;</span><br><span class="line">        &lt;CountCon /&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default App;</span></span><br></pre></td></tr></table></figure></p>
+<p>注意，此时 <code>CountCon</code> 不再需要 <code>props</code> 了，因为我们使用了 <code>connect</code> 函数为包裹起来的 <code>Hello</code> 组件的 <code>props</code> 适配了应用的状态。</p>
+<p>此时，运行项目，点击 + 或者 - 按钮，即可看到 <code>times</code> 的次数会发生变化。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，对于使用 <code>TypeScript</code> 编写 <code>React</code> 应用应该有了一定的了解。其实写法也比较固定，刚接触的话可能有些地方容易出现问题，多写几个组件之后，应该就没什么问题了。<br>在编写项目的过程中，<code>create-react-app</code> 自带的 <code>tslint</code> 可能要求比较严严格，比如：</p>
+<ul>
+<li>在标签里不允许使用 lambda 表达式，在 <code>tslint.json</code> 文件 <code>rules</code> 属性中添加：<code>&quot;jsx-no-lambda&quot;: false</code> 即可</li>
+<li>在导入模块时，必须按照字母顺序导入，在 <code>tslint.json</code> 文件 <code>rules</code> 属性中添加：”<code>ordered-imports&quot;: false</code> 即可</li>
+</ul>
+<p>还有很多别的配置，有需要的话，可以查看文档：<a href="https://palantir.github.io/tslint/rules/" target="_blank" rel="noopener">TSLint core rules</a>。</p>
+<hr>
+<h2 id="本文-Demo-地址-1"><a href="#本文-Demo-地址-1" class="headerlink" title="本文 Demo 地址"></a>本文 Demo 地址</h2><ul>
+<li><p>本文 <code>Counter Demo</code> 是一个简易的例子，可以用来作为入门参考：<strong><a href="https://github.com/beichensky/typescript-react-example/tree/master/typescript-react-app" target="_blank" rel="noopener">Counter Demo</a></strong></p>
+</li>
+<li><p>另外还写了一个 <code>TodoList</code> 的例子，稍微更有难度一些，代码量和组件更多更详细。有需要的朋友也可以参考一下：<strong><a href="https://github.com/beichensky/typescript-react-example/tree/master/typescript-react-todos" target="_blank" rel="noopener">TodoList Demo</a></strong></p>
+</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190308/cra-ts-react/" target="_blank" rel="external">https://beichensky.github.io/20190308/cra-ts-react/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redux/">Redux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端开发/">前端开发</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190308/cra-ts-react/&title=《使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190308/cra-ts-react/&title=《使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）》 — 前端小栈&source=本文详细介绍了如何使用 Create-React-App 编写 TypeScript + React 项目" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190308/cra-ts-react/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）》 — 前端小栈&url=https://beichensky.github.io/20190308/cra-ts-react/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190308/cra-ts-react/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190315/js-project-ts/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JavaScript 项目迁移到 TypeScript 步骤以及遇到的问题</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190221/webpack-happypack/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用 happypack 提升 Webpack 项目构建速度</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190308/cra-ts-react/&title=《使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190308/cra-ts-react/&title=《使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）》 — 前端小栈&source=本文详细介绍了如何使用 Create-React-App 编写 TypeScript + React 项目" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190308/cra-ts-react/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用 TypeScript + React + Redux 进行项目开发（入门篇，附源码）》 — 前端小栈&url=https://beichensky.github.io/20190308/cra-ts-react/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190308/cra-ts-react/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190308/cra-ts-react/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

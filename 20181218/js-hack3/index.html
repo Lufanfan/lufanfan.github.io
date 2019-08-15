@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>JavaScript性能优化（三） | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript,性能优化,DOM">
+    <meta name="description" content="本文是阅读《高性能JavaScript》一书后，从 DOM编程 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+<meta name="keywords" content="JavaScript,性能优化,DOM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript性能优化（三）">
+<meta property="og:url" content="https://beichensky.github.io/20181218/js-hack3/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文是阅读《高性能JavaScript》一书后，从 DOM编程 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-21T13:00:03.582Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript性能优化（三）">
+<meta name="twitter:description" content="本文是阅读《高性能JavaScript》一书后，从 DOM编程 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JavaScript性能优化（三）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JavaScript性能优化（三）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-18T03:19:40.000Z" itemprop="datePublished" class="page-time">
+  2018-12-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#慢的必然性"><span class="post-toc-number">1.</span> <span class="post-toc-text">慢的必然性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DOM-的修改与访问"><span class="post-toc-number">2.</span> <span class="post-toc-text">DOM 的修改与访问</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#innerHTML-对比-DOM-方法"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">innerHTML 对比 DOM 方法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#节点克隆"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">节点克隆</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#HTML-集合"><span class="post-toc-number">3.</span> <span class="post-toc-text">HTML 集合</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#昂贵的集合"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">昂贵的集合</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#遍历-DOM"><span class="post-toc-number">4.</span> <span class="post-toc-text">遍历 DOM</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#获取-DOM-元素"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">获取 DOM 元素</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#元素节点"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">元素节点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#选择器-API"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">选择器 API</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#重绘与重排"><span class="post-toc-number">5.</span> <span class="post-toc-text">重绘与重排</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#重排何时发生"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">重排何时发生</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#渲染树变化的排队与刷新"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">渲染树变化的排队与刷新</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最小化重绘与重排"><span class="post-toc-number">6.</span> <span class="post-toc-text">最小化重绘与重排</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#改变样式"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">改变样式</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#批量修改-DOM"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">批量修改 DOM</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缓存布局信息"><span class="post-toc-number">6.3.</span> <span class="post-toc-text">缓存布局信息</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#让元素脱离动画流"><span class="post-toc-number">6.4.</span> <span class="post-toc-text">让元素脱离动画流</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#hover-伪类"><span class="post-toc-number">6.5.</span> <span class="post-toc-text">hover 伪类</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#事件委托"><span class="post-toc-number">6.6.</span> <span class="post-toc-text">事件委托</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#小结"><span class="post-toc-number">7.</span> <span class="post-toc-text">小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-js-hack3" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JavaScript性能优化（三）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-18 11:19:40" datetime="2018-12-18T03:19:40.000Z" itemprop="datePublished">2018-12-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文是阅读《高性能JavaScript》一书后，从 <strong><em>DOM编程</em></strong> 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！</p>
+<a id="more"></a>
+<hr>
+<h3 id="慢的必然性"><a href="#慢的必然性" class="headerlink" title="慢的必然性"></a>慢的必然性</h3><ul>
+<li>简单理解，两个相互独立的功能只要通过接口彼此连接，就会产生消耗。</li>
+</ul>
+<hr>
+<h3 id="DOM-的修改与访问"><a href="#DOM-的修改与访问" class="headerlink" title="DOM 的修改与访问"></a>DOM 的修改与访问</h3><p>访问DOM元素是有代价的，修改元素的代价则更为昂贵，因为它会导致浏览器重新计算页面的集合变化</p>
+<p>当然，最坏的情况就是在循环中访问或修改元素，尤其是对 HTML 元素集合循环操作</p>
+<ul>
+<li><p>例一</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">innerHTMLLoop</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> count = <span class="number">0</span>; count &lt; <span class="number">15000</span>; count ++) &#123;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">'here'</span>).innerHTML += <span class="string">'a'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例二</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">innerHTMLLoop2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> content = <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> count = <span class="number">0</span>; count &lt; <span class="number">15000</span>; count ++) &#123;</span><br><span class="line">      content += <span class="string">'a'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">'here'</span>).innerHTML += content;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>结果显而易见，例二中的 innerHTMLLoop2 运行得更快</p>
+</li>
+<li><p>得出结论，访问DOM的次数越多，代码运行得速度越慢，因此，通用的经验法则是：减少访问 DOM 的次数，把运算尽量留在ECMAScript 这一端处理</p>
+</li>
+</ul>
+<h4 id="innerHTML-对比-DOM-方法"><a href="#innerHTML-对比-DOM-方法" class="headerlink" title="innerHTML 对比 DOM 方法"></a>innerHTML 对比 DOM 方法</h4><ul>
+<li>在旧版本浏览器中 innerHTML 的优势明显，在新版本的浏览器中两种方式相差无几</li>
+</ul>
+<h4 id="节点克隆"><a href="#节点克隆" class="headerlink" title="节点克隆"></a>节点克隆</h4><ul>
+<li>使用 element.cloneNode() 替代 document。createElemnt()，运行效率会稍快一点，但是差距不大</li>
+</ul>
+<hr>
+<h3 id="HTML-集合"><a href="#HTML-集合" class="headerlink" title="HTML 集合"></a>HTML 集合</h3><ul>
+<li>HTML 集合以一种“假定实时态”实时存在，这意味着当底层文档对象更新时，它也会自动更新<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个意外的死循环</span></span><br><span class="line"><span class="keyword">var</span> alldivs = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; alldivs.length; i ++) &#123;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(<span class="built_in">document</span>.createElement(<span class="string">'div));</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">/**</span></span><br><span class="line"><span class="string"> * 结局方案</span></span><br><span class="line"><span class="string">  * 将 HTML 集合拷贝到普通数组，再进行操作</span></span><br><span class="line"><span class="string">  */</span></span><br><span class="line"><span class="string">function toArray(coll) &#123;</span></span><br><span class="line"><span class="string">    for(var i = 0, a = []; i &lt; coll.length; i ++) &#123;</span></span><br><span class="line"><span class="string">        a[i] = coll[i];</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    return a;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">var coll = document.getElementsByTagName('</span>div<span class="string">');</span></span><br><span class="line"><span class="string">var ar = toArray(coll);</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="昂贵的集合"><a href="#昂贵的集合" class="headerlink" title="昂贵的集合"></a>昂贵的集合</h4><p>优化方案：</p>
+<ul>
+<li><p>相同的内容和数量下，便利一个数组的速度明显快于便利一个 HTML 集合</p>
+</li>
+<li><p>循环时缓存数组长度</p>
+</li>
+</ul>
+<hr>
+<h3 id="遍历-DOM"><a href="#遍历-DOM" class="headerlink" title="遍历 DOM"></a>遍历 DOM</h3><h4 id="获取-DOM-元素"><a href="#获取-DOM-元素" class="headerlink" title="获取 DOM 元素"></a>获取 DOM 元素</h4><ul>
+<li><p>在不同浏览器中，elemnt.nextSibling 和 parentEle.childNode 运行时间相差无几</p>
+<ul>
+<li><p>但是在 IE6 中，nextSibling 快16倍</p>
+</li>
+<li><p>在 IE7 中，nextSibling 快 105 倍</p>
+</li>
+</ul>
+</li>
+<li><p>因此得出结论，在老版本的 IE 中，推荐使用 nextSibling 来查找DOM 节点，其他情况取决于个人或团队偏好</p>
+</li>
+</ul>
+<h4 id="元素节点"><a href="#元素节点" class="headerlink" title="元素节点"></a>元素节点</h4><ul>
+<li>在所有浏览器中，children 都比 childNodes 要快，因为集合项更少</li>
+</ul>
+<h4 id="选择器-API"><a href="#选择器-API" class="headerlink" title="选择器 API"></a>选择器 API</h4><ul>
+<li><p>如果需要处理<strong>大量组合</strong>查询，推荐使用 querySelectorAll()</p>
+</li>
+<li><p>还有一个新的选择器API，querySelector()，可以获取第一个匹配到的节点</p>
+</li>
+</ul>
+<hr>
+<h3 id="重绘与重排"><a href="#重绘与重排" class="headerlink" title="重绘与重排"></a>重绘与重排</h3><ul>
+<li>概念：<br> 当DOM的变化影响了元素的几何属性（宽和高）——比如改变边框宽度或给段落增加文字，导致行数增加——浏览器需要重新计算元素的几何数形，同样其他元素的几何属性也会因此受到影响。浏览器回事渲染树中受到影响的部分失效，并重新构建渲染树。这个过程称为“重排”。完成重排后，浏览器会重新绘制受影响的部分到屏幕中，该过程称为“重绘”。</li>
+</ul>
+<ul>
+<li>并不是所有的 DOM 变化都会影响几何属性，例如，改变一个元素的背景色并不会影响它的宽和高。这种情况下，只会发生一次重绘（不需要重排）</li>
+</ul>
+<h4 id="重排何时发生"><a href="#重排何时发生" class="headerlink" title="重排何时发生"></a>重排何时发生</h4><ul>
+<li><p>添加或删除可见的 DOM 元素</p>
+</li>
+<li><p>元素位置改变</p>
+</li>
+<li><p>元素尺寸改变（包括：外边距、内边距、边框厚度、宽度、高度等属性改变）</p>
+</li>
+<li><p>内容改变，例如：文本改变或图片被另一个不同尺寸的图片替代</p>
+</li>
+<li><p>页面渲染器初始化</p>
+</li>
+<li><p>浏览器窗口尺寸改变</p>
+</li>
+<li><p>滚动条出现时</p>
+</li>
+</ul>
+<h4 id="渲染树变化的排队与刷新"><a href="#渲染树变化的排队与刷新" class="headerlink" title="渲染树变化的排队与刷新"></a>渲染树变化的排队与刷新</h4><blockquote>
+<p>由于每次重排都会产生计算消耗，大多数浏览器通过队列化修改并批量执行来优化重拍过程，然而，你可能会（经常不知不觉）强制刷新队列要求计划任务立即执行。获取布局信息的操作会导致队列刷新。例如一下方法:</p>
+</blockquote>
+<ul>
+<li><p>offsetTop, offsetLeft, offsetWidth, offsetHeight</p>
+</li>
+<li><p>scrollTop, scrollLeft, scrollWidth, scrollHeight</p>
+</li>
+<li><p>clientTop, clientLeft, clientWidth, clientHeight</p>
+</li>
+<li><p>getComputedStyle() （currentStyle in IE）</p>
+</li>
+</ul>
+<p>以上属性和方法需要最新的布局信息，因此浏览器不得不执行渲染队列的“待处理变化”并触发重排以返回正确的值。</p>
+<ul>
+<li>因此，在修改样式的过程中，最好避免出现上面列出的属性。它们都会刷新渲染队列，即使你是在获取最近未发生改变的或者与最新改变无关的布局信息</li>
+</ul>
+<hr>
+<h3 id="最小化重绘与重排"><a href="#最小化重绘与重排" class="headerlink" title="最小化重绘与重排"></a>最小化重绘与重排</h3><ul>
+<li>如上所述，通过延迟访问布局信息来避免“重排”</li>
+</ul>
+<h4 id="改变样式"><a href="#改变样式" class="headerlink" title="改变样式"></a>改变样式</h4><ul>
+<li><p>合并所有的改变然后依次处理</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> el = <span class="built_in">document</span>.getElementById(<span class="string">'box'</span>);</span><br><span class="line">el.style.borderLeft = <span class="string">'1px'</span>;</span><br><span class="line">el.style.borderRight = <span class="string">'2px'</span>;</span><br><span class="line">el.style.padding = <span class="string">'5px'</span>;</span><br><span class="line"><span class="comment">// 上面可能会导致浏览器触发三次重排</span></span><br><span class="line"><span class="comment">// 改写成下面的方式就会更高效</span></span><br><span class="line"><span class="keyword">var</span> el = <span class="built_in">document</span>.getElementById(<span class="string">'box'</span>);</span><br><span class="line">el.style.cssText = <span class="string">'border-left: 1px; border-right: 1px; padding: 5px;'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>另一个一次性修改样式的方法是修改CSS的class名称，而不是修改内联样式。适用于那些不依赖运行逻辑和计算的情况</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> el = <span class="built_in">document</span>.getElementById(<span class="string">'box'</span>);</span><br><span class="line">el.className = <span class="string">'active'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="批量修改-DOM"><a href="#批量修改-DOM" class="headerlink" title="批量修改 DOM"></a>批量修改 DOM</h4><p>可以使用以下步骤进行优化：</p>
+<ol>
+<li><p>使元素脱离文档流</p>
+</li>
+<li><p>对其应用多重改变</p>
+</li>
+<li><p>把元素带回文档中</p>
+</li>
+</ol>
+<p>使 DOM 脱离文档的三种基本方法：</p>
+<ul>
+<li>前情提要<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 如下元素 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">"myList"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.baidu.com"</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.google.com"</span>&gt;</span>谷歌<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> data = [</span></span><br><span class="line"><span class="undefined">        &#123;</span></span><br><span class="line"><span class="javascript">            <span class="string">"name"</span>: <span class="string">"Jack"</span>,</span></span><br><span class="line"><span class="javascript">            <span class="string">"url"</span>: <span class="string">"https://www.redux.org.cn"</span></span></span><br><span class="line"><span class="undefined">        &#125;,</span></span><br><span class="line"><span class="undefined">        &#123;</span></span><br><span class="line"><span class="javascript">            <span class="string">"name"</span>: <span class="string">"Ross"</span>,</span></span><br><span class="line"><span class="javascript">            <span class="string">"url"</span>: <span class="string">"https://github.com"</span></span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    ]</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 通用函数</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">appendDataToElement</span>(<span class="params">appendToElement, data</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> a, li;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, max = data.length; i &lt; max; i ++) &#123;</span></span><br><span class="line"><span class="javascript">            a = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>);</span></span><br><span class="line"><span class="undefined">            a.href = data[i].url;</span></span><br><span class="line"><span class="javascript">            a.appendChild(<span class="built_in">document</span>.createTextNode(data[i].name));</span></span><br><span class="line"><span class="javascript">            li = <span class="built_in">document</span>.createElement(<span class="string">'li'</span>);</span></span><br><span class="line"><span class="undefined">            li.appendChild(a);</span></span><br><span class="line"><span class="undefined">            appendToElement.appendChild(li);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 最普通的更新列表方式</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> ul = <span class="built_in">document</span>.getElementById(<span class="string">'myList'</span>);</span></span><br><span class="line"><span class="undefined">    appendDataToElement(ul, data);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol>
+<li><p>隐藏元素，应用修改，重新显示</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改之后的更新方式</span></span><br><span class="line"><span class="keyword">var</span> ul = <span class="built_in">document</span>.getElementById(<span class="string">'myList'</span>);</span><br><span class="line">ul.style.display = <span class="string">'none'</span>;</span><br><span class="line">appendDataToElement(ul, data);</span><br><span class="line">ul.style.display = <span class="string">'block'</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用文档片段（document fragment）在当前 DOM 之外构建一个子树，再把它拷贝回文档</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改之后的更新方式</span></span><br><span class="line"><span class="keyword">var</span> ul = <span class="built_in">document</span>.getElementById(<span class="string">'myList'</span>);</span><br><span class="line"><span class="keyword">var</span> fragment = <span class="built_in">document</span>.creatDocumentFragment();</span><br><span class="line">appendDataToElement(fragment, data);</span><br><span class="line">ul.appendChild(fragment);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将原始元素拷贝到一个脱离文档的节点中，修改副本，完成后再替换原始元素</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改之后的更新方式</span></span><br><span class="line"><span class="keyword">var</span> ul = <span class="built_in">document</span>.getElementById(<span class="string">'myList'</span>);</span><br><span class="line"><span class="keyword">var</span> clone = ul.cloneNode(<span class="literal">true</span>);</span><br><span class="line">appendDataToElement(clone, data);</span><br><span class="line">ul.parentNode.replaceChild(clone, ul);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="缓存布局信息"><a href="#缓存布局信息" class="headerlink" title="缓存布局信息"></a>缓存布局信息</h4><ul>
+<li><p>正如开始所说的，尽量减少获取布局信息的获取次数</p>
+</li>
+<li><p>应用场景：获取偏移量、滚动位置、计算出的样式值</p>
+</li>
+<li><p>例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 移动元素到一定位置后停止动画</span></span><br><span class="line"><span class="comment">// 低效的</span></span><br><span class="line">myElement.style.left = <span class="number">1</span> + myElement.offsetLeft + <span class="string">'px'</span>;</span><br><span class="line">myElement.style.top = <span class="number">1</span> + myElement.offsetTop + <span class="string">'px'</span>;</span><br><span class="line"><span class="keyword">if</span> (myElement.offsetLeft &gt;= <span class="number">500</span>) &#123;</span><br><span class="line">    stopAnimation();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 改写之后：</span></span><br><span class="line"><span class="comment">// 先将 myElement.offsetLeft 缓存给局部变量 current</span></span><br><span class="line"><span class="keyword">var</span> current = myElement.offsetLeft;</span><br><span class="line"></span><br><span class="line">....</span><br><span class="line"><span class="comment">// 循环体中</span></span><br><span class="line">current ++;</span><br><span class="line">myElement.style.left = current + <span class="string">'px'</span>;</span><br><span class="line">myElement.style.top = current + <span class="string">'px'</span>;</span><br><span class="line"><span class="keyword">if</span> (current &gt;= <span class="number">500</span>) &#123;</span><br><span class="line">    stopAnimation();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="让元素脱离动画流"><a href="#让元素脱离动画流" class="headerlink" title="让元素脱离动画流"></a>让元素脱离动画流</h4><ul>
+<li><p>步骤</p>
+<ol>
+<li><p>使用绝对位置定位页面上的动画元素，将其脱离文档流</p>
+</li>
+<li><p>让元素动起来。当它扩大时，会临时覆盖部分页面。但这只是页面一个小区域的重绘过程，不会产生重排并重绘页面的大部分内容</p>
+</li>
+<li><p>当动画结束时恢复定位，从而只会下移一次文档的其他元素</p>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="hover-伪类"><a href="#hover-伪类" class="headerlink" title="hover 伪类"></a>hover 伪类</h4><ul>
+<li><p>如果你有大量元素使用了 :hover，那么会降低响应速度。此问题在 IE8 中更为明显</p>
+</li>
+<li><p>因此在元素很多时应避免使用这种效果，比如很大的表格或很长的列表</p>
+</li>
+</ul>
+<h4 id="事件委托"><a href="#事件委托" class="headerlink" title="事件委托"></a>事件委托</h4><p>当页面中存在大量元素，且每一个都要一次或多次绑定事件处理器时，这种情况可能会影响性能。每绑定一个事件处理器都是有代价的，它要么是加重了页面负担（更多的标签或JavaScript代码），要么是增加了运行期的执行时间。</p>
+<p>因此，一个简单而优雅的处理 DOM 事件的技术是事件委托。它基于这样一个原理：事件逐层冒泡并能被父级元素捕获</p>
+<ul>
+<li><p>实例代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 场景： &lt;div&gt;&lt;ul id="menu"&gt;&lt;li&gt;&lt;a href="http://www.github.com"&gt;menu #1&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="comment"> *    用户点击链接 “menu #1”，点击事件首先由&lt;a&gt;元素收到，然后向 DOM 树上层冒泡，被&lt;li&gt;元素接受，接着是&lt;ul&gt;，然后是&lt;div&gt;。</span></span><br><span class="line"><span class="comment"> *    以此类推，一直到达document 的顶层乃至 window。这使得你可以添加一个事件处理器到父级元素，由它接受所有子节点的事件消息</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">'menu'</span>).onclick = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 浏览器 target</span></span><br><span class="line">    e = e || <span class="built_in">window</span>.event;</span><br><span class="line">    <span class="keyword">var</span> target = e.target || e.srcElement;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> pageid, hrefparts;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只关心hrefs， 非链接点击则退出</span></span><br><span class="line">    <span class="keyword">if</span> (target.nodeName !== <span class="string">'A'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从链接中找出页面 ID</span></span><br><span class="line">    hrefparts = target.href.split(<span class="string">'/'</span>);</span><br><span class="line">    pageid = hrefparts[hrefparts.length - <span class="number">1</span>];</span><br><span class="line">    pageid = pageid.replace(<span class="string">'.html'</span>, <span class="string">''</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新页面</span></span><br><span class="line">    ajaxReauest(<span class="string">'xhr.php?page='</span> + id, updatePageContents);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 浏览器阻止默认行为并取消冒泡</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> e.preventDefault === <span class="string">'function'</span>) &#123;</span><br><span class="line">        e.preventDefault();</span><br><span class="line">        e.stopPropagation();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      e.returnValue = <span class="literal">false</span>;</span><br><span class="line">      e.cancelBubble = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>跨浏览器兼容性的部分（可封装到可重用的类库）</p>
+<ul>
+<li><p>访问事件对象，并判断事件源</p>
+</li>
+<li><p>取消文档树中的冒泡（可选）</p>
+</li>
+<li><p>阻止默认动作（可选，但本例需要，因为需要捕获并阻止打开链接）</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>访问和操作 DOM 是现代 Web 应用的重要部分。范每次穿越连接 ECMAScript 和 DOM 两个岛屿之间的前两，都会被收取“过桥费”。为了减少 DOM 编程带来的性能损失，请记住以下几点：</p>
+<ul>
+<li><p>最小化 DOM 访问次数，尽可能在 JavaScript 端处理</p>
+</li>
+<li><p>如果需要多次访问某个 DOM 节点，请使用局部变量存储它的引用</p>
+</li>
+<li><p>小心处理 HTML 集合，因为它实时连系着底层文档。把集合的长度缓存到一个变量中，并在迭代中使用。如果需要经常操作集合，建议把它拷贝到一个数组中</p>
+</li>
+<li><p>如果可能的话，使用速度更快的 API，比如 querySelectorAll()和 firstElementChild</p>
+</li>
+<li><p>要留意重绘和重排；批量修改样式时，“离线”操作 DOM 树，使用缓存，并减少访问布局信息的次数</p>
+</li>
+<li><p>动画中使用绝对定位，使用拖放代理</p>
+</li>
+<li><p>使用事件委托来减少事件处理器的数量</p>
+</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20181218/js-hack3/" target="_blank" rel="external">https://beichensky.github.io/20181218/js-hack3/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DOM/">DOM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181218/js-hack3/&title=《JavaScript性能优化（三）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181218/js-hack3/&title=《JavaScript性能优化（三）》 — 前端小栈&source=本文是阅读《高性能JavaScript》一书后，从 DOM编程 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181218/js-hack3/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript性能优化（三）》 — 前端小栈&url=https://beichensky.github.io/20181218/js-hack3/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181218/js-hack3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20181219/js-hack4/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JavaScript性能优化（四）</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20181217/js-hack2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript性能优化（二）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181218/js-hack3/&title=《JavaScript性能优化（三）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181218/js-hack3/&title=《JavaScript性能优化（三）》 — 前端小栈&source=本文是阅读《高性能JavaScript》一书后，从 DOM编程 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181218/js-hack3/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript性能优化（三）》 — 前端小栈&url=https://beichensky.github.io/20181218/js-hack3/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181218/js-hack3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20181218/js-hack3/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

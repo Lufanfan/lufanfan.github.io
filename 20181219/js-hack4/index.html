@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>JavaScript性能优化（四） | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript,性能优化">
+    <meta name="description" content="本文是阅读《高性能JavaScript》一书后，从 算法与流程控制 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+<meta name="keywords" content="JavaScript,性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript性能优化（四）">
+<meta property="og:url" content="https://beichensky.github.io/20181219/js-hack4/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文是阅读《高性能JavaScript》一书后，从 算法与流程控制 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-21T13:00:03.583Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript性能优化（四）">
+<meta name="twitter:description" content="本文是阅读《高性能JavaScript》一书后，从 算法与流程控制 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JavaScript性能优化（四）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JavaScript性能优化（四）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-19T03:19:59.000Z" itemprop="datePublished" class="page-time">
+  2018-12-19
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#循环"><span class="post-toc-number">1.</span> <span class="post-toc-text">循环</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#循环类型"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">循环类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#循环性能"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">循环性能</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#基于函数的迭代"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">基于函数的迭代</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#条件语句"><span class="post-toc-number">2.</span> <span class="post-toc-text">条件语句</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#if-else-对比-switch"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">if-else 对比 switch</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优化-if-else"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">优化 if-else</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#查找表"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">查找表</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#调用栈限制"><span class="post-toc-number">3.</span> <span class="post-toc-text">调用栈限制</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#递归"><span class="post-toc-number">4.</span> <span class="post-toc-text">递归</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#迭代"><span class="post-toc-number">5.</span> <span class="post-toc-text">迭代</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Memoization"><span class="post-toc-number">6.</span> <span class="post-toc-text">Memoization</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#小结"><span class="post-toc-number">7.</span> <span class="post-toc-text">小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-js-hack4" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JavaScript性能优化（四）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-19 11:19:59" datetime="2018-12-19T03:19:59.000Z" itemprop="datePublished">2018-12-19</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文是阅读《高性能JavaScript》一书后，从 <strong><em>算法与流程控制</em></strong> 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！</p>
+<a id="more"></a>
+<hr>
+<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><h4 id="循环类型"><a href="#循环类型" class="headerlink" title="循环类型"></a>循环类型</h4><ul>
+<li><p>普通 for 循环</p>
+<blockquote>
+<p>在for循环中初始化的var语句会创建一个函数级的变量，而不是循环级。由于JavaScript只有函数级作用域，因此在for循环中使用var定义一个新变量相当于在循环体外定义一个新变量</p>
+</blockquote>
+</li>
+<li><p>while 循环，while 循环是最简单的前测循环</p>
+</li>
+<li><p>do-while 循环，是 JavaScript 中唯一一种后测循环</p>
+</li>
+<li><p>for-in 循环：可以枚举任何对象的属性名</p>
+<ul>
+<li>for-in 循环是四种循环中最慢的，另外三种循环性能相仿</li>
+<li>不要用 for-in 来遍历数组成员</li>
+<li>尽量避免使用 for-in 循环，除非你明确需要一个属性数量未知的对象</li>
+</ul>
+</li>
+</ul>
+<h4 id="循环性能"><a href="#循环性能" class="headerlink" title="循环性能"></a>循环性能</h4><blockquote>
+<p>当循环复杂度为 O(n) 时，减少每次迭代的工作量是最有效的方法。当复杂度大于 O(n)，建议着重减少迭代次数</p>
+</blockquote>
+<ul>
+<li><p>减少迭代的工作量</p>
+<ol>
+<li><p>减少对象成员及数组项的查找次数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原始版本</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; items.length; i ++) &#123;</span><br><span class="line">    process(items[i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最小化属性查找（优化版本）</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = items.length; i &lt; len; i ++) &#123;</span><br><span class="line">    process(items[i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化后的版本大概能节省25%的运行时间（IE中甚至可以节省50%）</span></span><br><span class="line"><span class="comment">// 另外三种循环也是一样的优化方式</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用倒序循环来提高循环性能</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 数组项的顺序与索要执行的染污无关时，可以按照下面方式改写。可以略微提升性能</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = items.length; i --; ) &#123;</span><br><span class="line">    process(items[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>减少迭代次数</p>
+<ol>
+<li><p>达夫设备（Duff’s Device）</p>
+<blockquote>
+<p>是否应该使用“达夫设备”，无论是原始版本还是优化版本，很大程度上取决于迭代次数。若循环次数小于1000，性能提升微不足道。如果迭代次数超过1000，那么“达夫设备”的执行效率明显提升。</p>
+</blockquote>
+<ul>
+<li><p>初始版本</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// credit: Jeff Greenberg</span></span><br><span class="line"><span class="keyword">var</span> iterations = <span class="built_in">Math</span>.floor(items.length / <span class="number">8</span>),</span><br><span class="line">    startAt    = items.length % <span class="number">8</span>,</span><br><span class="line">    i          = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span>(startAt) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>: process([items[i++]]);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">7</span>: process([items[i++]])</span><br><span class="line">        <span class="keyword">case</span> <span class="number">6</span>: process([items[i++]])</span><br><span class="line">        <span class="keyword">case</span> <span class="number">5</span>: process([items[i++]])</span><br><span class="line">        <span class="keyword">case</span> <span class="number">4</span>: process([items[i++]])</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>: process([items[i++]])</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>: process([items[i++]])</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>: process([items[i++]])</span><br><span class="line">    &#125;</span><br><span class="line">    startAt = <span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">while</span> (--iterations);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>优化版本</p>
+<blockquote>
+<p>此算法将余数处理和主循环分开。尽管这种方式使用两次循环代替之前的一次循环，但它移除了循环体中的 switch 语句，速度比原始循环更快</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// credit: Jeff Greenberg</span></span><br><span class="line"><span class="keyword">var</span> i = items.length % <span class="number">8</span>;</span><br><span class="line"><span class="keyword">while</span>(i) &#123;</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">i = <span class="built_in">Math</span>.floor(items.length / <span class="number">8</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(i) &#123;</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">    process([items[i--]]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其他方案</p>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="基于函数的迭代"><a href="#基于函数的迭代" class="headerlink" title="基于函数的迭代"></a>基于函数的迭代</h4><blockquote>
+<p>尽管基于函数的迭代提供了一个更为便利的迭代方法，但它仍然 <strong>比基于循环的迭代要慢一些</strong></p>
+</blockquote>
+<ul>
+<li><p>Ecma-262 标准第四版一如了一个新的原生数组方法：forEach()：items.forEach(function(value, index, array) {})</p>
+</li>
+<li><p>YUI 3 的each()：Y.Array.each(items, function(value, index, array) {})</p>
+</li>
+<li><p>Jquery 的 each()：jQuery.each(items, function(index, value) {})</p>
+</li>
+<li><p>Dojo 的 forEach()：dojo.each(items, function(value, index, array) {})</p>
+</li>
+<li><p>ProtoType 的 each()：items.each(function(value, index) {})</p>
+</li>
+<li><p>MooTools 的 each()：$each(items, function(value, index) {})</p>
+</li>
+</ul>
+<hr>
+<h3 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h3><h4 id="if-else-对比-switch"><a href="#if-else-对比-switch" class="headerlink" title="if-else 对比 switch"></a>if-else 对比 switch</h4><blockquote>
+<p>大多数的语言对 switch 语句的实现都采用了 branch table（分支表）索引来进行优化。<br>另外，在 JavaScript 中，switch 语句比较值时使用权等操作符，不会发生类型转换的消耗。</p>
+</blockquote>
+<ul>
+<li><p>大多数情况下，switch 比 if-else 运行得要快</p>
+</li>
+<li><p>循环条件较少时，if-else 更易读，条件数量较多时，switch 更易读</p>
+</li>
+<li><p>if-else 适用于判断两个离散值或者几个不同的值域。当判断多与两个离散值时，switch 语句是更佳选择</p>
+</li>
+</ul>
+<h4 id="优化-if-else"><a href="#优化-if-else" class="headerlink" title="优化 if-else"></a>优化 if-else</h4><p>优化 if-else 的目标是：最小化到达正确分之前所需判断的条件数量</p>
+<ul>
+<li><p>最简单的优化方法是确保可能出现的条件放在首位</p>
+</li>
+<li><p>把 if-else 组织成一系列嵌套的 if-else 语句</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实例代码：</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通版本</span></span><br><span class="line"><span class="keyword">if</span> (value == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result0;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result1;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result2;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result3;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">4</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result4;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">5</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result5;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">6</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result6;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">7</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result7;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">8</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result8;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">9</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> result9;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化版本</span></span><br><span class="line"><span class="keyword">if</span> (value &lt; <span class="number">6</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (value &lt; <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (value == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result0;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> result2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (value == <span class="number">3</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result3;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="number">4</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result4;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> result5;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (value &lt; <span class="number">8</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (value == <span class="number">6</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result6;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> result7;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (value == <span class="number">8</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result8;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> result9;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>重写后的 if-else 语句每次到达正确分支最多经过4次条件判断。它使用二分法把值域分成一系列的区间，然后逐步缩小范围。耗时仅是普通版本的一半。<br>这个方法非常适用于有多个值域需要测试的时候（如果是离散值，那么switch语句通常更为合适）。</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="查找表"><a href="#查找表" class="headerlink" title="查找表"></a>查找表</h4><p>有些时候优化条件语句的最佳方案是避免使用 if-else 和 switch。当有大量离散值需要测试时，if-else 和 switch 比使用查找表慢很多。JavaScript 中可以使用数组和普通对象来构建查找表。通过查找表访问数据比用 if-else 或 switch 快很多，特别是在条件语句数量很大的时候。</p>
+<blockquote>
+<p>使用查找表相对于 if-else 和 switch，不仅速度更快，而且有时代码的可读性更好，特别是当需要测试的离散值数量非常大的时候。</p>
+</blockquote>
+<pre><code><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 普通switch</span></span><br><span class="line"><span class="keyword">switch</span> (value) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>: </span><br><span class="line">        <span class="keyword">return</span> result0;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>: </span><br><span class="line">        <span class="keyword">return</span> result1;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">2</span>: </span><br><span class="line">        <span class="keyword">return</span> result2;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">3</span>: </span><br><span class="line">        <span class="keyword">return</span> result3;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">4</span>: </span><br><span class="line">        <span class="keyword">return</span> result4;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">5</span>: </span><br><span class="line">        <span class="keyword">return</span> result5;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">6</span>: </span><br><span class="line">        <span class="keyword">return</span> result6;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">7</span>: </span><br><span class="line">        <span class="keyword">return</span> result7;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">8</span>: </span><br><span class="line">        <span class="keyword">return</span> result8;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">9</span>: </span><br><span class="line">        <span class="keyword">return</span> result9;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> result10;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用查找表技术优化</span></span><br><span class="line"><span class="comment">// 将返回值集合存入数组</span></span><br><span class="line"><span class="keyword">var</span> results = [result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回当前结果值</span></span><br><span class="line"><span class="keyword">return</span> results[value];</span><br></pre></td></tr></table></figure>
+</code></pre><hr>
+<h3 id="调用栈限制"><a href="#调用栈限制" class="headerlink" title="调用栈限制"></a>调用栈限制</h3><blockquote>
+<p>JavaScript 引擎支持的递归数量与 JavaScript 调用栈大小直接相关。只有 IE 例外，它的调用栈与系统空闲内存有关，而其他浏览器都有固定数量的调用栈限制。</p>
+</blockquote>
+<p>使用了太多递归，甚至超过最大调用栈容量时，浏览器会报告一下错误信息：</p>
+<ul>
+<li><p>Internet Explorer: “Stack overflow at line x”</p>
+</li>
+<li><p>Firefox: “Too much recursion”</p>
+</li>
+<li><p>Safari: “Maximum call stack exceeded”</p>
+</li>
+<li><p>Opera: “Abort（control stack overflow）”</p>
+</li>
+<li><p>Chrome 是唯一不显示调用栈溢出错误的浏览器</p>
+</li>
+</ul>
+<blockquote>
+<p>尽管在 JavaScript 中捕获这些错误是有可能的，但并不推荐这样做。那些有潜在问题的调用栈溢出问题的脚本不应该发布上线</p>
+</blockquote>
+<hr>
+<h3 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h3><p>使用递归可以把复杂的算法变简单。比如阶乘函数：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">factorial</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> n * factorial(n - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>递归的潜在问题是终止条件不明确或缺少终止条件会导致函数长时间运行，并使得用户界面处于假死状态</p>
+</blockquote>
+<p>当遇到调用栈大小限制时，第一步应该先检查代码中的递归实例。为此，有两种递归模式值得注意：</p>
+<ul>
+<li><p>直接递归模式（即函数调用自身）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">recurse</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    recurse();</span><br><span class="line">&#125;</span><br><span class="line">recurse();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>隐伏模式（两个或多个函数互相调用）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">first</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    second();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">second</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    first();</span><br><span class="line">&#125;</span><br><span class="line">first();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>大多数调用栈错误都这两种模式有关。组常见的导致栈溢出的原因是不正确的终止条件，因此定位模式错误的第一步是验证终止条件。如果终止条件没有问题，那么可能是算法中包含了太多层递归，为了能在浏览器中安全的工作，建议改用 <strong>迭代</strong>、<strong>Memoization</strong>，或者结合两者使用。</p>
+<hr>
+<h3 id="迭代"><a href="#迭代" class="headerlink" title="迭代"></a>迭代</h3><p>任何递归能实现的算法同样可以用迭代来实现。迭代算法通常包含以下几个不同的循环，分别对应计算过程的不同方面，这也会引入它们自身的性能问题。然而，使用优化后的循环替代长时间运行的递归函数可以提升性能，因为 <strong>运行一个循环比反复调用一个函数的开销要少很多</strong></p>
+<p>例如合并排序算法：</p>
+<ul>
+<li><p>使用递归</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">merge</span>(<span class="params">left, right</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left.length &gt; <span class="number">0</span> &amp;&amp; right.length &gt;<span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (left[<span class="number">0</span>] &lt; right[<span class="number">0</span>]) &#123;</span><br><span class="line">            result.push(left.shift());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            result.push(right.shift());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result.concat(left).concat(right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeSort</span>(<span class="params">items</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(items.length == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> middle = <span class="built_in">Math</span>.floor(items.length / <span class="number">2</span>),</span><br><span class="line">        left   = items.slice(<span class="number">0</span>, middle),</span><br><span class="line">        right  = items.slice(middle);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> merge(mergeSort(left), mergeSort(right));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这段代码相当直观，但是 mergeSort() 函数会导致很频繁的自调用。一个长度为 n 的数组最终会调用 mergeSort() 2*n - 1 次，这意味着一个长度超过 1500 的数组会在 Firefox 上发生栈溢出错误。</p>
+</blockquote>
+</li>
+<li><p>使用迭代优化</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">merge</span>(<span class="params">left, right</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left.length &gt; <span class="number">0</span> &amp;&amp; right.length &gt;<span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (left[<span class="number">0</span>] &lt; right[<span class="number">0</span>]) &#123;</span><br><span class="line">            result.push(left.shift());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            result.push(right.shift());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result.concat(left).concat(right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeSort</span>(<span class="params">items</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (items.length == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> work = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = items.length; i &lt; len; i ++) &#123;</span><br><span class="line">        work.push([items[i]]);</span><br><span class="line">    &#125;</span><br><span class="line">    work.push([]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> lim = len; lim &gt; <span class="number">1</span>; lim = (lim + <span class="number">1</span>) / <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>, k = <span class="number">0</span>; k &lt; lim; j ++, k += <span class="number">2</span>) &#123;</span><br><span class="line">            work[j] = merge(work[k], work[k + <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        work[j] = []; <span class="comment">// 如果数组长度为奇数</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> work[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这个版本没有使用递归，尽管迭代版本的合并排序算法比递归实现得要慢一些，但它不会像递归版本那样受调用栈限制的影响。把递归算法改用迭代实现是避免栈溢出错误的方法之一。</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h3 id="Memoization"><a href="#Memoization" class="headerlink" title="Memoization"></a>Memoization</h3><p>减少工作量就是最好的性能优化技术。代码要处理的事越少，它的运行速度就越快。沿着这个思路，避免重复工作也是有意义的。多次执行相同的任务纯粹是浪费时间。Memoization 正是一种避免重复工作方法，它缓存前一个计算结果供后续计算使用，避免了重复工作。这使得它成为递归算法中有用的技术。</p>
+<ul>
+<li><p>普通的阶乘函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">factorial</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> n * factorial(n - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> fact6 = factorial(<span class="number">6</span>);</span><br><span class="line"><span class="keyword">var</span> fact5 = factorial(<span class="number">5</span>);</span><br><span class="line"><span class="keyword">var</span> fact4 = factorial(<span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这段代码有3次阶乘计算，导致 factorial() 函数一共被调用了 18 次。改代码中最糟糕的部分是，所有必要的计算在第一行代码里已经处理掉了。</p>
+</blockquote>
+</li>
+<li><p>使用 Memoization 技术进行重写（保存并重用计算结果，而不是每次都重新计算整个函数）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">memfactorial</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!memfactorial.cache) &#123;</span><br><span class="line">        memfactorial.cache = &#123;</span><br><span class="line">            <span class="string">"0"</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="string">"1"</span>: <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!memfactorial.cache.hasOwnProperty(n)) &#123;</span><br><span class="line">        memfactorial.cache[n] = n * memfactorial(n - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> memfactorial.cache[n];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fact6 = memfactorial(<span class="number">6</span>);</span><br><span class="line"><span class="keyword">var</span> fact5 = memfactorial(<span class="number">5</span>);</span><br><span class="line"><span class="keyword">var</span> fact4 = memfactorial(<span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>该代码返回了3个不同的阶乘值，但只调用了 memfactorial() 函数 8 次。因为所有必要的计算都在第一行完成并缓存了，所以接下来的梁行代码不会发生地柜运算，而是直接返回缓存中的值了。</p>
+</blockquote>
+</li>
+<li><p>更简单的版本</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基础功能的 memoize 函数</span></span><br><span class="line"><span class="comment"> *    @param &#123;*&#125; fundamental 需要增加缓存功能的函数</span></span><br><span class="line"><span class="comment"> *    @param &#123;*&#125; cache 可选的缓存对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">memoize</span>(<span class="params">fundamental, cache</span>) </span>&#123;</span><br><span class="line">    cache = cache || &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> shell = <span class="function"><span class="keyword">function</span>(<span class="params">arg</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!cache.hasOwnProperty(arg)) &#123;</span><br><span class="line">            cache[arg] = fundamental(arg);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cache[arg];</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> shell;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">factorial</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> n * factorial(n - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> memfactorial = memoize(factorial, &#123;<span class="string">"0"</span>: <span class="number">1</span>, <span class="string">"1"</span>: <span class="number">1</span>&#125;);</span><br><span class="line"><span class="keyword">var</span> fact6 = memfactorial(<span class="number">6</span>);</span><br><span class="line"><span class="keyword">var</span> fact5 = memfactorial(<span class="number">5</span>);</span><br><span class="line"><span class="keyword">var</span> fact4 = memfactorial(<span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这种通用的 Memoization 与手工更新给定函数的算法先比优化效果要差一些，因为 memoize() 函数会缓存特定参数的函数调用结果。当代码以相同的参数多次调用外壳函数时才能节省时间。因此，当 Memoization 函数存在显著性能问题时，最好有针对性的手工实现它，而不是直接用通用 Memoization 方案。</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li><p>for、while、和 do-while 循环性能特性相当，并没有一种循环类型明显快于或慢于其他类型</p>
+</li>
+<li><p>避免使用 for-in 循环，除非你需要遍历一个属性数量未知的对象</p>
+</li>
+<li><p>改善循环性能的最佳方式是减少每次迭代的运算量和减少循环迭代次数</p>
+</li>
+<li><p>通常来说，switch 总是比 if-else 快，但并不总是最佳解决方案</p>
+</li>
+<li><p>在判断条件较多时，使用查找表比 if-else 和 switch 更快</p>
+</li>
+<li><p>浏览器的调用栈大小限制了递归算法在 JavaScript 中的应用；栈溢出错误会导致其他代码中断执行</p>
+</li>
+<li><p>如果你遇到栈溢出错误，可将方法改为迭代算法，或使用 Memoization 来避免重复计算</p>
+</li>
+</ul>
+<blockquote>
+<p>运行的代码数量越大，使用这些策略所带来的性能提升也就越明显。</p>
+</blockquote>
+<p>JavaScript 和其他编程语言一样，代码的写法和算法会影响运行时间。与其他语言不同的是，JavaScript 可用资源有限（由于JavaScript是解释型语言，与编译性语言不同的是，它无需编译，而是将代码以字符串的形式交给 JavaScript 引擎来执行。因此，代码性能在一定程度上取决于客户端浏览器的JavaScript引擎），因此优化技术更为重要。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20181219/js-hack4/" target="_blank" rel="external">https://beichensky.github.io/20181219/js-hack4/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181219/js-hack4/&title=《JavaScript性能优化（四）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181219/js-hack4/&title=《JavaScript性能优化（四）》 — 前端小栈&source=本文是阅读《高性能JavaScript》一书后，从 算法与流程控制 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181219/js-hack4/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript性能优化（四）》 — 前端小栈&url=https://beichensky.github.io/20181219/js-hack4/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181219/js-hack4/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20181220/js-hack5/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JavaScript性能优化（五）</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20181218/js-hack3/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript性能优化（三）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181219/js-hack4/&title=《JavaScript性能优化（四）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181219/js-hack4/&title=《JavaScript性能优化（四）》 — 前端小栈&source=本文是阅读《高性能JavaScript》一书后，从 算法与流程控制 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181219/js-hack4/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript性能优化（四）》 — 前端小栈&url=https://beichensky.github.io/20181219/js-hack4/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181219/js-hack4/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20181219/js-hack4/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

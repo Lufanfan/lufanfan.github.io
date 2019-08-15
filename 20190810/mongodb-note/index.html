@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>MonogoDB 数据库基本使用和常用命令 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="数据库,MongoDB">
+    <meta name="description" content="本文简单介绍了 mongodb 数据库的基本概念以及基础用法">
+<meta name="keywords" content="数据库,MongoDB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MonogoDB 数据库基本使用和常用命令">
+<meta property="og:url" content="https://beichensky.github.io/20190810/mongodb-note/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文简单介绍了 mongodb 数据库的基本概念以及基础用法">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-15T23:23:53.721Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MonogoDB 数据库基本使用和常用命令">
+<meta name="twitter:description" content="本文简单介绍了 mongodb 数据库的基本概念以及基础用法">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">MonogoDB 数据库基本使用和常用命令</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">MonogoDB 数据库基本使用和常用命令</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-08-10T06:27:44.000Z" itemprop="datePublished" class="page-time">
+  2019-08-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据库/">数据库</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据库/MongoDB/">MongoDB</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、相关概念及名词"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、相关概念及名词</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、常用指令"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、常用指令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基本指令"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">基本指令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#增删改查（CRUD）指令"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">增删改查（CRUD）指令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#新增（INSERT）"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">新增（INSERT）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#查询（QUERY）"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">查询（QUERY）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#投影"><span class="post-toc-number">3.2.2.1.</span> <span class="post-toc-text">投影</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#常用查询器"><span class="post-toc-number">3.2.2.2.</span> <span class="post-toc-text">常用查询器</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#更新（UPDATE）"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">更新（UPDATE）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除（DELETE）"><span class="post-toc-number">3.2.4.</span> <span class="post-toc-text">删除（DELETE）</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删除集合和数据库"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">删除集合和数据库</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、参考链接"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、参考链接</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-mongodb-note" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">MonogoDB 数据库基本使用和常用命令</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-08-10 14:27:44" datetime="2019-08-10T06:27:44.000Z" itemprop="datePublished">2019-08-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据库/">数据库</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据库/MongoDB/">MongoDB</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文简单介绍了 mongodb 数据库的基本概念以及基础用法</p>
+<a id="more"></a>
+<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><ul>
+<li><code>MongoDB</code> 是为快速开发互联网 <code>Web</code> 应用而设计的数据库系统</li>
+<li><code>MongoDB</code> 的设计目标是极简、灵活、作为 <code>Web</code> 应用栈的一部分</li>
+<li><code>MongoDB</code> 的数据模型是面向文档的，所谓文档，是一种类似于 <code>JSON</code> 的结构，简单理解 <code>MongoDB</code> 这个数据库中存的是各种各样的 <code>JSON(BJSON)</code></li>
+</ul>
+<hr>
+<h2 id="二、相关概念及名词"><a href="#二、相关概念及名词" class="headerlink" title="二、相关概念及名词"></a>二、相关概念及名词</h2><ul>
+<li><p>数据库：是一个仓库，在仓库中可以存放集合</p>
+</li>
+<li><p>集合</p>
+<ul>
+<li>类似于数组，在集合中可以存放文档</li>
+<li>存储的文档可以是多种多样的，没有格式要求</li>
+</ul>
+</li>
+<li><p>文档</p>
+<ul>
+<li>数据库中的最小单位，对数据库进行存储和操作的内容都是文档</li>
+<li>类似于 <code>JS</code> 中的对象，在 <code>MongoDB</code> 中每一条数据就是一个文档</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>多个文档组成集合，多个集合组成数据库</p>
+</blockquote>
+<hr>
+<h2 id="三、常用指令"><a href="#三、常用指令" class="headerlink" title="三、常用指令"></a>三、常用指令</h2><h3 id="基本指令"><a href="#基本指令" class="headerlink" title="基本指令"></a>基本指令</h3><ul>
+<li><code>show dbs/ databases</code>: 显示当前的所有数据库</li>
+<li><code>use</code> 数据库名：进入到指定的数据库中  <code>eg: use my_test</code></li>
+<li><code>db</code> ：表示的是当前所处的数据库</li>
+<li><code>show collections</code>：显示数据库中所有的集合</li>
+</ul>
+<h3 id="增删改查（CRUD）指令"><a href="#增删改查（CRUD）指令" class="headerlink" title="增删改查（CRUD）指令"></a>增删改查（CRUD）指令</h3><h4 id="新增（INSERT）"><a href="#新增（INSERT）" class="headerlink" title="新增（INSERT）"></a>新增（INSERT）</h4><ul>
+<li><p>向数据库中插入文档：<code>db.&lt;collection&gt;.insert(doc)</code></p>
+<ul>
+<li>向集合中插入一个或多个文档</li>
+<li>向集合中插入文档时，如果没有给文档指定 <code>id</code> 属性，则数据库会自动为文档添加 <code>_id</code>，该属性用来作为文档的唯一标识</li>
+<li><code>_id</code> 我们可以自己指定，如果我们指定了，则数据库就不会再自动生成了。如果自己指定 <code>_id</code>，也必须确保它的唯一性</li>
+<li>例子：向 <code>test</code> 数据库中的 <code>students</code> 集合中插入一个新的学生对象：<code>{name: &quot;小明&quot;, age: 18, addr: &quot;male&quot;}</code><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">test</span>;</span><br><span class="line">db.students.insert(&#123;name: "小明", age: 18, addr: "三味书屋"&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><code>db.&lt;collection&gt;.insertOne(doc)</code>：向数据库中插入一条数据</p>
+</li>
+<li><code>db.&lt;collection&gt;.insertMany(doc)</code>：向数据库中插入多条数据</li>
+</ul>
+<p>示例：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">test</span>;</span><br><span class="line"></span><br><span class="line">// 插入一条</span><br><span class="line">db.students.insert(&#123;name: "小明", age: 18, addr: "三味书屋", salary: 3000&#125;);</span><br><span class="line"></span><br><span class="line">// 插入多条</span><br><span class="line">db.students.insert([&#123;name: "小红", age: 16, addr: "东方明珠", salary: 5000&#125;, &#123;name: "小白", age: 19, addr: "王府井", salary: 6000&#125;]);</span><br><span class="line"></span><br><span class="line">// 等同于下面的方式</span><br><span class="line"></span><br><span class="line">// 插入一条</span><br><span class="line">db.students.insertOne(&#123;name: "小明", age: 18, addr: "三味书屋", salary: 3000&#125;);</span><br><span class="line"></span><br><span class="line">// 插入多条</span><br><span class="line">db.students.insertMany([&#123;name: "小红", age: 16, addr: "东方明珠", salary: 5000&#125;, &#123;name: "小白", age: 19, addr: "王府井", salary: 6000&#125;]);</span><br></pre></td></tr></table></figure></p>
+<h4 id="查询（QUERY）"><a href="#查询（QUERY）" class="headerlink" title="查询（QUERY）"></a>查询（QUERY）</h4><ul>
+<li><code>db.&lt;collection&gt;.find()</code><ul>
+<li>默认查询当前集合中的所有文档</li>
+<li><code>find({})</code>：也是查询当前集合中所有的文档</li>
+<li>返回的是一个数组</li>
+<li>接收一个对象作为参数，必须满足对象中所有的属性</li>
+<li><code>.count()</code>: 查询出所有结果的数量</li>
+<li><code>.length()</code>: 查询出所有结果的数量</li>
+</ul>
+</li>
+<li><code>db.&lt;collection&gt;.findOne()</code>：查询集合中符合条件的第一个文档<ul>
+<li>返回的是一个对象</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">test</span></span><br><span class="line"></span><br><span class="line">// 查询集合中所有的文档（实际项目中不会这么操作）</span><br><span class="line">db.students.find();</span><br><span class="line"></span><br><span class="line">// 查询集合中符合条件的所有文档</span><br><span class="line">db.students.find(&#123; age: 19 &#125;);</span><br><span class="line"></span><br><span class="line">// 查询符合条件的第一个文档</span><br><span class="line">db.students.findOne(&#123; age: 19 &#125;);</span><br><span class="line"></span><br><span class="line">// 查询符合条件的文档数目</span><br><span class="line">db.students.find(&#123; age: 19 &#125;).count();</span><br><span class="line">// 或</span><br><span class="line">db.students.find(&#123; age: 19 &#125;).length();</span><br></pre></td></tr></table></figure>
+<h5 id="投影"><a href="#投影" class="headerlink" title="投影"></a>投影</h5><ul>
+<li><code>db.&lt;collection&gt;.find(filter, options)</code><ul>
+<li><code>filter</code>：查询条件对象</li>
+<li><code>options</code>: 投影条件对象，需要展示的属性设置为 1，不需要展示的属性设置为 0</li>
+</ul>
+</li>
+<li><code>.limit(num)</code>：显示多少个文档</li>
+<li><code>.skip(num)</code>：跳过多少个文档</li>
+<li><code>.sort({ key1: 1, key2: -1 })</code>：按照 <code>key1</code> 正序排列，排完之后再按照 <code>key2</code> 倒序排列 </li>
+</ul>
+<p>示例<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">test</span>;</span><br><span class="line"></span><br><span class="line">// 查询 students 集合中所有对象，只展示 age 字段</span><br><span class="line">db.students.find(&#123;&#125;, &#123; age: 1 &#125;);</span><br><span class="line"></span><br><span class="line">// 查询 students 集合中所有对象，不展示 age 字段</span><br><span class="line">db.students.find(&#123;&#125;, &#123; age: 0 &#125;);</span><br><span class="line"></span><br><span class="line">// 查询 students 集合，只展示符合条件的前 2 条数据</span><br><span class="line">db.students.find(&#123;&#125;).limit(2);</span><br><span class="line"></span><br><span class="line">// 查询 students 集合中所有对象，跳过前 2 条数据</span><br><span class="line">db.students.find(&#123;&#125;).skip(2);</span><br><span class="line"></span><br><span class="line">// 查询 students 集合中所有对象，按 age 正序排列</span><br><span class="line">db.students.find(&#123;&#125;).sort(&#123; age: 1 &#125;);</span><br><span class="line"></span><br><span class="line">// 查询 students 集合中所有对象，按 age 倒序排列</span><br><span class="line">db.students.find(&#123;&#125;).sort(&#123; age: -1 &#125;);</span><br></pre></td></tr></table></figure></p>
+<h5 id="常用查询器"><a href="#常用查询器" class="headerlink" title="常用查询器"></a>常用查询器</h5><ul>
+<li><code>$gt</code>：大于</li>
+<li><code>$gte</code>：大于等于</li>
+<li><code>$eq</code>：等于</li>
+<li><code>$lt</code>：小于</li>
+<li><code>$lte</code>：小于等于</li>
+<li><code>$or</code>：或者</li>
+</ul>
+<blockquote>
+<p>之前查询不使用任何查询器时，条件的判断是包含，不是相等</p>
+</blockquote>
+<p>示例：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 工资大于 3000</span><br><span class="line">db.students.find(&#123;salary: &#123; $gt: 3000 &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 工资大于等于 3000</span><br><span class="line">db.students.find(&#123;salary: &#123; $gte: 3000 &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 工资等于 3000</span><br><span class="line">db.students.find(&#123;salary: &#123; $eq: 3000 &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 工资小于 6000 </span><br><span class="line">db.students.find(&#123;salary: &#123; $lt: 6000 &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 工资小于等于 6000</span><br><span class="line">db.students.find(&#123;salary: &#123; $lte: 6000 &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 工资大于 3000 且小于 6000 </span><br><span class="line">db.students.find(&#123;salary: &#123; $gt: 3000, $lt: 6000 &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 工资是 3000 或者 名字是 小白</span><br><span class="line">db.students.find(&#123;$or: [ &#123;salary: 3000&#125;, &#123;name: "小白"&#125; ]&#125;);</span><br></pre></td></tr></table></figure></p>
+<h4 id="更新（UPDATE）"><a href="#更新（UPDATE）" class="headerlink" title="更新（UPDATE）"></a>更新（UPDATE）</h4><ul>
+<li><code>db.&lt;collection&gt;.update(查询条件, 新对象, [options])</code><ul>
+<li><code>options</code>: 配置对象 <ul>
+<li><code>upsert: &lt;boolean&gt;</code></li>
+<li><code>multi: &lt;boolean&gt;</code> 是否跟新多条，默认是 false</li>
+<li><code>writeConcern: &lt;document&gt;</code></li>
+<li><code>collation: &lt;document&gt;</code></li>
+</ul>
+</li>
+<li><code>update()</code> 默认情况下会使用新对象来替换旧的对象</li>
+<li>如果需要修改指定的属性，而不是替换，则需要使用 “修改操作符” 来完成</li>
+<li><code>$set</code>: 修改操作符，修改属性值。</li>
+<li><code>$unset</code>: 修改操作符，删除属性值。<ul>
+<li>db.<collection>.update({ name: “zgd” }, {$set: { age: 21 }})</collection></li>
+</ul>
+</li>
+<li>默认情况下只会更新匹配到的第一个文档对象</li>
+</ul>
+</li>
+<li>db.<collection>.updateOne(查询条件, 新对象)：修改第一个符合条件的文档</collection></li>
+<li>db.<collection>.updateMany(查询条件, 新对象)：同时修改多个符合条件的文档</collection></li>
+<li>db.<collection>.replaceOne(查询条件, 新对象)：替换一个文档</collection></li>
+</ul>
+<p>示例<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">test</span></span><br><span class="line"></span><br><span class="line">// 修改一条数据</span><br><span class="line">db.students.update(&#123;<span class="keyword">name</span>: <span class="string">'小明'</span>&#125;, &#123;$<span class="keyword">set</span>: &#123; age: <span class="number">19</span> &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 等同于 updateOne</span><br><span class="line">db.students.updateOne(&#123;name: '小明'&#125;, &#123;$set: &#123; age: 19 &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 修改多条数据</span><br><span class="line">db.students.update(&#123;age: 19&#125;, &#123;$set: &#123; addr: '水月洞天' &#125;&#125;, &#123; multi: true &#125;);</span><br><span class="line"></span><br><span class="line">// 等同于 updateMany</span><br><span class="line">db.students.updateMany(&#123;age: 19&#125;, &#123;$set: &#123; addr: '水月洞天' &#125;&#125;);</span><br><span class="line"></span><br><span class="line">// 数据替换</span><br><span class="line">db.students.update(&#123;age: 16&#125;, &#123; name: '小花', age: 14, addr: '迪士尼乐园' &#125;);</span><br><span class="line"></span><br><span class="line">// 等同于 replaceOne</span><br><span class="line">db.students.replaceOne(&#123;age: 16&#125;, &#123; name: '小花', age: 14, addr: '迪士尼乐园' &#125;);</span><br></pre></td></tr></table></figure></p>
+<p><strong>常用修改器：</strong></p>
+<ul>
+<li><code>$set</code>: 设置属性</li>
+<li><code>$unset</code>：删除属性</li>
+<li><code>$push</code>：向数组中添加一条数据</li>
+<li><code>$addToSet</code>：向数组中添加一条数据，与 <code>$push</code> 的区别：若数据已存在，则不再添加</li>
+<li><code>$inc</code>（只能用于 Number 类型的值）：用来增加已有属性的值，若属性不存在，则创建该属性</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 修改 addr 属性</span><br><span class="line">db.students.updateMany(&#123;age: 19&#125;, &#123; $set: &#123; addr: '花果山' &#125; &#125;);</span><br><span class="line"></span><br><span class="line">// 为小花删除 age 属性</span><br><span class="line">db.students.updateOne(&#123;name: '小花' &#125;, &#123; $unset: &#123; age: '' &#125; &#125;);</span><br><span class="line"></span><br><span class="line">// 先为小明添加一个 hobby 属性，其中有一个 cities 属性是一个数组</span><br><span class="line">db.students.updateOne(&#123;name: '小明' &#125;, &#123; $set: &#123; hobby: &#123; cities: '北京', '上海' &#125; &#125; &#125;);</span><br><span class="line">// 为小明的 cities 属性 添加一个 '杭州'，可以通过 . 操作符为下级属性赋值，但是必须用 "" 引号包裹起来</span><br><span class="line">db.students.updateOne(&#123;name: '小明' &#125;, &#123; $push: &#123; "hobby.cities": '杭州' &#125; &#125;);</span><br><span class="line"></span><br><span class="line">// 将 addr 为 '花果山' 的文档，年龄都加 2 岁</span><br><span class="line">db.students.updateMany(&#123;addr: '花果山'&#125;, &#123; $inc: &#123; age: 2 &#125; &#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="删除（DELETE）"><a href="#删除（DELETE）" class="headerlink" title="删除（DELETE）"></a>删除（DELETE）</h4><ul>
+<li><code>db.&lt;collection&gt;.remove(查询条件, [justone]])</code><ul>
+<li>默认删除所有符合条件的文档</li>
+<li>不传查询对象会报错</li>
+<li>如果传递一个空对象 <code>{}</code> 作为参数，则会删除集合中的所有数据。使用这种方式清空集合性能较差</li>
+<li><code>justone</code>：<code>&lt;boolean&gt;</code> 默认是 <code>false</code>，设置为 <code>true</code>，则只会删除匹配到的第一个文档</li>
+</ul>
+</li>
+<li><code>db.&lt;collection&gt;.deleteOne(查询条件)</code>：删除匹配到的第一个文档</li>
+<li><code>db.&lt;collection&gt;.deleteMany(查询条件)</code>：删除匹配到的所有文档</li>
+</ul>
+<p>示例<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 删除一条</span><br><span class="line">db.students.remove(&#123; name: '小花' &#125;, true);</span><br><span class="line"></span><br><span class="line">// 等同于 deleteOne</span><br><span class="line">db.students.deleteOne(&#123; name: '小花' &#125;);</span><br><span class="line"></span><br><span class="line">// 删除多条</span><br><span class="line">db.students.remove(&#123; age: '19' &#125;);</span><br><span class="line"></span><br><span class="line">// 等同于</span><br><span class="line">db.students.deleteMany(&#123; age: '19' &#125;);</span><br><span class="line"></span><br><span class="line">// 删除所有数据（不建议使用这种方式清空数据，速度较慢）</span><br><span class="line">db.students.deleteMany(&#123;&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="删除集合和数据库"><a href="#删除集合和数据库" class="headerlink" title="删除集合和数据库"></a>删除集合和数据库</h3><ul>
+<li><code>db.&lt;collection&gt;.drop()</code>: 删除集合</li>
+<li><code>db.dropDatabase()</code>：删除数据库</li>
+</ul>
+<p>示例<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 删除 students 集合（建议使用这种方式清空数据，速度较快）</span><br><span class="line">db.students.drop();</span><br><span class="line"></span><br><span class="line">// 删除当前数据库</span><br><span class="line">db.dropDatabase();</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="四、参考链接"><a href="#四、参考链接" class="headerlink" title="四、参考链接"></a>四、参考链接</h2><ul>
+<li><a href="https://docs.mongodb.com/manual/crud/" target="_blank" rel="noopener">MongoDB 官方教程</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190810/mongodb-note/" target="_blank" rel="external">https://beichensky.github.io/20190810/mongodb-note/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoDB/">MongoDB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190810/mongodb-note/&title=《MonogoDB 数据库基本使用和常用命令》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190810/mongodb-note/&title=《MonogoDB 数据库基本使用和常用命令》 — 前端小栈&source=本文简单介绍了 mongodb 数据库的基本概念以及基础用法" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190810/mongodb-note/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MonogoDB 数据库基本使用和常用命令》 — 前端小栈&url=https://beichensky.github.io/20190810/mongodb-note/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190810/mongodb-note/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190808/prototype-chain/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">浅显易懂的原型与原型链知识总结</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190810/mongodb-note/&title=《MonogoDB 数据库基本使用和常用命令》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190810/mongodb-note/&title=《MonogoDB 数据库基本使用和常用命令》 — 前端小栈&source=本文简单介绍了 mongodb 数据库的基本概念以及基础用法" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190810/mongodb-note/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MonogoDB 数据库基本使用和常用命令》 — 前端小栈&url=https://beichensky.github.io/20190810/mongodb-note/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190810/mongodb-note/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190810/mongodb-note/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

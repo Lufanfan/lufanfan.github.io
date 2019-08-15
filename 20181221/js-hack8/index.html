@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>JavaScript性能优化（八） | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript,性能优化,Practice">
+    <meta name="description" content="本文是阅读《高性能JavaScript》一书后，从 编程实践 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+<meta name="keywords" content="JavaScript,性能优化,Practice">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript性能优化（八）">
+<meta property="og:url" content="https://beichensky.github.io/20181221/js-hack8/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文是阅读《高性能JavaScript》一书后，从 编程实践 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-21T13:00:03.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript性能优化（八）">
+<meta name="twitter:description" content="本文是阅读《高性能JavaScript》一书后，从 编程实践 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JavaScript性能优化（八）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JavaScript性能优化（八）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-21T10:29:19.000Z" itemprop="datePublished" class="page-time">
+  2018-12-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#避免双重求值"><span class="post-toc-number">1.</span> <span class="post-toc-text">避免双重求值</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用-Object-Array-直接量"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用 Object/Array 直接量</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#避免重复工作"><span class="post-toc-number">3.</span> <span class="post-toc-text">避免重复工作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#先来看一段基本代码，之后对其进行优化"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">先来看一段基本代码，之后对其进行优化</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用延迟加载进行优化"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">使用延迟加载进行优化</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用条件预加载进行优化"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">使用条件预加载进行优化</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用速度快的部分"><span class="post-toc-number">4.</span> <span class="post-toc-text">使用速度快的部分</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#位操作符"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">位操作符</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#范例"><span class="post-toc-number">4.1.1.</span> <span class="post-toc-text">范例</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#原生方法"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">原生方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#小结"><span class="post-toc-number">5.</span> <span class="post-toc-text">小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-js-hack8" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JavaScript性能优化（八）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-21 18:29:19" datetime="2018-12-21T10:29:19.000Z" itemprop="datePublished">2018-12-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文是阅读《高性能JavaScript》一书后，从 <strong><em>编程实践</em></strong> 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望各位大佬能多给出一些建议。万分感谢！</p>
+<a id="more"></a>
+<hr>
+<h3 id="避免双重求值"><a href="#避免双重求值" class="headerlink" title="避免双重求值"></a>避免双重求值</h3><p>当你在 JavaScript 代码中执行另一段 JavaScript 代码时，都会导致双重求值的性能消耗。此代码首先会以正常的方式求值，然后在执行过程中对包含于字符串找哪个的代码发起另一个求值运算。<strong>双重求值是一项低价昂贵的操作，它比直接包含的代码执行速度慢许多。</strong> </p>
+<ul>
+<li><p>尽量不使用 eval() 函数 和 Function() 构造函数</p>
+</li>
+<li><p>使用 setTimeout() 和 setInterval() 第一个参数尽量传入函数而不是字符串</p>
+</li>
+</ul>
+<blockquote>
+<p>使用原生代码和 eval() 分别读取 10 000 个数组项的速度对比：</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>浏览器类别</th>
+<th>原生代码（毫秒）</th>
+<th>eval()（毫秒）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Firefox 3</td>
+<td>10.57</td>
+<td>822.62</td>
+</tr>
+<tr>
+<td>Firefox 3.5</td>
+<td>0.72</td>
+<td>141.54</td>
+</tr>
+<tr>
+<td>Chrome 1</td>
+<td>5.7</td>
+<td>106.41 </td>
+</tr>
+<tr>
+<td>Chrome 2</td>
+<td>5.17</td>
+<td>54.55</td>
+</tr>
+<tr>
+<td>Internet Explorer 7</td>
+<td>31.25</td>
+<td>5086.13</td>
+</tr>
+<tr>
+<td>Internet Explorer 8</td>
+<td>40.06</td>
+<td>420.55</td>
+</tr>
+<tr>
+<td>Opera 9.64</td>
+<td>2.01</td>
+<td>402.82</td>
+</tr>
+<tr>
+<td>Opera 10 Beta</td>
+<td>10.52</td>
+<td>315.16</td>
+</tr>
+<tr>
+<td>Safari 3.2</td>
+<td>30.37</td>
+<td>306.6</td>
+</tr>
+<tr>
+<td>Safari 4</td>
+<td>22.16</td>
+<td>54.47</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>优化后的 JavaScript 引擎通常会魂村住那些使用了 eval() 且重复运行的代码。如果你在 Safari 4 和所有版本 Chrome 中对同一段代码字符串反复求值，你会看到显著的性能提升。</p>
+</blockquote>
+<hr>
+<h3 id="使用-Object-Array-直接量"><a href="#使用-Object-Array-直接量" class="headerlink" title="使用 Object/Array 直接量"></a>使用 Object/Array 直接量</h3><blockquote>
+<p>对象属性和数组项的数量越多，使用直接量的好处就越明显。</p>
+</blockquote>
+<hr>
+<h3 id="避免重复工作"><a href="#避免重复工作" class="headerlink" title="避免重复工作"></a>避免重复工作</h3><h4 id="先来看一段基本代码，之后对其进行优化"><a href="#先来看一段基本代码，之后对其进行优化" class="headerlink" title="先来看一段基本代码，之后对其进行优化"></a>先来看一段基本代码，之后对其进行优化</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addHandle</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (target.addEvenetListener) &#123; <span class="comment">// DOM2 Events</span></span><br><span class="line">        target.addEvenetListener(eventType, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// IE</span></span><br><span class="line">        target.attachEvent(<span class="string">"on"</span> + eventType, handler);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeHandle</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (target.removeEvenetListener) &#123; <span class="comment">// DOM2 Events</span></span><br><span class="line">        target.removeEvenetListener(eventType, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// IE</span></span><br><span class="line">        target.detachEvent(<span class="string">"on"</span> + eventType, handler);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用延迟加载进行优化"><a href="#使用延迟加载进行优化" class="headerlink" title="使用延迟加载进行优化"></a>使用延迟加载进行优化</h4><blockquote>
+<p>调用延迟加载函数时，第一次总会消耗较长的时间，因为它必须运行监测接着再调用另一个函数完成任务。然随后调动相同的函数会更快，因为不需要再执行检测逻辑。当一个函数在页面中不会立刻调用时，延迟加载是最好的选择</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addHandle</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (target.addEvenetListener) &#123; <span class="comment">// DOM2 Events</span></span><br><span class="line">        addHandle = <span class="function"><span class="keyword">function</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">            target.addEvenetListener(eventType, handler, <span class="literal">false</span>);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// IE</span></span><br><span class="line">        addHandle = <span class="function"><span class="keyword">function</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">            target.attachEvent(<span class="string">"on"</span> + eventType, handler);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用新函数</span></span><br><span class="line">    addHandle(target, eventType, handler)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeHandle</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (target.removeEvenetListener) &#123; <span class="comment">// DOM2 Events</span></span><br><span class="line">        removeHandle = <span class="function"><span class="keyword">function</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">            target.removeEvenetListener(eventType, handler, <span class="literal">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// IE</span></span><br><span class="line">        removeHandle = <span class="function"><span class="keyword">function</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">            target.detachEvent(<span class="string">"on"</span> + eventType, handler);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 调用新函数</span></span><br><span class="line">    removeHandle(target, eventType, handler)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用条件预加载进行优化"><a href="#使用条件预加载进行优化" class="headerlink" title="使用条件预加载进行优化"></a>使用条件预加载进行优化</h4><blockquote>
+<p>条件预加载确保所有函数调用消耗的时间相同。其代价是需要在脚本加载时就检测，而不是加载后。预加载适用于一个函数马上就要被用到，并且在整个页面的生命周期中频繁出现的场合。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> addHandler = <span class="built_in">document</span>.body.addEvenetListener ? </span><br><span class="line">                <span class="function"><span class="keyword">function</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">                    target.addEvenetListener(eventType, handler, <span class="literal">false</span>);</span><br><span class="line">                &#125; :</span><br><span class="line">                <span class="function"><span class="keyword">function</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">                    target.attachEvent(<span class="string">"on"</span> + eventType, handler);</span><br><span class="line">                &#125;;</span><br><span class="line"><span class="keyword">var</span> removeHandler = <span class="built_in">document</span>.body.removeEvenetListener ? </span><br><span class="line">                <span class="function"><span class="keyword">function</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">                    target.removeEvenetListener(eventType, handler, <span class="literal">false</span>);</span><br><span class="line">                &#125; :</span><br><span class="line">                <span class="function"><span class="keyword">function</span>(<span class="params">target, eventType, handler</span>) </span>&#123;</span><br><span class="line">                    target.detachEvent(<span class="string">"on"</span> + eventType, handler);</span><br><span class="line">                &#125;;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<h3 id="使用速度快的部分"><a href="#使用速度快的部分" class="headerlink" title="使用速度快的部分"></a>使用速度快的部分</h3><h4 id="位操作符"><a href="#位操作符" class="headerlink" title="位操作符"></a>位操作符</h4><blockquote>
+<p>使用位操作符比 JavaScript 其他数学运算和布尔操作相比要快很多。</p>
+<ul>
+<li>按位与 &amp;<ul>
+<li>两个操作数的对应位数都是 1 时，则在该位返回 1</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>按位或 |</p>
+<ul>
+<li>两个操作数的对应位数只要一个为 1 时，则在该位返回 1</li>
+</ul>
+</li>
+<li><p>按位异或 ^</p>
+<ul>
+<li>两个操作数的对应位数只有一个为 1，则在该位返回 1</li>
+</ul>
+</li>
+<li><p>按位取反 ~</p>
+<ul>
+<li>遇 0 则返回 1，反之亦然</li>
+</ul>
+</li>
+</ul>
+<h5 id="范例"><a href="#范例" class="headerlink" title="范例"></a>范例</h5><ul>
+<li><p>位运算</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 普通写法</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = rows.length; i &lt; len; i ++) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (i % <span class="number">2</span>) &#123;</span><br><span class="line">        className = <span class="string">"even"</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        className = <span class="string">"odd"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 增加class</span></span><br><span class="line">    ……</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用位操作符进行优化</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = rows.length; i &lt; len; i ++) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (i &amp; <span class="number">1</span>) &#123;</span><br><span class="line">        className = <span class="string">"odd"</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        className = <span class="string">"even"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 增加class</span></span><br><span class="line">    ……</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化后的版本比普通版本快了 50%</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>位掩码</p>
+<blockquote>
+<p>用于处理同时存在多个布尔值的情形。期数即使用单个数字的每一位来判断是否选项成立，从而有效的把数字转换成有不二指标及组成的数组。掩码中的每个选项的值都等于 2 的幂。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> OPTION_A = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> OPTION_B = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">var</span> OPTION_C = <span class="number">4</span>;</span><br><span class="line"><span class="keyword">var</span> OPTION_D = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">var</span> OPTION_E = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过这些选项，可以用按位或运算创建一个数字来包含多个设置选项</span></span><br><span class="line"><span class="keyword">var</span> options = OPTIONS_A | OPTIONS_C | OPTIONS_D;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果该选项未设置则运算结果为 0， 如果已设置则运算结果为 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 选项 A 是否在列表中？</span></span><br><span class="line"><span class="keyword">if</span> (options &amp; OPTIONS_A) &#123;</span><br><span class="line">    <span class="comment">// 代码处理</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 选项 B 是否在列表中？</span></span><br><span class="line"><span class="keyword">if</span> (options &amp; OPTIONS_B) &#123;</span><br><span class="line">    <span class="comment">// 代码处理</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 像这样的位掩码运算速度非常快，原因正如前面提到的，计算操作发生在系统底层。</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>JavaScript 也支持按位左移（&lt;&lt;）， 按位右移（&gt;&gt;），和无符号右移（&gt;&gt;&gt;）等位运算符</p>
+</blockquote>
+<h4 id="原生方法"><a href="#原生方法" class="headerlink" title="原生方法"></a>原生方法</h4><blockquote>
+<p><strong>无论你的 JavaScript 代码如何优化，都永远不会比 JavaScript 引擎提供的原生方法更快</strong>。</p>
+</blockquote>
+<ul>
+<li><p>当你想进行数学运算时，请先查看 Math 对象</p>
+</li>
+<li><p>选择器 API，即使 JQuery 提供的方法也比原生方法要慢</p>
+</li>
+<li><p>当原生方法可用时，尽量使用它们。特别是数学运算和 DOM 操作。用编译后的代码做更多的事情，你的代码就会越快</p>
+</li>
+</ul>
+<hr>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li><p>通过避免使用 eval() 和 Function() 构造器来避免双重求值带来的性能消耗。同样的，给 setTimeout 和 setInterval() 传递函数而不是字符串作为参数</p>
+</li>
+<li><p>尽量使用直接量创建对象和数组。直接量的创建和初始化都比非直接量形式要快</p>
+</li>
+<li><p>避免做重复的工作。当需要检测浏览器时，可使用延迟加载或条件预加载</p>
+</li>
+<li><p>在进行数学计算时，考虑使用直接操作数字的二进制形式的位运算</p>
+</li>
+<li><p>JavaScript 的原生方法总会比你写的任何代码都要快。尽量使用原生方法</p>
+</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20181221/js-hack8/" target="_blank" rel="external">https://beichensky.github.io/20181221/js-hack8/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Practice/">Practice</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181221/js-hack8/&title=《JavaScript性能优化（八）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181221/js-hack8/&title=《JavaScript性能优化（八）》 — 前端小栈&source=本文是阅读《高性能JavaScript》一书后，从 编程实践 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181221/js-hack8/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript性能优化（八）》 — 前端小栈&url=https://beichensky.github.io/20181221/js-hack8/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181221/js-hack8/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20181228/ts-extends-impl/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">聊聊TypeScript中类、接口之间相互继承与实现的那些事儿</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20181221/js-hack7/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript性能优化（七）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181221/js-hack8/&title=《JavaScript性能优化（八）》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181221/js-hack8/&title=《JavaScript性能优化（八）》 — 前端小栈&source=本文是阅读《高性能JavaScript》一书后，从 编程实践 模块对JavaScript性能优化做了部分总结，记录一下。可能总结的不好，不是很完整，也希望..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181221/js-hack8/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript性能优化（八）》 — 前端小栈&url=https://beichensky.github.io/20181221/js-hack8/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181221/js-hack8/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20181221/js-hack8/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

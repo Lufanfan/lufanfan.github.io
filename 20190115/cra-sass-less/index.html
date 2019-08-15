@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>在 Create React App 中启用 Sass 和 Less | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="React,Sass,Less">
+    <meta name="description" content="本文介绍了如何在 Create React App 脚手架中启用 Sass 和 Less">
+<meta name="keywords" content="React,Sass,Less">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Create React App 中启用 Sass 和 Less">
+<meta property="og:url" content="https://beichensky.github.io/20190115/cra-sass-less/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文介绍了如何在 Create React App 脚手架中启用 Sass 和 Less">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-17T03:48:50.857Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在 Create React App 中启用 Sass 和 Less">
+<meta name="twitter:description" content="本文介绍了如何在 Create React App 脚手架中启用 Sass 和 Less">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">在 Create React App 中启用 Sass 和 Less</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">在 Create React App 中启用 Sass 和 Less</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-01-15T05:12:23.000Z" itemprop="datePublished" class="page-time">
+  2019-01-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#启用-Sass-语法编写-CSS"><span class="post-toc-number">2.</span> <span class="post-toc-text">启用 Sass 语法编写 CSS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#安装-node-sass-插件"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">安装 node-sass 插件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#用法："><span class="post-toc-number">2.2.</span> <span class="post-toc-text">用法：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#编写-sass-文件：App-scss"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">编写 sass 文件：App.scss</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在-js-文件中直接使用：改写-App-js-文件"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">在 js 文件中直接使用：改写 App.js 文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在浏览器中查看效果"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">在浏览器中查看效果</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#启用-Less-语法编写-CSS"><span class="post-toc-number">3.</span> <span class="post-toc-text">启用 Less 语法编写 CSS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#添加-Less-相关配置"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">添加 Less 相关配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#用法"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">用法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#编写-less-文件：App-less"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">编写 less 文件：App.less</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在-js-文件中直接使用：改写-App-js-文件-1"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">在 js 文件中直接使用：改写 App.js 文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#在浏览器中查看效果-1"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">在浏览器中查看效果</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-cra-sass-less" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">在 Create React App 中启用 Sass 和 Less</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-01-15 13:12:23" datetime="2019-01-15T05:12:23.000Z" itemprop="datePublished">2019-01-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文介绍了如何在 Create React App 脚手架中启用 Sass 和 Less</p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>关于创建 create-react-app 项目请查看： <strong><a href="https://juejin.im/post/5c3c3df451882525153c2352#heading-0" target="_blank" rel="noopener">create-react-app 的安装与创建</a></strong></p>
+<p>关于在 less 和 sass 如何在 create-react-app 启用 CSS Modules，请查看我的上一篇文章：<strong><a href="https://juejin.im/post/5c3c3df451882525153c2352" target="_blank" rel="noopener">在 Create React App 中使用 CSS Modules</a></strong></p>
+<hr>
+<h2 id="启用-Sass-语法编写-CSS"><a href="#启用-Sass-语法编写-CSS" class="headerlink" title="启用 Sass 语法编写 CSS"></a>启用 Sass 语法编写 CSS</h2><blockquote>
+<p>create-react-app 脚手架中已经添加了 sass-loader 的支持，所以只需要安装 node-sass 插件即可</p>
+</blockquote>
+<h3 id="安装-node-sass-插件"><a href="#安装-node-sass-插件" class="headerlink" title="安装 node-sass 插件"></a>安装 node-sass 插件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ npm install node-sass --save</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="comment"># $ yarn add node-sass</span></span><br></pre></td></tr></table></figure>
+<h3 id="用法："><a href="#用法：" class="headerlink" title="用法："></a>用法：</h3><h4 id="编写-sass-文件：App-scss"><a href="#编写-sass-文件：App-scss" class="headerlink" title="编写 sass 文件：App.scss"></a>编写 sass 文件：App.scss</h4><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.App</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  &amp;-logo &#123;</span><br><span class="line">    <span class="attribute">animation</span>: App-logo-spin infinite <span class="number">20s</span> linear;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">40vmin</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在-js-文件中直接使用：改写-App-js-文件"><a href="#在-js-文件中直接使用：改写-App-js-文件" class="headerlink" title="在 js 文件中直接使用：改写 App.js 文件"></a>在 js 文件中直接使用：改写 App.js 文件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> logo <span class="keyword">from</span> <span class="string">'./logo.svg'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./App.scss'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=<span class="string">"App"</span>&gt;</span><br><span class="line">        &lt;header className=<span class="string">"App-header"</span>&gt;</span><br><span class="line">          &lt;img src=&#123;logo&#125; className=<span class="string">"App-logo"</span> alt=<span class="string">"logo"</span> /&gt;</span><br><span class="line">        &lt;<span class="regexp">/header&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<h4 id="在浏览器中查看效果"><a href="#在浏览器中查看效果" class="headerlink" title="在浏览器中查看效果"></a>在浏览器中查看效果</h4><p>运行项目，此时在浏览器中即可查看到 logo 图片在缓慢转动</p>
+<hr>
+<h2 id="启用-Less-语法编写-CSS"><a href="#启用-Less-语法编写-CSS" class="headerlink" title="启用 Less 语法编写 CSS"></a>启用 Less 语法编写 CSS</h2><blockquote>
+<p>由于 create-react-app 脚手架中并没有配置关于 less 文件的解析，所以我们需要自己进行配置。需要安装的插件 <code>less</code>， <code>less-loader</code>。</p>
+</blockquote>
+<h3 id="添加-Less-相关配置"><a href="#添加-Less-相关配置" class="headerlink" title="添加 Less 相关配置"></a>添加 Less 相关配置</h3><ul>
+<li><p>在命令行运行 <code>npm run eject</code> 命令</p>
+<blockquote>
+<p>此命令会将脚手架中隐藏的配置都展示出来，此过程不可逆</p>
+</blockquote>
+</li>
+<li><p>运行完成之后，打开 config 目录下的 webpack.config.js 文件，找到 <code>// style files regexes</code> 注释位置，仿照其解析 sass 的规则，在下面添加两行代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加 less 解析规则</span></span><br><span class="line"><span class="keyword">const</span> lessRegex = <span class="regexp">/\.less$/</span>;</span><br><span class="line"><span class="keyword">const</span> lessModuleRegex = <span class="regexp">/\.module\.less$/</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>找到 rules 属性配置，在其中添加 less 解析配置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Less 解析配置</span></span><br><span class="line">&#123;</span><br><span class="line">    test: lessRegex,</span><br><span class="line">    exclude: lessModuleRegex,</span><br><span class="line">    use: getStyleLoaders(</span><br><span class="line">        &#123;</span><br><span class="line">            importLoaders: <span class="number">2</span>,</span><br><span class="line">            sourceMap: isEnvProduction &amp;&amp; shouldUseSourceMap,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">'less-loader'</span></span><br><span class="line">    ),</span><br><span class="line">    sideEffects: <span class="literal">true</span>,</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">    test: lessModuleRegex,</span><br><span class="line">    use: getStyleLoaders(</span><br><span class="line">        &#123;</span><br><span class="line">            importLoaders: <span class="number">2</span>,</span><br><span class="line">            sourceMap: isEnvProduction &amp;&amp; shouldUseSourceMap,</span><br><span class="line">            modules: <span class="literal">true</span>,</span><br><span class="line">            getLocalIdent: getCSSModuleLocalIdent,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">'less-loader'</span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>此时配置完成，安装 less 和 less-loader 插件即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install less less-loader --save</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><blockquote>
+<p>以下代码根据上面 sass 用法中的文件进行修改</p>
+</blockquote>
+<h4 id="编写-less-文件：App-less"><a href="#编写-less-文件：App-less" class="headerlink" title="编写 less 文件：App.less"></a>编写 less 文件：App.less</h4><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.App</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="selector-tag">&amp;</span><span class="selector-tag">-logo</span> &#123;</span><br><span class="line">    <span class="attribute">animation</span>: App-logo-spin infinite <span class="number">20s</span> linear;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">40vmin</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在-js-文件中直接使用：改写-App-js-文件-1"><a href="#在-js-文件中直接使用：改写-App-js-文件-1" class="headerlink" title="在 js 文件中直接使用：改写 App.js 文件"></a>在 js 文件中直接使用：改写 App.js 文件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> logo <span class="keyword">from</span> <span class="string">'./logo.svg'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./App.less'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=<span class="string">"App"</span>&gt;</span><br><span class="line">        &lt;header className=<span class="string">"App-header"</span>&gt;</span><br><span class="line">          &lt;img src=&#123;logo&#125; className=<span class="string">"App-logo"</span> alt=<span class="string">"logo"</span> /&gt;</span><br><span class="line">        &lt;<span class="regexp">/header&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<h4 id="在浏览器中查看效果-1"><a href="#在浏览器中查看效果-1" class="headerlink" title="在浏览器中查看效果"></a>在浏览器中查看效果</h4><p>运行项目，此时在浏览器中即可查看到 logo 图片在缓慢转动</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190115/cra-sass-less/" target="_blank" rel="external">https://beichensky.github.io/20190115/cra-sass-less/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Less/">Less</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Sass/">Sass</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190115/cra-sass-less/&title=《在 Create React App 中启用 Sass 和 Less》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190115/cra-sass-less/&title=《在 Create React App 中启用 Sass 和 Less》 — 前端小栈&source=本文介绍了如何在 Create React App 脚手架中启用 Sass 和 Less" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190115/cra-sass-less/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在 Create React App 中启用 Sass 和 Less》 — 前端小栈&url=https://beichensky.github.io/20190115/cra-sass-less/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190115/cra-sass-less/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190116/pure-component/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">PureComponent 使用注意事项以及源码解析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190114/cra-css-modules/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">在 Create React App 中使用 CSS Modules</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190115/cra-sass-less/&title=《在 Create React App 中启用 Sass 和 Less》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190115/cra-sass-less/&title=《在 Create React App 中启用 Sass 和 Less》 — 前端小栈&source=本文介绍了如何在 Create React App 脚手架中启用 Sass 和 Less" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190115/cra-sass-less/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在 Create React App 中启用 Sass 和 Less》 — 前端小栈&url=https://beichensky.github.io/20190115/cra-sass-less/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190115/cra-sass-less/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190115/cra-sass-less/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

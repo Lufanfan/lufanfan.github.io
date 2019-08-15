@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>react-dnd 用法详解 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="React,react-dnd,拖拽组件">
+    <meta name="description" content="本文详细讲解了 react-dnd 的 API 以及用法，并且附上了可供参考的 Demo，希望能够给需要的朋友提供一下帮助。">
+<meta name="keywords" content="React,react-dnd,拖拽组件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react-dnd 用法详解">
+<meta property="og:url" content="https://beichensky.github.io/20190321/react-dnd/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文详细讲解了 react-dnd 的 API 以及用法，并且附上了可供参考的 Demo，希望能够给需要的朋友提供一下帮助。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://beichensky.github.io/images/react-dnd/项目效果.gif">
+<meta property="og:updated_time" content="2019-08-03T09:27:33.903Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react-dnd 用法详解">
+<meta name="twitter:description" content="本文详细讲解了 react-dnd 的 API 以及用法，并且附上了可供参考的 Demo，希望能够给需要的朋友提供一下帮助。">
+<meta name="twitter:image" content="https://beichensky.github.io/images/react-dnd/项目效果.gif">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">react-dnd 用法详解</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">react-dnd 用法详解</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-21T01:46:43.000Z" itemprop="datePublished" class="page-time">
+  2019-03-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/React/">React</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、概念"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、概念</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、DragSource：使组件能够被拖拽"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、DragSource：使组件能够被拖拽</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用方式"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">使用方式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#spec-对象中的方法"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">spec 对象中的方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法中的参数-props-monitor-component"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">方法中的参数 props, monitor, component</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#collect-中的-connect-和-monitor-参数"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">collect 中的 connect 和 monitor 参数</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、DropTarget：使组件能够放置拖拽组件"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、DropTarget：使组件能够放置拖拽组件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用方式-1"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">使用方式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#spec-对象中的方法-1"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">spec 对象中的方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法中的参数-props-monitor-component-1"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">方法中的参数 props, monitor, component</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#collect-中的-connect-和-monitor-参数-1"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">collect 中的 connect 和 monitor 参数</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、DragDropContext-amp-DragDropContextProvider"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、DragDropContext &amp; DragDropContextProvider</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DragDropContext"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">DragDropContext</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#用法"><span class="post-toc-number">4.1.1.</span> <span class="post-toc-text">用法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#参数"><span class="post-toc-number">4.1.2.</span> <span class="post-toc-text">参数</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DragDropContextProvider"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">DragDropContextProvider</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#用法-1"><span class="post-toc-number">4.2.1.</span> <span class="post-toc-text">用法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#参数-1"><span class="post-toc-number">4.2.2.</span> <span class="post-toc-text">参数</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#五、react-dnd-的简单示例"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、react-dnd 的简单示例</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#项目准备"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">项目准备</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建-Box-组件，作为-DragSource"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">创建 Box 组件，作为 DragSource</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建-Dustbin-组件，作为-DropTarget"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">创建 Dustbin 组件，作为 DropTarget</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#在-App-js-文件中使用-DragDropContext"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">在 App.js 文件中使用 DragDropContext</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#运行项目，查看效果"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">运行项目，查看效果</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#六、本文-Demo-地址"><span class="post-toc-number">6.</span> <span class="post-toc-text">六、本文 Demo 地址</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#七、参考链接"><span class="post-toc-number">7.</span> <span class="post-toc-text">七、参考链接</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-react-dnd" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">react-dnd 用法详解</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-21 09:46:43" datetime="2019-03-21T01:46:43.000Z" itemprop="datePublished">2019-03-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/React/">React</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文详细讲解了 react-dnd 的 API 以及用法，并且附上了可供参考的 Demo，希望能够给需要的朋友提供一下帮助。</p>
+<a id="more"></a>
+<hr>
+<h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><p>React DnD 是一组 React 高阶组件，使用的时候只需要使用对应的 API 将目标组件进行包裹，即可实现拖动或接受拖动元素的功能。将拖动的事件转换成对象中对应状态的形式，不需要开发者自己判断拖动状态，只需要在传入的 spec 对象中各个状态属性中做对应处理即可。刚刚接触可能难以理解，真正熟悉用法之后会感觉很方便。</p>
+<hr>
+<h2 id="二、DragSource：使组件能够被拖拽"><a href="#二、DragSource：使组件能够被拖拽" class="headerlink" title="二、DragSource：使组件能够被拖拽"></a>二、DragSource：使组件能够被拖拽</h2><p>使用 <code>DragSource</code> 包裹住组件，使其可以进行拖动。</p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DragSource &#125; <span class="keyword">from</span> <span class="string">'react-dnd'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> spec = &#123;</span><br><span class="line">	beginDrag(props, monitor, component) &#123;</span><br><span class="line">		<span class="comment">// 这里 return 出去的对象属性自行选择，这里只是用 id 作为演示</span></span><br><span class="line">		<span class="keyword">return</span> &#123; <span class="attr">id</span>: props.id &#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	endDrag(props, monitor, component) &#123;</span><br><span class="line">			...</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	canDrag(props, monitor) &#123;</span><br><span class="line">			...</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	isDragging(props, monitor) &#123;</span><br><span class="line">			...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> collect = <span class="function">(<span class="params">connect, monitor</span>) =&gt;</span> (&#123;</span><br><span class="line">	<span class="comment">// 这里返回一个对象，会将对象的属性都赋到组件的 props 中去。这些属性需要自己定义。</span></span><br><span class="line">	connectDropTarget: connect.dropTarget(),</span><br><span class="line">	id: monitor.getItem().id</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">@DragSource(type, spec, collect)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponent</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> MyComponent;</span><br></pre></td></tr></table></figure>
+<p>参数讲解：</p>
+<ul>
+<li>type: 必填。字符串，ES6符号或返回给定组件的函数props。只有为相同类型注册的 <code>drop targets</code> 才会对此拖动源生成的项目做出反应</li>
+<li>spec：必填。一个普通的JavaScript对象，上面有一些允许的方法。它描述了拖动源如何对拖放事件做出反应。</li>
+<li>collect：必填。收集功能。它应该返回一个普通的对象注入你的组件。它接收两个参数：connect和monitor。</li>
+<li>options：可选的。一个普通的对象。</li>
+</ul>
+<h3 id="spec-对象中的方法"><a href="#spec-对象中的方法" class="headerlink" title="spec 对象中的方法"></a>spec 对象中的方法</h3><ul>
+<li><p><code>beginDrag(props, monitor, component)</code>：必填。当拖动开始时，<code>beginDrag</code> 被调用。您必须返回描述被拖动数据的纯 <code>JavaScript</code> 对象。您返回的内容会被放置到 <code>monitor.getItem()</code> 获取到的对象中。</p>
+</li>
+<li><p><code>endDrag(props, monitor, component)</code>：可选的。当拖动停止时，<code>endDrag</code> 被调用。对于每个 <code>beginDrag</code>，<code>endDrag</code> 都会对应。</p>
+</li>
+<li><p><code>canDrag(props, monitor)</code>： 可选的。用它来指定当前是否允许拖动。如果您想要始终允许它，只需省略此方法即可。注意：您可能无法调用<code>monitor.canDrag()</code> 此方法。</p>
+</li>
+<li><p><code>isDragging(props, monitor)</code>： 可选的。默认情况下，仅启动拖动操作的拖动源被视为拖动。注意：您可能无法调用 <code>monitor.isDragging()</code> 此方法。</p>
+</li>
+</ul>
+<h3 id="方法中的参数-props-monitor-component"><a href="#方法中的参数-props-monitor-component" class="headerlink" title="方法中的参数 props, monitor, component"></a>方法中的参数 props, monitor, component</h3><ul>
+<li><code>props</code>：当前组件的 <code>props</code></li>
+<li><code>monitor</code>：一个 <code>DragSourceMonitor</code> 实例。使用它来查询有关当前拖动状态的信息，例如当前拖动的项目及其类型，当前和初始坐标和偏移，以及它是否已被删除。</li>
+<li><code>component</code>：指定时，它是组件的实例。使用它来访问底层DOM节点以进行位置或大小测量，或调用 <code>setState</code> 以及其他组件方法。<code>isDragging</code>、 <code>canDrag</code> 方法里获取不到 <code>component</code> 这个参数，因为它们被调用时实例可能不可用</li>
+</ul>
+<h3 id="collect-中的-connect-和-monitor-参数"><a href="#collect-中的-connect-和-monitor-参数" class="headerlink" title="collect 中的 connect 和 monitor 参数"></a>collect 中的 connect 和 monitor 参数</h3><ul>
+<li><p><code>connect</code>: 一个 <code>DragSourceConnector</code> 实例。它有两种方法：dragPreview()和dragSource()。</p>
+<ul>
+<li>dragSource() =&gt; (elementOrNode, options?)：常用方法，返回一个函数，传递给组件用来将 source DOM 和 React DnD Backend 连接起来<ul>
+<li>dragPreview()：返回一个函数，传递给组件用来将拖动时预览的 DOM 节点 和 React DnD Backend 连接起来</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>monitor：一个 <code>DragSourceMonitor</code> 实例。包含下面各种方法：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>canDrag()</code></td>
+<td>是否可以被拖拽。如果没有正在进行拖动操作，则返回 true</td>
+</tr>
+<tr>
+<td><code>isDragging()</code></td>
+<td>是否正在被拖动。如果正在进行拖动操作，则返回 true</td>
+</tr>
+<tr>
+<td><code>getItemType()</code></td>
+<td>返回标识当前拖动项的类型的字符串或ES6符号。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getItem()</code></td>
+<td>返回表示当前拖动项的普通对象。 每个拖动源都必须通过从其beginDrag（）方法返回一个对象来指定它。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getDropResult()</code></td>
+<td>返回表示最后记录的放置 <code>drop result</code> 对象</td>
+</tr>
+<tr>
+<td><code>didDrop()</code></td>
+<td>如果某个 <code>drop target</code> 处理了 <code>drop</code> 事件，则返回 true，否则返回 false。即使 <code>target</code> 没有返回 <code>drop</code> 结果，<code>didDrop()</code> 也会返回true。 在 <code>endDrag()</code> 中使用它来测试任何放置目标是否已处理掉落。 如果在 <code>endDrag()</code> 之外调用，则返回 false</td>
+</tr>
+<tr>
+<td><code>getInitialClientOffset()</code></td>
+<td>返回当前拖动操作开始时指针的{x，y} <code>client</code> 偏移量。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getInitialSourceClientOffset()</code></td>
+<td>返回当前拖动操作开始时 <code>drag source</code> 组件的根DOM节点的{x，y}<code>client</code> 偏移量。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getClientOffset()</code></td>
+<td>拖动操作正在进行时，返回指针的最后记录的{x，y}<code>client</code> 偏移量。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getDifferenceFromInitialOffset()</code></td>
+<td>返回当前拖动操作开始时鼠标的最后记录 <code>client</code> 偏移量与 <code>client</code> 偏移量之间的{x，y}差异。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getSourceClientOffset()</code></td>
+<td>返回 <code>drag source</code> 组件的根DOM节点的预计{x，y} <code>client</code> 偏移量，基于其在当前拖动操作开始时的位置以及移动差异。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="三、DropTarget：使组件能够放置拖拽组件"><a href="#三、DropTarget：使组件能够放置拖拽组件" class="headerlink" title="三、DropTarget：使组件能够放置拖拽组件"></a>三、DropTarget：使组件能够放置拖拽组件</h2><p>使用 <code>DropTarget</code> 包裹住组件，使其对拖动，悬停或 dropped 的兼容项目做出反应。</p>
+<h3 id="使用方式-1"><a href="#使用方式-1" class="headerlink" title="使用方式"></a>使用方式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DropTarget &#125; <span class="keyword">from</span> <span class="string">'react-dnd'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> spec = &#123;</span><br><span class="line">	drop(props, monitor, component) &#123;</span><br><span class="line">		<span class="comment">// 这里 return 出去的对象属性自行选择，这里只是用 id 作为演示</span></span><br><span class="line">		<span class="keyword">return</span> &#123; <span class="attr">id</span>: props.id &#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	hover(props, monitor, component) &#123;</span><br><span class="line">			...</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	canDrop(props, monitor) &#123;</span><br><span class="line">			...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> collect = <span class="function">(<span class="params">connect, monitor</span>) =&gt;</span> (&#123;</span><br><span class="line">	<span class="comment">// 这里返回一个对象，会将对象的属性都赋到组件的 props 中去。这些属性需要自己定义。</span></span><br><span class="line">	connectDropTarget: connect.dropTarget()</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">@DropTarget(type, spec, collect)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponent</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">	<span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> MyComponent;</span><br></pre></td></tr></table></figure>
+<p>参数讲解：</p>
+<ul>
+<li>type: 必填。字符串，ES6符号或返回给定组件的函数props。此放置目标仅对指定类型的 <code>drag sources</code> 项目做出反应</li>
+<li>spec：必填。一个普通的JavaScript对象，上面有一些允许的方法。它描述了放置目标如何对拖放事件做出反应。</li>
+<li>collect：必填。收集功能。它应该返回一个普通的道具对象注入你的组件。它接收两个参数：connect 和 monitor。</li>
+<li>options：可选的。一个普通的对象。</li>
+</ul>
+<h3 id="spec-对象中的方法-1"><a href="#spec-对象中的方法-1" class="headerlink" title="spec 对象中的方法"></a>spec 对象中的方法</h3><ul>
+<li><p><code>drop(props, monitor, component)</code>： 可选的。在目标上放置兼容项目时调用。可以返回 <code>undefined</code> 或普通对象。如果返回一个对象，它将成为放置结果，可以使用 <code>monitor.getDropResult()</code> 获取到。</p>
+</li>
+<li><p><code>hover(props, monitor, component)</code>： 可选的。当项目悬停在组件上时调用。您可以检查 <code>monitor.isOver({ shallow: true })</code> 以测试悬停是仅发生在当前目标上还是嵌套上。</p>
+</li>
+<li><p><code>canDrop(props, monitor)</code>： 可选的。使用它来指定放置目标是否能够接受该项目。如果想要始终允许它，只需省略此方法即可。</p>
+</li>
+</ul>
+<blockquote>
+<p>文档没有提供按目的处理进入或离开事件的方法。而是 <code>monitor.isOver()</code> 从收集函数返回调用结果，以便我们可以使用 <code>componentDidUpdateReact</code> 钩子函数来处理组件中的进入和离开事件。</p>
+</blockquote>
+<h3 id="方法中的参数-props-monitor-component-1"><a href="#方法中的参数-props-monitor-component-1" class="headerlink" title="方法中的参数 props, monitor, component"></a>方法中的参数 props, monitor, component</h3><ul>
+<li><code>props</code>：当前组件的 <code>props</code></li>
+<li><code>monitor</code>：一个 <code>DropTargetMonitor</code> 实例。使用它来查询有关当前拖动状态的信息，例如当前拖动的项目及其类型，当前和初始坐标和偏移，是否超过当前目标，以及是否可以删除它。</li>
+<li><code>component</code>：指定时，它是组件的实例。使用它来访问底层DOM节点以进行位置或大小测量，或调用 <code>setState</code> 以及其他组件方法。<code>canDrag</code> 方法里获取不到 <code>component</code> 这个参数，因为它们被调用时实例可能不可用。</li>
+</ul>
+<h3 id="collect-中的-connect-和-monitor-参数-1"><a href="#collect-中的-connect-和-monitor-参数-1" class="headerlink" title="collect 中的 connect 和 monitor 参数"></a>collect 中的 connect 和 monitor 参数</h3><ul>
+<li><p><code>connect</code>: 一个 <code>DropTargetConnector</code> 实例。它只有一种 <code>dropTarget()</code> 方法。</p>
+<ul>
+<li><code>dropTarget() =&gt; (elementOrNode)</code>：常用方法，返回一个函数，传递给组件用来将 target DOM 和 React DnD Backend 连接起来。通过{ connectDropTarget: connect.dropTarget() }从收集函数返回，可以将任何React元素标记为可放置节点。</li>
+</ul>
+</li>
+<li><p>monitor：一个 <code>DropTargetMonitor</code> 实例。包含下面各种方法：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>canDrop()</code></td>
+<td>是否可以被放置。如果正在进行拖动操作，则返回true</td>
+</tr>
+<tr>
+<td><code>isOver(options)</code></td>
+<td><code>drag source</code> 是否悬停在 <code>drop target</code> 区域。可以选择传递<code>{ shallow: true }</code>以严格检查是否只有 <code>drag source</code> 悬停，而不是嵌套目标</td>
+</tr>
+<tr>
+<td><code>getItemType()</code></td>
+<td>返回标识当前拖动项的类型的字符串或ES6符号。如果没有拖动项目则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getItem()</code></td>
+<td>返回表示当前拖动项的普通对象，每个拖动源都必须通过从其beginDrag()方法返回一个对象来指定它。如果没有拖动项目则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getDropResult()</code></td>
+<td>返回表示最后记录的放置 <code>drop result</code> 对象</td>
+</tr>
+<tr>
+<td><code>didDrop()</code></td>
+<td>如果某个 <code>drop target</code> 处理了 <code>drop</code> 事件，则返回 true，否则返回 false。即使 <code>target</code> 没有返回 <code>drop</code> 结果，<code>didDrop()</code> 也会返回true。 在 <code>endDrag()</code> 中使用它来测试任何放置目标是否已处理掉落。 如果在 <code>endDrag()</code> 之外调用，则返回 false</td>
+</tr>
+<tr>
+<td><code>getInitialClientOffset()</code></td>
+<td>返回当前拖动操作开始时指针的{x，y} <code>client</code> 偏移量。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getInitialSourceClientOffset()</code></td>
+<td>返回当前拖动操作开始时 <code>drag source</code> 组件的根DOM节点的{x，y}<code>client</code> 偏移量。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getClientOffset()</code></td>
+<td>拖动操作正在进行时，返回指针的最后记录的{x，y}<code>client</code> 偏移量。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getDifferenceFromInitialOffset()</code></td>
+<td>返回当前拖动操作开始时鼠标的最后记录 <code>client</code> 偏移量与 <code>client</code> 偏移量之间的{x，y}差异。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+<tr>
+<td><code>getSourceClientOffset()</code></td>
+<td>返回 <code>drag source</code> 组件的根DOM节点的预计{x，y} <code>client</code> 偏移量，基于其在当前拖动操作开始时的位置以及移动差异。 如果没有拖动项目，则返回 <code>null</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="四、DragDropContext-amp-DragDropContextProvider"><a href="#四、DragDropContext-amp-DragDropContextProvider" class="headerlink" title="四、DragDropContext &amp; DragDropContextProvider"></a>四、DragDropContext &amp; DragDropContextProvider</h2><blockquote>
+<p><strong>注意：</strong> 使用 DragSource 和 DropTarget 包裹的组件，必须放在： DragDropContext 包裹的根组件内部，或者 DragDropContextProvider 根标签的内部。</p>
+</blockquote>
+<h3 id="DragDropContext"><a href="#DragDropContext" class="headerlink" title="DragDropContext"></a>DragDropContext</h3><p>使用 <code>DragDropContext</code> 包装应用程序的根组件以启用 React DnD。</p>
+<h4 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> HTML5Backend <span class="keyword">from</span> <span class="string">'react-dnd-html5-backend'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DragDropContext &#125; <span class="keyword">from</span> <span class="string">'react-dnd'</span>;</span><br><span class="line"></span><br><span class="line">@DragDropContext(HTML5Backend)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">YourApp</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> YourApp;</span><br></pre></td></tr></table></figure>
+<h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><ul>
+<li><p>backend：必填。一个 React DnD 后端。除非您正在编写自定义的，否则建议使用 React DnD 附带的 HTML5Backend。</p>
+</li>
+<li><p>context：backend 依赖。用于自定义后端的上下文对象。例如，HTML5Backend可以为iframe场景注入自定义窗口对象。</p>
+</li>
+</ul>
+<h3 id="DragDropContextProvider"><a href="#DragDropContextProvider" class="headerlink" title="DragDropContextProvider"></a>DragDropContextProvider</h3><p>作为 <code>DragDropContext</code> 的替代方法，您可以使用 <code>DragDropContextProvider</code> 元素为应用程序启用React DnD。与 <code>DragDropContext</code> 类似，这可以通过 <code>backendprop</code> 注入后端，但也可以注入一个 <code>window</code> 对象。</p>
+<h4 id="用法-1"><a href="#用法-1" class="headerlink" title="用法"></a>用法</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> HTML5Backend <span class="keyword">from</span> <span class="string">'react-dnd-html5-backend'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DragDropContextProvider &#125; <span class="keyword">from</span> <span class="string">'react-dnd'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">YourApp</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">	render() &#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;DragDropContextProvider backend=&#123;HTML5Backend&#125;&gt;</span><br><span class="line">			<span class="comment">/* ... */</span></span><br><span class="line">			&lt;<span class="regexp">/DragDropContextProvider&gt;</span></span><br><span class="line"><span class="regexp">		)</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<h4 id="参数-1"><a href="#参数-1" class="headerlink" title="参数"></a>参数</h4><ul>
+<li><p>backend：必填。一个 React DnD 后端。除非您正在编写自定义的，否则建议使用 React DnD 附带的 HTML5Backend。</p>
+</li>
+<li><p>context：backend 依赖。用于自定义后端的上下文对象。例如，HTML5Backend可以为iframe场景注入自定义窗口对象。</p>
+</li>
+</ul>
+<hr>
+<h2 id="五、react-dnd-的简单示例"><a href="#五、react-dnd-的简单示例" class="headerlink" title="五、react-dnd 的简单示例"></a>五、react-dnd 的简单示例</h2><p>本示例参照官方的 Dustbin 示例进行讲解。</p>
+<h3 id="项目准备"><a href="#项目准备" class="headerlink" title="项目准备"></a>项目准备</h3><p>当前项目使用 <code>create-react-app</code> 脚手架进行搭建，而且使用 <code>react-dnd</code> 时都是使用装饰器语法进行编写。所以需要先在项目里添加一些配置。</p>
+<p>启用装饰器的配置方式可以参考我的上一篇文章：<strong><a href="https://lufanfan.github.io/20190320/cra-decorators/" target="_blank" rel="noopener">在 create-react-app 中启用装饰器语法</a></strong>。</p>
+<p>新建 <code>components</code> 文件夹，用来存放编写的组件。新建 <code>types</code> 文件夹，用来存放 <code>type</code> 字符串常量，在 <code>types</code> 目录下创建 <code>index.js</code> 文件声明对应的 <code>type</code> 值。</p>
+<p><code>types/index.js</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">	BOX: <span class="string">'box'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以当前项目 <code>src</code> 目录下文件结构如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">├── components/</span><br><span class="line">├── types/</span><br><span class="line">      └── index.js</span><br><span class="line">├── App.js</span><br><span class="line">├── index.css</span><br><span class="line">└── index.js</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建-Box-组件，作为-DragSource"><a href="#创建-Box-组件，作为-DragSource" class="headerlink" title="创建 Box 组件，作为 DragSource"></a>创建 Box 组件，作为 DragSource</h3><p>在 <code>components</code> 目录下，创建 <code>Box.js</code> 文件，编写 <code>Box</code> 组件，使其可以进行拖动</p>
+<p><code>components/Box.js</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> PropTypes <span class="keyword">from</span> <span class="string">'prop-types'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DragSource &#125; <span class="keyword">from</span> <span class="string">'react-dnd'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> ItemTypes <span class="keyword">from</span> <span class="string">'../types'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> style = &#123;</span><br><span class="line">	border: <span class="string">'1px dashed gray'</span>,</span><br><span class="line">	backgroundColor: <span class="string">'white'</span>,</span><br><span class="line">	padding: <span class="string">'0.5rem 1rem'</span>,</span><br><span class="line">	marginRight: <span class="string">'1.5rem'</span>,</span><br><span class="line">	marginBottom: <span class="string">'1.5rem'</span>,</span><br><span class="line">	cursor: <span class="string">'move'</span>,</span><br><span class="line">	float: <span class="string">'left'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> boxSource = &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 开始拖拽时触发当前函数</span></span><br><span class="line"><span class="comment">	 * @param &#123;*&#125; props 组件的 props</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	beginDrag(props) &#123;</span><br><span class="line">		<span class="comment">// 返回的对象可以在 monitor.getItem() 中获取到</span></span><br><span class="line">		<span class="keyword">return</span> &#123;</span><br><span class="line">			name: props.name,</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 拖拽结束时触发当前函数</span></span><br><span class="line"><span class="comment">	 * @param &#123;*&#125; props 当前组件的 props</span></span><br><span class="line"><span class="comment">	 * @param &#123;*&#125; monitor DragSourceMonitor 对象</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	endDrag(props, monitor) &#123;</span><br><span class="line">		<span class="comment">// 当前拖拽的 item 组件</span></span><br><span class="line">		<span class="keyword">const</span> item = monitor.getItem()</span><br><span class="line">		<span class="comment">// 拖拽元素放下时，drop 结果</span></span><br><span class="line">		<span class="keyword">const</span> dropResult = monitor.getDropResult()</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 如果 drop 结果存在，就弹出 alert 提示</span></span><br><span class="line">		<span class="keyword">if</span> (dropResult) &#123;</span><br><span class="line">			alert(<span class="string">`You dropped <span class="subst">$&#123;item.name&#125;</span> into <span class="subst">$&#123;dropResult.name&#125;</span>!`</span>)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@DragSource(</span><br><span class="line">	<span class="comment">// type 标识，这里是字符串 'box'</span></span><br><span class="line">	ItemTypes.BOX,</span><br><span class="line">	<span class="comment">// 拖拽事件对象</span></span><br><span class="line">	boxSource,</span><br><span class="line">	<span class="comment">// 收集功能函数，包含 connect 和 monitor 参数</span></span><br><span class="line">	<span class="comment">// connect 里面的函数用来将 DOM 节点与 react-dnd 的 backend 建立联系</span></span><br><span class="line">	(connect, monitor) =&gt; (&#123;</span><br><span class="line">		<span class="comment">// 包裹住 DOM 节点，使其可以进行拖拽操作</span></span><br><span class="line">		connectDragSource: connect.dragSource(),</span><br><span class="line">		<span class="comment">// 是否处于拖拽状态</span></span><br><span class="line">		isDragging: monitor.isDragging(),</span><br><span class="line">	&#125;),</span><br><span class="line">)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Box</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">		name: PropTypes.string.isRequired,</span><br><span class="line">		isDragging: PropTypes.bool.isRequired,</span><br><span class="line">		connectDragSource: PropTypes.func.isRequired</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	render() &#123;</span><br><span class="line">		<span class="keyword">const</span> &#123; isDragging, connectDragSource &#125; = <span class="keyword">this</span>.props</span><br><span class="line">		<span class="keyword">const</span> &#123; name &#125; = <span class="keyword">this</span>.props</span><br><span class="line">		<span class="keyword">const</span> opacity = isDragging ? <span class="number">0.4</span> : <span class="number">1</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 使用 connectDragSource 包裹住 DOM 节点，使其可以接受各种拖动 API</span></span><br><span class="line">		<span class="comment">// connectDragSource 包裹住的 DOM 节点才可以被拖动</span></span><br><span class="line">		<span class="keyword">return</span> connectDragSource &amp;&amp; connectDragSource(</span><br><span class="line">				&lt;div style=&#123;&#123; ...style, opacity &#125;&#125;&gt;</span><br><span class="line">					&#123;name&#125;</span><br><span class="line">				&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">			);</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default Box;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="创建-Dustbin-组件，作为-DropTarget"><a href="#创建-Dustbin-组件，作为-DropTarget" class="headerlink" title="创建 Dustbin 组件，作为 DropTarget"></a>创建 Dustbin 组件，作为 DropTarget</h3><p>在 <code>components</code> 目录下，创建 <code>Dustbin.js</code> 文件，编写 <code>Dustbin</code> 组件，使其可以接受对应的拖拽组件。</p>
+<p><code>components/Dustbin.js</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> PropTypes <span class="keyword">from</span> <span class="string">'prop-types'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; DropTarget &#125; <span class="keyword">from</span> <span class="string">'react-dnd'</span>;</span><br><span class="line"><span class="keyword">import</span> ItemTypes <span class="keyword">from</span> <span class="string">'../types'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> style = &#123;</span><br><span class="line">	height: <span class="string">'12rem'</span>,</span><br><span class="line">	width: <span class="string">'12rem'</span>,</span><br><span class="line">	marginRight: <span class="string">'1.5rem'</span>,</span><br><span class="line">	marginBottom: <span class="string">'1.5rem'</span>,</span><br><span class="line">	color: <span class="string">'white'</span>,</span><br><span class="line">	padding: <span class="string">'1rem'</span>,</span><br><span class="line">	textAlign: <span class="string">'center'</span>,</span><br><span class="line">	fontSize: <span class="string">'1rem'</span>,</span><br><span class="line">	lineHeight: <span class="string">'normal'</span>,</span><br><span class="line">	float: <span class="string">'left'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> boxTarget = &#123;</span><br><span class="line">	<span class="comment">// 当有对应的 drag source 放在当前组件区域时，会返回一个对象，可以在 monitor.getDropResult() 中获取到</span></span><br><span class="line">	drop: <span class="function"><span class="params">()</span> =&gt;</span> (&#123; <span class="attr">name</span>: <span class="string">'Dustbin'</span> &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@DropTarget(</span><br><span class="line">	<span class="comment">// type 标识，这里是字符串 'box'</span></span><br><span class="line">	ItemTypes.BOX,</span><br><span class="line">	<span class="comment">// 接收拖拽的事件对象</span></span><br><span class="line">	boxTarget,</span><br><span class="line">	<span class="comment">// 收集功能函数，包含 connect 和 monitor 参数</span></span><br><span class="line">	<span class="comment">// connect 里面的函数用来将 DOM 节点与 react-dnd 的 backend 建立联系</span></span><br><span class="line">	(connect, monitor) =&gt; (&#123;</span><br><span class="line">		<span class="comment">// 包裹住 DOM 节点，使其可以接收对应的拖拽组件</span></span><br><span class="line">		connectDropTarget: connect.dropTarget(),</span><br><span class="line">		<span class="comment">// drag source是否在 drop target 区域</span></span><br><span class="line">		isOver: monitor.isOver(),</span><br><span class="line">		<span class="comment">// 是否可以被放置</span></span><br><span class="line">		canDrop: monitor.canDrop(),</span><br><span class="line">	&#125;)</span><br><span class="line">)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dustbin</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">        canDrop: PropTypes.bool.isRequired,</span><br><span class="line">        isOver: PropTypes.bool.isRequired,</span><br><span class="line">        connectDropTarget: PropTypes.func.isRequired</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	render() &#123;</span><br><span class="line">		<span class="keyword">const</span> &#123; canDrop, isOver, connectDropTarget &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">		<span class="keyword">const</span> isActive = canDrop &amp;&amp; isOver;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">let</span> backgroundColor = <span class="string">'#222'</span>;</span><br><span class="line">		<span class="comment">// 拖拽组件此时正处于 drag target 区域时，当前组件背景色变为 darkgreen</span></span><br><span class="line">		<span class="keyword">if</span> (isActive) &#123;</span><br><span class="line">			backgroundColor = <span class="string">'darkgreen'</span>;</span><br><span class="line">		&#125; </span><br><span class="line">		<span class="comment">// 当前组件可以放置 drag source 时，背景色变为 pink</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (canDrop) &#123;</span><br><span class="line">			backgroundColor = <span class="string">'darkkhaki'</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 使用 connectDropTarget 包裹住 DOM 节点，使其可以接收对应的 drag source 组件</span></span><br><span class="line">		<span class="comment">// connectDropTarget 包裹住的 DOM 节点才能接收 drag source 组件</span></span><br><span class="line">		<span class="keyword">return</span> connectDropTarget &amp;&amp; connectDropTarget(</span><br><span class="line">			&lt;div style=&#123;&#123; ...style, backgroundColor &#125;&#125;&gt;</span><br><span class="line">				&#123;isActive ? <span class="string">'Release to drop'</span> : <span class="string">'Drag a box here'</span>&#125;</span><br><span class="line">			&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">		);</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default Dustbin;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="在-App-js-文件中使用-DragDropContext"><a href="#在-App-js-文件中使用-DragDropContext" class="headerlink" title="在 App.js 文件中使用 DragDropContext"></a>在 App.js 文件中使用 DragDropContext</h3><p><code>App.js</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DragDropContext &#125; <span class="keyword">from</span> <span class="string">'react-dnd'</span>;</span><br><span class="line"><span class="keyword">import</span> HTMLBackend <span class="keyword">from</span> <span class="string">'react-dnd-html5-backend'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Dustbin <span class="keyword">from</span> <span class="string">'./components/Dustbin'</span>;</span><br><span class="line"><span class="keyword">import</span> Box <span class="keyword">from</span> <span class="string">'./components/Box'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 HTMLBackend 作为参数传给 DragDropContext</span></span><br><span class="line">@DragDropContext(HTMLBackend)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;div style=&#123;&#123; <span class="attr">paddingLeft</span>: <span class="number">200</span>, <span class="attr">paddingTop</span>: <span class="number">50</span> &#125;&#125;&gt;</span><br><span class="line">            &lt;div style=&#123;&#123; <span class="attr">overflow</span>: <span class="string">'hidden'</span>, <span class="attr">clear</span>: <span class="string">'both'</span> &#125;&#125;&gt;</span><br><span class="line">                &lt;Box name=<span class="string">"Glass"</span> /&gt;</span><br><span class="line">                &lt;Box name=<span class="string">"Banana"</span> /&gt;</span><br><span class="line">                &lt;Box name=<span class="string">"Paper"</span> /&gt;</span><br><span class="line">            &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">            &lt;div style=&#123;&#123; overflow: 'hidden', clear: 'both' &#125;&#125;&gt;</span></span><br><span class="line"><span class="regexp">                &lt;Dustbin /</span>&gt;</span><br><span class="line">            &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure></p>
+<h3 id="运行项目，查看效果"><a href="#运行项目，查看效果" class="headerlink" title="运行项目，查看效果"></a>运行项目，查看效果</h3><p>运行项目：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm run start</span><br></pre></td></tr></table></figure></p>
+<p>浏览器会自动打开 <code>http://localhost:3000/</code> 窗口，此时可以操作浏览器上的 Box 组件，结合项目代码，查看效果。<br>预览效果如下：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/images/react-dnd/项目效果.gif" alt="预览效果" title="">
+                </div>
+                <div class="image-caption">预览效果</div>
+            </figure></p>
+<hr>
+<h2 id="六、本文-Demo-地址"><a href="#六、本文-Demo-地址" class="headerlink" title="六、本文 Demo 地址"></a>六、本文 Demo 地址</h2><p><a href="https://github.com/beichensky/ReactUtilsDemo/tree/master/react-dnd-dustbin" target="_blank" rel="noopener">react-dnd-dustbin</a></p>
+<p><strong>欢迎 Star！谢谢！</strong></p>
+<hr>
+<h2 id="七、参考链接"><a href="#七、参考链接" class="headerlink" title="七、参考链接"></a>七、参考链接</h2><p><a href="http://react-dnd.github.io/react-dnd/about" target="_blank" rel="noopener">react-dnd 官方文档</a><br><a href="https://juejin.im/post/5aebbdedf265da0ba469a56f" target="_blank" rel="noopener">拖拽组件：React DnD 的使用</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190321/react-dnd/" target="_blank" rel="external">https://beichensky.github.io/20190321/react-dnd/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-dnd/">react-dnd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/拖拽组件/">拖拽组件</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190321/react-dnd/&title=《react-dnd 用法详解》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190321/react-dnd/&title=《react-dnd 用法详解》 — 前端小栈&source=本文详细讲解了 react-dnd 的 API 以及用法，并且附上了可供参考的 Demo，希望能够给需要的朋友提供一下帮助。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190321/react-dnd/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《react-dnd 用法详解》 — 前端小栈&url=https://beichensky.github.io/20190321/react-dnd/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190321/react-dnd/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190404/webpack-update/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Webpack3 升级到 webpack4 时遇到的问题汇总</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190320/cra-decorators/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">在 create-react-app 中启用装饰器语法</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190321/react-dnd/&title=《react-dnd 用法详解》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190321/react-dnd/&title=《react-dnd 用法详解》 — 前端小栈&source=本文详细讲解了 react-dnd 的 API 以及用法，并且附上了可供参考的 Demo，希望能够给需要的朋友提供一下帮助。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190321/react-dnd/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《react-dnd 用法详解》 — 前端小栈&url=https://beichensky.github.io/20190321/react-dnd/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190321/react-dnd/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190321/react-dnd/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

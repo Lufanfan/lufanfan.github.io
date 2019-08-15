@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Webpack3 升级到 webpack4 时遇到的问题汇总 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Webpack,前端开发">
+    <meta name="description" content="项目在对 webpack 的版本升级的过程中，出现了各种各样的问题，今天就把其中比较典型的问题总结一下，作为记录。">
+<meta name="keywords" content="Webpack,前端开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack3 升级到 webpack4 时遇到的问题汇总">
+<meta property="og:url" content="https://beichensky.github.io/20190404/webpack-update/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="项目在对 webpack 的版本升级的过程中，出现了各种各样的问题，今天就把其中比较典型的问题总结一下，作为记录。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-03T09:27:33.912Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webpack3 升级到 webpack4 时遇到的问题汇总">
+<meta name="twitter:description" content="项目在对 webpack 的版本升级的过程中，出现了各种各样的问题，今天就把其中比较典型的问题总结一下，作为记录。">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Webpack3 升级到 webpack4 时遇到的问题汇总</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Webpack3 升级到 webpack4 时遇到的问题汇总</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-04T02:55:21.000Z" itemprop="datePublished" class="page-time">
+  2019-04-04
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/Webpack/">Webpack</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、MissingDeps-some-is-not-a-function"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、MissingDeps.some is not a function</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、this-htmlWebpackPlugin-getHooks-is-not-a-function"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、this.htmlWebpackPlugin.getHooks is not a function</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、When-specified-“proxy”-in-package-json-must-be-a-string"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、When specified, “proxy” in package.json must be a string</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-webpack-update" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Webpack3 升级到 webpack4 时遇到的问题汇总</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-04 10:55:21" datetime="2019-04-04T02:55:21.000Z" itemprop="datePublished">2019-04-04</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/Webpack/">Webpack</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>项目在对 webpack 的版本升级的过程中，出现了各种各样的问题，今天就把其中比较典型的问题总结一下，作为记录。</p>
+<a id="more"></a>
+<h2 id="一、MissingDeps-some-is-not-a-function"><a href="#一、MissingDeps-some-is-not-a-function" class="headerlink" title="一、MissingDeps.some is not a function"></a>一、MissingDeps.some is not a function</h2><p>错误提示中，提示 <code>react-dev-utils</code> 包有问题，<code>TypeError: MissingDeps.some is not a function</code>。</p>
+<ul>
+<li>解决方案：升级 <code>react-utils-dev</code> 包到 6.0.0 版本之后即可。将 package.json 中的 <code>react-utils-dev</code> 依赖删除掉，重新安装匹配版本插件。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install react-utils-dev --save-dev</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="二、this-htmlWebpackPlugin-getHooks-is-not-a-function"><a href="#二、this-htmlWebpackPlugin-getHooks-is-not-a-function" class="headerlink" title="二、this.htmlWebpackPlugin.getHooks is not a function"></a>二、this.htmlWebpackPlugin.getHooks is not a function</h2><p>运行项目时，提示错误：<code>this.htmlWebpackPlugin.getHooks is not a function</code></p>
+<ul>
+<li>解决方案：<ul>
+<li><ol>
+<li>安装与 webpack4 匹配的 <code>html-webpack-plugin</code> 插件：<code>npm install html-webpack-plugin@next --save-dev</code></li>
+</ol>
+</li>
+<li><ol start="2">
+<li>修改 webpack 配置文件：<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">new</span> InterpolateHtmlPlugin(env.raw),</span><br><span class="line">+ <span class="keyword">new</span> InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="三、When-specified-“proxy”-in-package-json-must-be-a-string"><a href="#三、When-specified-“proxy”-in-package-json-must-be-a-string" class="headerlink" title="三、When specified, “proxy” in package.json must be a string"></a>三、When specified, “proxy” in package.json must be a string</h2><p>运行报错提示为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">When specified, <span class="string">"proxy"</span> <span class="keyword">in</span> package.json must be a string.</span><br><span class="line">Instead, the <span class="built_in">type</span> of <span class="string">"proxy"</span> was <span class="string">"object"</span>.</span><br><span class="line">Either remove <span class="string">"proxy"</span> from package.json, or make it a string.</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>错误出现原因：使用 <code>create-react-app</code> 搭建脚手架，在 CRA2.X 升级之后，对 proxy 的设置作了修改。</p>
+<ul>
+<li>当使用 <code>proxy</code> 为字符串时不需要修改，可以直接在 <code>package.json</code>中添加 <code>proxy</code> 字段，例如：<code>&quot;proxy&quot;: &quot;http://localhost:4000&quot;,</code></li>
+<li>当使用多个 <code>proxy</code> 时，就需要结合 <code>http-proxy-middleware</code> 进行使用。</li>
+<li><a href="https://facebook.github.io/create-react-app/docs/proxying-api-requests-in-development" target="_blank" rel="noopener">create-react-app 官网说明地址</a></li>
+</ul>
+</li>
+<li><p>解决方案：</p>
+<ul>
+<li><ol>
+<li>安装 <code>http-proxy-middleware</code> 插件：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm install http-proxy-middleware --save</span><br><span class="line">$ <span class="comment"># 或</span></span><br><span class="line">$ yarn add http-proxy-middleware</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>创建 src/setupProxy.js 并将以下内容放入该文件中(将路由和 target 值修改为自己需要的即可):<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> proxy = <span class="built_in">require</span>(<span class="string">'http-proxy-middleware'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">app</span>) </span>&#123;</span><br><span class="line">    app.use(proxy(<span class="string">'/api'</span>, &#123; <span class="attr">target</span>: <span class="string">'http://localhost:5000/api'</span> &#125;));</span><br><span class="line">    app.use(proxy(<span class="string">'/test'</span>, &#123; <span class="attr">target</span>: <span class="string">'http://localhost:4000/test'</span> &#125;));</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>注意： 无需在任何位置导入此文件。 它在启动开发服务器时会自动注册。</p>
+</blockquote>
+<blockquote>
+<p>注意： 此文件仅支持 Node 的 JavaScript 语法。 请务必仅使用支持的语言特性（即不支持 Flow ，ES Modules 等）。</p>
+</blockquote>
+<blockquote>
+<p>注意： 将路径传递给代理函数允许你在路径上使用 globbing 和/或 模式匹配，这比 express 路由匹配更灵活。</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20190404/webpack-update/" target="_blank" rel="external">https://beichensky.github.io/20190404/webpack-update/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端开发/">前端开发</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190404/webpack-update/&title=《Webpack3 升级到 webpack4 时遇到的问题汇总》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190404/webpack-update/&title=《Webpack3 升级到 webpack4 时遇到的问题汇总》 — 前端小栈&source=项目在对 webpack 的版本升级的过程中，出现了各种各样的问题，今天就把其中比较典型的问题总结一下，作为记录。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190404/webpack-update/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Webpack3 升级到 webpack4 时遇到的问题汇总》 — 前端小栈&url=https://beichensky.github.io/20190404/webpack-update/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190404/webpack-update/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190408/react-hooks/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">React Hooks 使用详解</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20190321/react-dnd/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">react-dnd 用法详解</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20190404/webpack-update/&title=《Webpack3 升级到 webpack4 时遇到的问题汇总》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20190404/webpack-update/&title=《Webpack3 升级到 webpack4 时遇到的问题汇总》 — 前端小栈&source=项目在对 webpack 的版本升级的过程中，出现了各种各样的问题，今天就把其中比较典型的问题总结一下，作为记录。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20190404/webpack-update/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Webpack3 升级到 webpack4 时遇到的问题汇总》 — 前端小栈&url=https://beichensky.github.io/20190404/webpack-update/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20190404/webpack-update/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20190404/webpack-update/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

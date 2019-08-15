@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>聊聊TypeScript中类、接口之间相互继承与实现的那些事儿 | 前端小栈 | 因为有了危机感，所以会义无反顾。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="TypeScript">
+    <meta name="description" content="本文讲述了类的继承、接口的实现中需要注意的一些小细节，同时也对类、接口的多继承做了一些讲解。">
+<meta name="keywords" content="TypeScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊TypeScript中类、接口之间相互继承与实现的那些事儿">
+<meta property="og:url" content="https://beichensky.github.io/20181228/ts-extends-impl/index.html">
+<meta property="og:site_name" content="前端小栈">
+<meta property="og:description" content="本文讲述了类的继承、接口的实现中需要注意的一些小细节，同时也对类、接口的多继承做了一些讲解。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-01-14T15:08:04.938Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊聊TypeScript中类、接口之间相互继承与实现的那些事儿">
+<meta name="twitter:description" content="本文讲述了类的继承、接口的实现中需要注意的一些小细节，同时也对类、接口的多继承做了一些讲解。">
+    
+        <link rel="alternate" type="application/atom+xml" title="前端小栈" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">卢凡凡</h5>
+          <a href="mailto:1376286204@qq.com" title="1376286204@qq.com" class="mail">1376286204@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Lufanfan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1376286204@qq.com" target="_blank">
+                <i class="icon icon-lg icon-envelope"></i>
+                Email
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">聊聊TypeScript中类、接口之间相互继承与实现的那些事儿</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">聊聊TypeScript中类、接口之间相互继承与实现的那些事儿</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-28T07:42:26.000Z" itemprop="datePublished" class="page-time">
+  2018-12-28
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#先看一下继承"><span class="post-toc-number">1.</span> <span class="post-toc-text">先看一下继承</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#类的继承"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">类的继承</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#类的多继承（Mixins-模拟）"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">类的多继承（Mixins 模拟）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#接口与类之间的继承"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">接口与类之间的继承</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#接口与接口之间的多继承"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">接口与接口之间的多继承</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#再来看一下接口的实现"><span class="post-toc-number">2.</span> <span class="post-toc-text">再来看一下接口的实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#接口的实现"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">接口的实现</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#类对于接口的多实现"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">类对于接口的多实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-ts-extends-impl" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">聊聊TypeScript中类、接口之间相互继承与实现的那些事儿</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-28 15:42:26" datetime="2018-12-28T07:42:26.000Z" itemprop="datePublished">2018-12-28</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端开发/">前端开发</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本文讲述了类的继承、接口的实现中需要注意的一些小细节，同时也对类、接口的多继承做了一些讲解。</p>
+<a id="more"></a>
+<h2 id="先看一下继承"><a href="#先看一下继承" class="headerlink" title="先看一下继承"></a>先看一下继承</h2><h3 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h3><blockquote>
+<p>子类继承了父类之后，就会将父类中定义的非 private 属性以及方法都继承下来</p>
+</blockquote>
+  <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Animal &#123;</span><br><span class="line">    <span class="keyword">public</span> name: <span class="built_in">string</span> = <span class="string">"Animal"</span>;</span><br><span class="line">    <span class="keyword">public</span> age: <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line">    sayHello() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">`Hello <span class="subst">$&#123; this.name &#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Dog <span class="keyword">extends</span> Animal &#123;</span><br><span class="line">    age: <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">constructor</span>(<span class="params">age</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dog = <span class="keyword">new</span>  Dog(<span class="number">6</span>);</span><br><span class="line"></span><br><span class="line">dog.sayHello();</span><br></pre></td></tr></table></figure>
+<p>  由于 Dog 继承了 Animal 类，所以同时也继承了 Animal 的 name 属性和 sayHello 方法，因此可以直接使用 dog 实例调用 sayHello 方法。<br>  <strong>那么问题来了：如果可以进行多继承，若多个父类中都包含同一个属性，那么子类使用的应该是哪个父类的属性呢？</strong> 因此 TypeScript 中不允许进行多继承，可是我就是想进行类的多继承该怎么办呢？可以使用用下节所说的 Mixins 的方式。</p>
+<h3 id="类的多继承（Mixins-模拟）"><a href="#类的多继承（Mixins-模拟）" class="headerlink" title="类的多继承（Mixins 模拟）"></a>类的多继承（Mixins 模拟）</h3><ul>
+<li><p>先定义两个类，Person 和 Student 类</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Person 类</span></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line">    sayHello() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'tag'</span>, <span class="string">`Helo <span class="subst">$&#123; this.name &#125;</span>!`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Student 类</span></span><br><span class="line"><span class="keyword">class</span> Student &#123;</span><br><span class="line">    grade: <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line">    study() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'tag'</span>, <span class="string">' I need Study!'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下面创建一个类，结合 Person 和 Student 这两个类<br>首先应该注意到的是，没使用 extends 而是使用 implements。 把类当成了接口，仅使用 Person 和 Student 的类型而非其实现。<br>我们可以这么做来达到目的，为将要mixin进来的属性方法创建出占位属性。 这告诉编译器这些成员在运行时是可用的。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> SmartObject <span class="keyword">implements</span> Person, Student &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Person</span></span><br><span class="line">    name: <span class="built_in">string</span> = <span class="string">'person'</span>;</span><br><span class="line">    sayHello: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">    <span class="comment">// Activatable</span></span><br><span class="line">    grade: <span class="built_in">number</span> = <span class="number">3</span>;</span><br><span class="line">    study: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最后，把mixins混入定义的类，完成全部实现部分</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 把mixins混入定义的类</span></span><br><span class="line">applyMixins(SmartObject, [Person, Student]);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// applyMixins 方法</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">applyMixins</span>(<span class="params">derivedCtor: <span class="built_in">any</span>, baseCtors: <span class="built_in">any</span>[]</span>) </span>&#123;</span><br><span class="line">    baseCtors.forEach(<span class="function"><span class="params">baseCtor</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">Object</span>.getOwnPropertyNames(baseCtor.prototype).forEach(<span class="function"><span class="params">name</span> =&gt;</span> &#123;</span><br><span class="line">            derivedCtor.prototype[name] = baseCtor.prototype[name];</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="接口与类之间的继承"><a href="#接口与类之间的继承" class="headerlink" title="接口与类之间的继承"></a>接口与类之间的继承</h3><blockquote>
+<p>接口继承类的方式以及特点与上面类的继承和类的多继承一致。</p>
+</blockquote>
+<h3 id="接口与接口之间的多继承"><a href="#接口与接口之间的多继承" class="headerlink" title="接口与接口之间的多继承"></a>接口与接口之间的多继承</h3><blockquote>
+<p>接口与接口之间是可以直接进行多继承的。</p>
+</blockquote>
+<ul>
+<li><p>先定义两个接口</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 阿里接口</span></span><br><span class="line"><span class="keyword">interface</span> Ali  &#123;</span><br><span class="line">    pay: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">void</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 腾讯接口</span></span><br><span class="line"><span class="keyword">interface</span> Tencent &#123;</span><br><span class="line">    game: <span class="built_in">string</span></span><br><span class="line">    play: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">void</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在定义一个接口继承 Ali、Tencent 接口</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自己的接口</span></span><br><span class="line"><span class="keyword">interface</span> Self <span class="keyword">extends</span> Ali, Tencent &#123;</span><br><span class="line">    name: <span class="built_in">string</span></span><br><span class="line">    say: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">void</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>此时Self 接口就包含了 Ali 和 Tencent 接口中所有的属性和方法</p>
+</blockquote>
+</li>
+<li><p>验证一下<br>用一个类继承 Self 接口，必须要将 Ali、 Tencent、 Self 接口中包含的所有属性和方法都声明了才可以，不然会编译报错</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 Test 类实现 Self 接口</span></span><br><span class="line"><span class="keyword">class</span> Test <span class="keyword">extends</span> Self &#123;</span><br><span class="line">    game: <span class="built_in">string</span>;</span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line">    pay() &#123;</span><br><span class="line">        cosole.log(<span class="string">'经常用于支付'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    play() =&gt; &#123;</span><br><span class="line">        cosole.log(<span class="string">'可以玩各种游戏'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    say() &#123;</span><br><span class="line">        cosole.log(<span class="string">'不知道说点儿什么'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h2 id="再来看一下接口的实现"><a href="#再来看一下接口的实现" class="headerlink" title="再来看一下接口的实现"></a>再来看一下接口的实现</h2><h3 id="接口的实现"><a href="#接口的实现" class="headerlink" title="接口的实现"></a>接口的实现</h3><blockquote>
+<p>接口在定义的时候，不能初始化属性以及方法，属性不能进行初始化，方法不能实现方法体。<br>    类实现接口之后，必须声明接口中定义的属性以及方法。</p>
+</blockquote>
+  <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Animal &#123;</span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line">    eat: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Dog <span class="keyword">implements</span> Animal &#123;</span><br><span class="line"></span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line">    eat() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'tag'</span>, <span class="string">'I love eat bone!'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dog: Dog = <span class="keyword">new</span> Dog();</span><br><span class="line">dog.eat();</span><br></pre></td></tr></table></figure>
+<h3 id="类对于接口的多实现"><a href="#类对于接口的多实现" class="headerlink" title="类对于接口的多实现"></a>类对于接口的多实现</h3><blockquote>
+<p>一个类可以实现多个接口，不过要将实现的所有接口的属性和方法都实现了。</p>
+</blockquote>
+  <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 动物接口</span></span><br><span class="line"><span class="keyword">interface</span> Animal &#123;</span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line">    eat: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 猫科接口</span></span><br><span class="line"><span class="keyword">interface</span> Felidae &#123;</span><br><span class="line">    claw: <span class="built_in">number</span>;</span><br><span class="line">    run: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 让猫类实现 Animal 和 Felidae 两个接口</span></span><br><span class="line"><span class="keyword">class</span> Cat <span class="keyword">implements</span> Animal, Felidae &#123;</span><br><span class="line"></span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line">    claw: <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line">    eat() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'tag'</span>, <span class="string">'I love eat Food!'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    run: () &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'tag'</span>, <span class="string">'My speed is very fast!'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dog: Dog = <span class="keyword">new</span> Dog();</span><br><span class="line">dog.eat();</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>类与类之间只能进行单继承，想要实现多继承需要使用 Mixins 的方式</p>
+</li>
+<li><p>接口继承类也只能进行单继承，想要实现多继承需要使用 Mixins 的方式<br>Mixins 方式模拟多继承的缺陷：</p>
+<ul>
+<li><p>只能在继承一级父类的方法和属性</p>
+</li>
+<li><p>如果父类中含有同一种方法或属性，会根据赋值的顺序，先赋值的会被覆盖掉</p>
+</li>
+</ul>
+</li>
+<li><p>接口与接口之间可以直接进行多继承</p>
+</li>
+<li><p>类实现接口可以进行多实现，每个接口用 , 隔开即可</p>
+</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        原始链接：<a href="/20181228/ts-extends-impl/" target="_blank" rel="external">https://beichensky.github.io/20181228/ts-extends-impl/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://beichensky.github.io">
+            <img src="/img/avatar.jpg" alt="卢凡凡">
+            卢凡凡
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TypeScript/">TypeScript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181228/ts-extends-impl/&title=《聊聊TypeScript中类、接口之间相互继承与实现的那些事儿》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181228/ts-extends-impl/&title=《聊聊TypeScript中类、接口之间相互继承与实现的那些事儿》 — 前端小栈&source=本文讲述了类的继承、接口的实现中需要注意的一些小细节，同时也对类、接口的多继承做了一些讲解。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181228/ts-extends-impl/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《聊聊TypeScript中类、接口之间相互继承与实现的那些事儿》 — 前端小栈&url=https://beichensky.github.io/20181228/ts-extends-impl/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181228/ts-extends-impl/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/20190102/github-branch/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Github仓库中分支的创建和删除</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/20181221/js-hack8/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript性能优化（八）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "dAOovJq82ddaEvVzyiNHIxtj-gzGzoHsz",
+            appKey: "ekVtCf1N8VWSPfjArfQngw5Y",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        感谢支持
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>卢凡凡 &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://beichensky.github.io/20181228/ts-extends-impl/&title=《聊聊TypeScript中类、接口之间相互继承与实现的那些事儿》 — 前端小栈&pic=https://beichensky.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://beichensky.github.io/20181228/ts-extends-impl/&title=《聊聊TypeScript中类、接口之间相互继承与实现的那些事儿》 — 前端小栈&source=本文讲述了类的继承、接口的实现中需要注意的一些小细节，同时也对类、接口的多继承做了一些讲解。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://beichensky.github.io/20181228/ts-extends-impl/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《聊聊TypeScript中类、接口之间相互继承与实现的那些事儿》 — 前端小栈&url=https://beichensky.github.io/20181228/ts-extends-impl/&via=https://beichensky.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://beichensky.github.io/20181228/ts-extends-impl/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://beichensky.github.io/20181228/ts-extends-impl/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '前端小栈';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '前端小栈';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
